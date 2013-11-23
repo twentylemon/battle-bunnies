@@ -1,1 +1,1 @@
-include ':BattleBunnies'
+include ':BattleBunnies', ':AndEngine'
