@@ -13,32 +13,38 @@ public class RandomGenerator implements TerrainGenerator ,Serializable{
 		return c;
 	}
 	
+	/**
+	 * Takes an empty array and first chooses the type(peak or valley) and
+	 *  balance point for that type. the creates a new top line with a flatter 
+	 *  area where the bunnies start.
+	 * 
+	 * @param c an empty int[][]
+	 * @param width the width of the terrain
+	 * @param height the height of the terrain
+	 * @return the array c with a top line of terrain
+	 */
 	public int[][] topline(int[][] c,int width, int height){
 		
 		int prev;
-		Random rng= new Random();
-		int x=rng.nextInt();
-		rng= new Random(x);
-		System.out.println(x);
+		Random rng= new Random();		
+		
 		boolean b=rng.nextBoolean();
 		int scale= width/4;
 		int modifier= rng.nextInt(scale);
 		if(!b)scale*=-1;		
 		int central= (width/2)+modifier;
+		
 		boolean peak= rng.nextBoolean();		
 		int type=1;
 		if(!peak)type*=-1;
 		if(peak)prev=height/4;
 		else{prev=height-height/4;}
-		//System.out.println(central);
 		
 		int p1w= rng.nextInt(width/20)+20;
 		int p2w= rng.nextInt(width/20)+20;
 		
 		int p1cent=(width/10)*2;
-		int p2cent= width-((width/10)*2);
-		
-		System.out.println(p1w+" "+p2w+" "+p1cent+" "+p2cent);
+		int p2cent= width-((width/10)*2);		
 		
 		for(int i=0;i<c.length;i++){			
 			
@@ -75,6 +81,14 @@ public class RandomGenerator implements TerrainGenerator ,Serializable{
 		return c;
 	}
 	
+	/**
+	 * Takes in a generated  terrain array and averages the top line over
+	 * a fact values to the left and right of it, creating a smoother line
+	 * 
+	 * @param c the terrain array
+	 * @param fact the amount of coordinates on either side to be averaged
+	 * @return the smoothed array c
+	 */
 	public int[][] smooth(int[][] c,int fact){
 		
 		int count=0;
@@ -111,7 +125,15 @@ public class RandomGenerator implements TerrainGenerator ,Serializable{
 		return 0;
 	}
 	
-	
+	/**
+	 * Takes a terrain array and finds the top line fills the soil and grass below it
+	 * 
+	 * @param c the unfilled terrain array
+	 * @param top represents the color of the top grass layer
+	 * @param soil represents the color of the under soil
+	 * @param sky represents the color of the sky
+	 * @return c the filled terrain array
+	 */
 	public int[][] fillLower(int[][] c, int top, int soil,int sky){
 		
 		boolean lower=false;
