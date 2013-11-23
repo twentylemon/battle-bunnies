@@ -19,22 +19,16 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -48,20 +42,38 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     /**
-     * A placeholder fragment containing a simple view.
+     * Called when Profile is clicked. Starts up the settings activity.
+     * @param view the button clicked
      */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
+    public void onProfileClicked(View view){
+        //start the settings activity
     }
 
+
+    /**
+     * Called when the Campaign button is clicked. Starts the campaign loader activity.
+     * @param view the button clicked
+     */
+    public void onCampaignClicked(View view){
+        //start the campaign loader activity
+    }
+
+    /**
+     * Called when Quick Play is clicked. Starts up the weapon select activity.
+     * @param view the button clicked
+     */
+    public void onQuickPlayClicked(View view){
+        //start the weapon select activity
+    }
+
+
+    /**
+     * Called when mutliplayer is clicked. Starts up the bluetooth handler activity.
+     * @param view the button clicked
+     */
+    public void onMultiplayerClicked(View view){
+        //start the bluetooth activity
+    }
 }
