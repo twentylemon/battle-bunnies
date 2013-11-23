@@ -45,6 +45,7 @@ public class MainActivity extends ActionBarActivity {
 
     /**
      * Called when Profile is clicked. Starts up the settings activity.
+     *
      * @param view the button clicked
      */
     public void onProfileClicked(View view){
@@ -54,6 +55,7 @@ public class MainActivity extends ActionBarActivity {
 
     /**
      * Called when the Campaign button is clicked. Starts the campaign loader activity.
+     *
      * @param view the button clicked
      */
     public void onCampaignClicked(View view){
@@ -62,6 +64,7 @@ public class MainActivity extends ActionBarActivity {
 
     /**
      * Called when Quick Play is clicked. Starts up the weapon select activity.
+     *
      * @param view the button clicked
      */
     public void onQuickPlayClicked(View view){
@@ -71,6 +74,7 @@ public class MainActivity extends ActionBarActivity {
 
     /**
      * Called when mutliplayer is clicked. Starts up the bluetooth handler activity.
+     *
      * @param view the button clicked
      */
     public void onMultiplayerClicked(View view){

@@ -1,13 +1,24 @@
-package ca.fluffybunny.battlebunnies.game;
+package ca.fluffybunny.battlebunnies.util;
+
+import java.io.Serializable;
 
 /**
+ * Defines a point in space.
  *
+ * @author Taras Mychaskiw
+ * @version 1.0
+ * @since 2013-11-23
  */
-public class Point {
+public class Point implements Serializable {
 
-    public int x;
+    public int x;   //public is fine
     public int y;
 
+    /**
+     * Default constructors. Set the x and y points.
+     * @param x the x value
+     * @param y the y value
+     */
     public Point (int x, int y){
         this.x = x;
         this.y = y;

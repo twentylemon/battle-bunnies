@@ -11,7 +11,9 @@ public interface TerrainGenerator {
     /**
      * Returns the terrain that should be used by the map. It is an integer array of pixel colours,
      * such that is (x,y) is 0 (black) then it is not occupied by any terrain, otherwise the colour
-     * is displayed.
+     * is displayed. The terrain will be in the form { new int[width][height] }.
+     * (0,0) is the bottom left corner.
+     *
      * @param width the width of the terrain
      * @param height the height of the terrain
      * @return the terrain
