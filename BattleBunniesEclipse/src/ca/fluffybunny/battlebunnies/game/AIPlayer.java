@@ -1,6 +1,3 @@
-/**
- * 
- */
 package ca.fluffybunny.battlebunnies.game;
 
 import java.util.Random;

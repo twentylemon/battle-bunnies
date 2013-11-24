@@ -17,7 +17,7 @@ public class Bunny implements Serializable {
     private Point position;     //where we are located on the map
     private int movesRemaining; //how many times we can move
     private int score;          //how many points we have
-    String name;                //our display name
+    private String name;    	//our display name
     private Point[] extents;    //how big on the map the bunny is (for collision detection)
 
     public final static int DEFAULT_NUM_MOVES = 4;
