@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="characters">
+        <item>MacFluffy</item>
+        <item>Lord Admiral Flufson </item>
+        <item>Bunius Ceaser</item>
+        <item>Flufonidus</item>
+        <item>Bunnyovitch</item>
+        <item>Erwin "The Desert Fox" Rommel</item>
+    </string-array>
+    <string-array name="charactersvals">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+</resources>

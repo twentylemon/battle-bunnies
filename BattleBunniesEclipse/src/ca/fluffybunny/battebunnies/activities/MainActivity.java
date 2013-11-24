@@ -63,7 +63,8 @@ public class MainActivity extends Activity {
      * @param view the button clicked
      */
     public void onProfileClicked(View view){
-        //start the settings activity
+    	Intent j = new Intent(MainActivity.this, Profile.class);
+        startActivityForResult(j,0);
     }
 
 

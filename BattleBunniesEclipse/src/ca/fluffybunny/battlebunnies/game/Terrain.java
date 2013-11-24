@@ -1,6 +1,6 @@
 package ca.fluffybunny.battlebunnies.game;
 
-import org.andengine.util.color.Color;
+//import org.andengine.util.color.Color;
 
 import java.io.Serializable;
 
@@ -9,18 +9,18 @@ import ca.fluffybunny.battlebunnies.util.Point;
 /**
  * The game terrain map.
  *
- * @author Taras Mychaskiw
+ * @author Taras Mychaskiw 
  * @version 1.0
- * @since 2013-11-23
+ * @since 2013-11-23 
  */
 public class Terrain implements Serializable {
 
 	private static final long serialVersionUID = 1L;
     private int[][] map;    //the terrain map
 
-    public final static int AIR = Color.BLACK_ABGR_PACKED_INT;
-    public final static int GRASS = Color.GREEN_ARGB_PACKED_INT;
-    public final static int ROCK = Color.PINK_ABGR_PACKED_INT;
+    public final static int AIR = 0;
+    public final static int GRASS = 1;
+    public final static int ROCK = 2;
 
     /**
      * Initializes the terrain. Nothing destroyed yet.
