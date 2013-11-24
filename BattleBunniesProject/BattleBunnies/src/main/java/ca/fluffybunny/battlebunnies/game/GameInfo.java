@@ -19,6 +19,7 @@ public class GameInfo implements Serializable {
     private Bunny[] bunnies;
     private List<Weapon> weaponList;
     private boolean gameOver;
+    private int numShots;   //number of shots so far (turns = numShots / 2)
 
     /**
      * Initializes a new game.
@@ -28,6 +29,7 @@ public class GameInfo implements Serializable {
      */
     public GameInfo(String[] names, Terrain terrain){
         gameOver = false;
+        numShots = 0;
         this.terrain = terrain;
         Point[] startLocations = new Point[names.length];
         // TODO dymanicness this stuff?
@@ -61,10 +63,13 @@ public class GameInfo implements Serializable {
      * Getters/Setters.
      */
     public void setGameOver(boolean over){ gameOver = over; }
+    public void incNumShots(){ numShots++; }
     public Terrain getTerrain(){ return terrain; }
     public int getNumberOfPlayers(){ return bunnies.length; }
     public Bunny getBunny(int id){ return bunnies[id]; }
     public List<Weapon> getWeaponList(){ return weaponList; }
     public Weapon getWeapon(int id){ return weaponList.get(id); }
     public boolean isGameOver(){ return gameOver; }
+    public int getNumShots(){ return numShots; }
+    public int getTurnNumber(){ return numShots / 2; }
 }
