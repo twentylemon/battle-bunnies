@@ -1,7 +1,9 @@
 package ca.fluffybunny.battlebunnies.game;
 
 /**
- * Created by Taras on 24/11/13.
+ * This class handles the message passing for one player.
+ * 
+ * 
  */
 public class Player implements Runnable {
 
@@ -34,11 +36,21 @@ public class Player implements Runnable {
         Bunny bunny = game.getBunny(playerID);
 
         while (!game.isGameOver()){
-            //wait for user input
-            //mark the weapon we want to fire, send that info to GameMaster
-            //GameMaster send the weapon info to all
-            //each player runs the weapon firing on their own device
-            //block for next player's turn
+        	/**
+        	 * assuming we're playerID = 0 (order reversed for playerID = 1)
+        	 * wait for user input
+        	 * on move
+        	 * 		send our move to the GameMaster
+        	 * 		wait for our message to return
+        	 * 		execute our move on our device
+        	 * 		continue our turn
+        	 * on fire
+        	 * 		send our fire action to the GameMaster
+        	 * 		wait for our message to return
+        	 * 		execute the fire action on our device
+        	 * 		our turn ends
+        	 * wait for playerID = 1 to take their turn
+        	 */
         }
     }
 }

@@ -7,9 +7,7 @@
     <string name="campaign">Campaign</string>
     <string name="quick_play">Quick Play</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="availible_devices">Availible Devices</string>
+    <string name="availible_devices">Available Devices</string>
     <string name="button_scan">Scan</string>
     <string name="scanning">Scanning</string>
     <string name="connect">Connect</string>
