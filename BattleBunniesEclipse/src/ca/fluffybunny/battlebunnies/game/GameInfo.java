@@ -67,6 +67,7 @@ public class GameInfo implements Serializable {
     public Bunny getBunny(int id){ return bunnies[id]; }
     public List<Weapon> getWeaponList(){ return weaponList; }
     public Weapon getWeapon(int id){ return weaponList.get(id); }
+    public int getNumWeapons(){ return weaponList.size(); }
     public boolean isGameOver(){ return getTurnNumber() >= MAX_TURNS; }
     public int getNumShots(){ return numShots; }
     public int getTurnNumber(){ return numShots / 2; }
@@ -75,9 +76,10 @@ public class GameInfo implements Serializable {
     /**
      * Fires the weapon on this game.
      * 
+     * @param playerID who shot the weapon
      * @param weapon the weapon to fire
      */
-    public void takeShot(Weapon weapon){
+    public void takeShot(int playerID, Weapon weapon){
     	numShots++;
     	// TODO do the stuff
     }

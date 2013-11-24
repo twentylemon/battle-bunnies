@@ -7,9 +7,10 @@ package ca.fluffybunny.battlebunnies.game;
  */
 public class Player implements Runnable {
 
-    private int playerID;
-    private String name;
-    private Port port;
+    protected int playerID;
+    protected String name;
+    protected Port port;
+    protected GameInfo game;
 
     /**
      * Initializes this player with the name and port.
@@ -32,8 +33,7 @@ public class Player implements Runnable {
      */
     @Override
     public void run(){
-        GameInfo game = (GameInfo) port.receive();
-        Bunny bunny = game.getBunny(playerID);
+        game = (GameInfo) port.receive();
 
         while (!game.isGameOver()){
         	/**

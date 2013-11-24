@@ -55,6 +55,18 @@ public class GameMaster implements Runnable {
 			 * do player 2's turn (same thing again)
 			 * after GameInfo.MAX_TURNS turns, stop
 			 */
+			
+			//for each player, get their actions and send them to each player
+			for (int playerID = 0; playerID < game.getNumberOfPlayers(); playerID++){
+				Action action = null;
+				while (!(action instanceof FireAction)){
+					action = (Action) info.getPort(playerID).receive();
+					for (int i = 0; i < game.getNumberOfPlayers(); i++){
+						info.getPort(i).send(action);	//send the action to each player
+					}
+					action.execute(game);	//execute the action on our game
+				}
+			}
 		}
 	}
 }
