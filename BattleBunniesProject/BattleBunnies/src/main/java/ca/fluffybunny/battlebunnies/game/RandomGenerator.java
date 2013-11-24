@@ -141,6 +141,7 @@ public class RandomGenerator implements TerrainGenerator, Serializable {
 
     /**
      * Returns the y coord where c is 1.
+     *
      * @param c the terrain to search
      * @param loc the x coord to find c = 1
      * @return the y index in c

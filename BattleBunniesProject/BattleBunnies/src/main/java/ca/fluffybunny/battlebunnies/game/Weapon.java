@@ -81,7 +81,8 @@ public abstract class Weapon implements Serializable, Cloneable {
 
 
     /**
-     * Clones this weapon
+     * Clones this weapon.
+     *
      * @return a clone of this weapon
      */
     public Weapon clone(){
