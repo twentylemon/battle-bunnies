@@ -3,54 +3,53 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".MainActivity"
     tools:ignore="MergeRootFrame" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/app_name"
-        android:id="@+id/title"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dp" />
-
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/profile"
-        android:id="@+id/profileButton"
-        android:layout_below="@+id/title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:onClick="onProfileClicked" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/campaign"
-        android:id="@+id/campaignButton"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/title"
-        android:onClick="onCampaignClicked" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/quick_play"
         android:id="@+id/quickPlayButton"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/title"
-        android:onClick="onQuickPlayClicked" />
-
-    <Button
+        style="@style/ButtonText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/multiplayer"
+        android:layout_alignBottom="@+id/campaignButton"
+        android:layout_marginBottom="16dp"
+        android:layout_toLeftOf="@+id/multiplayerButton"
+        android:background="@drawable/but_grn"
+        android:onClick="onQuickPlayClicked"
+        android:text="@string/quick_play" />
+
+    <Button
+        android:id="@+id/campaignButton"
+        style="@style/ButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/multiplayerButton"
+        android:background="@drawable/but_grn"
+        android:onClick="onCampaignClicked"
+        android:text="@string/campaign" />
+
+    <Button
+        android:id="@+id/profileButton"
+        style="@style/ButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/quickPlayButton"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/but_grn"
+        android:onClick="onProfileClicked"
+        android:text="@string/profile" />
+
+    <Button
         android:id="@+id/multiplayerButton"
+        style="@style/ButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/campaignButton"
         android:layout_centerHorizontal="true"
-        android:onClick="onMultiplayerClicked" />
+        android:background="@drawable/but_grn"
+        android:onClick="onMultiplayerClicked"
+        android:text="@string/multiplayer" />
 
 </RelativeLayout>

@@ -30,69 +30,94 @@ public class ConnectionHandler {
     // Member fields
     private final BluetoothAdapter mAdapter;
  //   private final Handler mHandler;
-    private AcceptThread mAcceptThread;
-    private ConnectThread mConnectThread;
+    private Accepter mAccepter;
+    private Connecter mConnecter;
     public int mState;
     
+    //possible states for the bluetooth device
     public static final int STATE_NONE = 0;     
     public static final int STATE_LISTEN = 1;     
     public static final int STATE_CONNECTING = 2; 
     public static final int STATE_CONNECTED = 3;  
+    
+    //the Bluetooth socket used for communication
     private BluetoothSocket mySock;
+    
+    //context passed to object from multiplayer launch activity
     private Context cont;
 
     public ConnectionHandler(Context context) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         cont=context;
-      //  mHandler = handler;
     }
+    /**
+     * returns the BluetoothSocket held by the class
+     * 
+     * @return BluetoothSocket
+     */
     public BluetoothSocket getBluetoothSocket(){
     	return mySock;
     }
     
+    /**
+     * Initializes the thread used for the server side of the connection
+     * 
+     */
     public synchronized void start() {
         if (D) Log.d(TAG, "start");
 
         // Cancel any thread attempting to make a connection
-        if (mConnectThread != null) {mConnectThread.cancel(); mConnectThread = null;}
+        if (mConnecter != null) {mConnecter.cancel(); mConnecter = null;}
 
 
         // Start the thread to listen on a BluetoothServerSocket
-        if (mAcceptThread == null) {
-            mAcceptThread = new AcceptThread();
-            mAcceptThread.start();
+        if (mAccepter == null) {
+            mAccepter = new Accepter();
+            mAccepter.start();
         }
         mState=STATE_LISTEN;
     }
     
+    
+    /**
+     * Initializes the thread used for the client side of the connection
+     * Stops any current connections
+     * 
+     */
     public synchronized void connect(BluetoothDevice device) {
     	
     	if (D) Log.d(TAG, "connect to: " + device);
 
         if (mState == STATE_CONNECTING) {
-            if (mConnectThread != null) {
-            	mConnectThread.cancel(); 
-            	mConnectThread = null;
+            if (mConnecter != null) {
+            	mConnecter.cancel(); 
+            	mConnecter = null;
             	}
         }
 
         // Start the thread to connect with the given device
-        mConnectThread = new ConnectThread(device);
-        mConnectThread.start();
+        mConnecter = new Connecter(device);
+        mConnecter.start();
         mState=STATE_CONNECTING;
     }
     
+    /**
+     * Sets the State on a failed connection
+     */
     private void connectionFailed() {
         mState=STATE_LISTEN;
-
     }
-
-	   private class AcceptThread extends Thread {
-	        // The local server socket
+    
+    /**
+     * The Server side thread for the connection.
+     * Gets a BluetoothSocket using the UUID declared above
+     */
+	   private class Accepter extends Thread {
+	        
 	        private final BluetoothServerSocket mmServerSocket;
 
-	        public AcceptThread() {
+	        public Accepter() {
 	            BluetoothServerSocket temp = null;
 
 	            // Create a new listening server socket
@@ -106,11 +131,11 @@ public class ConnectionHandler {
 	        }
 
 	        public void run() {
-	            if (D) Log.d(TAG, "BEGIN mAcceptThread" + this);
-	            setName("AcceptThread");
+	            if (D) Log.d(TAG, "BEGIN mAccepter" + this);
+	            setName("Accepter");
 	            BluetoothSocket socket = null;
 
-	            // Listen to the server socket if we're not connected
+	            // loop till the connection is done, and we are paired
 	            while (mState != STATE_CONNECTED) {
 	                try {
 	                    // This is a blocking call and will only return on a
@@ -131,7 +156,8 @@ public class ConnectionHandler {
 	                            break;
 	                        case STATE_NONE:
 	                        case STATE_CONNECTED:
-	                            // Either not ready or already connected. Terminate new socket.
+	                            //there were isues with threading if this has been reached. 
+	                        	//shut it down
 	                            try {
 	                                socket.close();
 	                            } catch (IOException e) {
@@ -143,7 +169,7 @@ public class ConnectionHandler {
 	                }
 	            }
 	            mySock=socket;
-	            if (D) Log.i(TAG, "END mAcceptThread");
+	            if (D) Log.i(TAG, "END mAccepter");
 	        }
 
 	        public void cancel() {
@@ -151,27 +177,23 @@ public class ConnectionHandler {
 	            try {
 	                mmServerSocket.close();
 	            } catch (IOException e) {
-	                Log.e(TAG, "close() of server failed", e);
+	                Log.e(TAG, "cancel did not work", e);
 	            }
 	        }
 	    }
 
 
 	    /**
-	     * This thread runs while attempting to make an outgoing connection
-	     * with a device. It runs straight through; the connection either
-	     * succeeds or fails.
+	     * The client side thread for the connection.
+	     * Gets a BluetoothSocket using the UUID declared above
 	     */
-	    private class ConnectThread extends Thread {
+	    private class Connecter extends Thread {
 	        private final BluetoothSocket mmSocket;
 	        private final BluetoothDevice mmDevice;
 
-	        public ConnectThread(BluetoothDevice device) {
+	        public Connecter(BluetoothDevice device) {
 	            mmDevice = device;
 	            BluetoothSocket tmp = null;
-
-	            // Get a BluetoothSocket for a connection with the
-	            // given BluetoothDevice
 	            try {
 	                tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
 	            } catch (IOException e) {
@@ -185,32 +207,29 @@ public class ConnectionHandler {
 	        }
 
 	        public void run() {
-	            Log.i(TAG, "BEGIN mConnectThread");
-	            setName("ConnectThread");
+	            Log.i(TAG, "BEGIN mConnecter");
+	            setName("Connecter");
 
-	           
+	           //save battery
 	            mAdapter.cancelDiscovery();
 
 	            // Make a connection to the BluetoothSocket
 	            try {
-	                // This is a blocking call and will only return on a
-	                // successful connection or an exception
 	                mmSocket.connect();
 	            } catch (IOException e) {
 	                connectionFailed();
-	                // Close the socket
 	                try {
 	                    mmSocket.close();
 	                } catch (IOException e2) {
-	                    Log.e(TAG, "unable to close() socket during connection failure", e2);
+	                    Log.e(TAG, "unable to close socket ", e2);
 	                }
 	                
 	                return;
 	            }
 
-	            // Reset the ConnectThread because we're done
+	            
 	            synchronized (ConnectionHandler.this) {
-	                mConnectThread = null;
+	                mConnecter = null;
 	            }
 	        }
 
@@ -218,7 +237,7 @@ public class ConnectionHandler {
 	            try {
 	                mmSocket.close();
 	            } catch (IOException e) {
-	                Log.e(TAG, "close() of connect socket failed", e);
+	                Log.e(TAG, "cancel did not work", e);
 	            }
 	        }
 	    }

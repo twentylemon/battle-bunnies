@@ -53,7 +53,7 @@ public class MultiplayerLaunchActivity extends Activity {
 		        	return;
 		        }
 				else if (conHandle.mState == ConnectionHandler.STATE_NONE) {
-		              // Start the Bluetooth chat services
+		              
 					conHandle.start();
 		            }; //set up game, start as server
 			} 
@@ -76,8 +76,9 @@ public class MultiplayerLaunchActivity extends Activity {
 		enable.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) { 
-				Intent serverIntent = new Intent(MultiplayerLaunchActivity.this, DeviceListActivity.class);
-	            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+				Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+	            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+	            startActivity(discoverableIntent);
 			} 
 		});
 	}
