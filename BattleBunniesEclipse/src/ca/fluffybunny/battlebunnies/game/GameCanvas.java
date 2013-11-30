@@ -3,9 +3,8 @@ package ca.fluffybunny.battlebunnies.game;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.SurfaceHolder;
-import ca.fluffybunny.battebunnies.activities.MainActivity;
+import ca.fluffybunny.battlebunnies.util.Point;
 
 public class GameCanvas implements Runnable {
 	
@@ -13,6 +12,8 @@ public class GameCanvas implements Runnable {
 	private SurfaceHolder surfaceHolder;
 	private Thread thread;
 	private boolean running;
+	private double fireTime;
+	private boolean firing;
 
 	/**
 	 * Default constructor.
@@ -23,7 +24,15 @@ public class GameCanvas implements Runnable {
 	public GameCanvas(GameInfo game, SurfaceHolder surfaceHolder){
 		this.game = game;
 		this.surfaceHolder = surfaceHolder;
+		fireTime = 0;
 	}
+
+	
+	/**
+	 * Getters/Setters.
+	 */
+	public void setFireTime(double time){ fireTime = time; }
+	public void setFiring(boolean fire){ firing = fire; }
 
 	
 	/**
@@ -51,6 +60,7 @@ public class GameCanvas implements Runnable {
 	public void run(){
 		long lastLoopTime = System.currentTimeMillis();
 		long currentTime, delta;
+		firing = false;
 		while (running){
 			currentTime = System.currentTimeMillis();
 			delta = currentTime - lastLoopTime;
@@ -60,9 +70,7 @@ public class GameCanvas implements Runnable {
 					Thread.sleep(10 - delta);
 				} catch (InterruptedException e){}
 			}
-			/**
-			 * update the canvas using the GameInfo
-			 */
+
 			try {
 				Canvas canvas = surfaceHolder.lockCanvas();
 				Terrain terrain = game.getTerrain();
@@ -75,8 +83,29 @@ public class GameCanvas implements Runnable {
 				Bitmap map = Bitmap.createBitmap(data, terrain.getWidth(), terrain.getHeight(), Bitmap.Config.ARGB_8888);
 				canvas.drawBitmap(map, 0, 0, new Paint());
 				
+				//draw the bunnies
 				for (int i = 0; i < game.getNumberOfPlayers(); i++){
 					game.getBunny(i).draw(canvas);
+				}
+				
+				//draw the weapon, if any
+				if (firing){
+					Point position = game.getFiredWeapon().getPosition(currentTime - fireTime);
+					//check if it went out of bounds
+					if (position.x < 0 || position.x >= game.getTerrain().getWidth()){
+						firing = false;
+					}
+					//check if we hit the terrain
+					else if (game.getTerrain().getPoint(position.x, position.y) != Terrain.AIR){
+						game.getFiredWeapon().explode(canvas, position);
+						game.getTerrain().destroyTerrain(position, game.getFiredWeapon());
+						firing = false;
+					}
+					// TODO check if we hit bunnies
+					//else it's ok, just continue flying
+					else {
+						game.getFiredWeapon().draw(canvas, position);
+					}
 				}
 				
 				surfaceHolder.unlockCanvasAndPost(canvas);

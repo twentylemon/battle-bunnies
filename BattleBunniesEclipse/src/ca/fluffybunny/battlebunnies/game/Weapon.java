@@ -27,14 +27,6 @@ public abstract class Weapon extends Drawable implements Serializable, Cloneable
     public final static double GRAVITY = -9.8;
 
     /**
-     * Default constructor. Assigns the weapon's name.
-     * @param name the name of this weapon as it will appear in the list of weapons
-     */
-    public Weapon(String name){
-    	this.name = name;
-    }
-
-    /**
      * Getters/Setters.
      */
     public void setMass(double mass){ this.mass = mass; }
@@ -80,14 +72,14 @@ public abstract class Weapon extends Drawable implements Serializable, Cloneable
         setFireAngle(angle);
     }
 
-
-    /**
-     * To be called in OpenGL callbacks. Draws the explosion of the weapon.
-     */
-    public abstract void onExplode();
-
     
-    public abstract void draw(Canvas canvas, double time);
+    /**
+     * Stuff for drawing the weapon;
+     * @param canvas where to draw
+     * @param where where the weapon is
+     */
+    public abstract void explode(Canvas canvas, Point where);
+    public abstract void draw(Canvas canvas, Point where);
 
 
     /**
@@ -101,5 +93,20 @@ public abstract class Weapon extends Drawable implements Serializable, Cloneable
         } catch (CloneNotSupportedException e) {
             return null;
         }
+    }
+
+    
+    /**
+     * Override this from Object. Two weapons are equal if they have the same name.
+     * 
+     * @param other the object to compare to
+     */
+    @Override
+    public boolean equals(Object other){
+    	if (other instanceof Weapon){
+    		Weapon weapon = (Weapon) other;
+    		return getName().equals(weapon.getName());
+    	}
+    	return false;
     }
 }

@@ -12,26 +12,27 @@ public class RockWeapon extends Weapon {
 	private final float RADIUS = 10;
 	private final Paint PAINT = new Paint();
 
-	public RockWeapon(String name){
-		super(name);
+	public RockWeapon(){
+		name = "Throw a Rock";
 		PAINT.setColor(Color.parseColor("#C0C0C0"));
 	}
 
 
 	@Override
-	public void onExplode(){
+	public void explode(Canvas canvas, Point where){
+		draw(canvas, where);
 	}
 
 	
 	/**
 	 * Draws this weapon on the canvas provided. This method should not be used, as
-	 * { @code draw(Canvas, double) } animates the weapon.
+	 * { @code draw(Canvas, Point) } animates the weapon.
 	 * 
 	 * @param canvas where to draw
 	 */
 	@Override
 	public void draw(Canvas canvas){
-		draw(canvas, 0);
+		draw(canvas, fireLocation);
 	}
 
 	
@@ -39,12 +40,11 @@ public class RockWeapon extends Weapon {
 	 * Draws this weapon on the canvas provided.
 	 * 
 	 * @param canvas where to draw
-	 * @param time how much time has passed in the flight
+	 * @param where where the weapon currently is { @see getPosition() }
 	 */
 	@Override
-	public void draw(Canvas canvas, double time){
-		Point position = getPosition(time);
-		canvas.drawCircle(position.x, position.y, RADIUS, PAINT);
+	public void draw(Canvas canvas, Point where){
+		canvas.drawCircle(where.x, where.y, RADIUS, PAINT);
 	}
 
 	@Override
