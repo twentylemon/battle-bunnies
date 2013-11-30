@@ -43,7 +43,7 @@ public class Channel {
      * @return the item received
      */
     public Serializable pullMasterPort(){
-        return masterToClient.pull();
+        return clientToMaster.pull();
     }
 
 
@@ -63,7 +63,7 @@ public class Channel {
      * @return the item received
      */
     public Serializable pullClientPort(){
-        return clientToMaster.pull();
+        return masterToClient.pull();
     }
 
 

@@ -37,6 +37,15 @@ public class AIPlayer extends Player {
 		return new FireAction(playerID, weapon);
 	}
 
+    
+    /**
+     * Stops this runnable.
+     */
+	@Override
+    public void stop(){
+    	game.forceGameEnd();
+    }
+
 
     /**
      * Starts executing the active part of the class' code. This method is

@@ -71,6 +71,7 @@ public class GameInfo implements Serializable {
     public boolean isGameOver(){ return getTurnNumber() >= MAX_TURNS; }
     public int getNumShots(){ return numShots; }
     public int getTurnNumber(){ return numShots / 2; }
+    public void forceGameEnd(){ numShots = Integer.MAX_VALUE; }
     
     
     /**

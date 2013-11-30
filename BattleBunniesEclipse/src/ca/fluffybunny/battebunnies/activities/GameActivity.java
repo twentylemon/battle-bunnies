@@ -21,10 +21,10 @@ public class GameActivity extends Activity {
 	
 	private Thread gameThread;
 	private GameMaster gameMaster = null;
-	private Thread playerThread;
-	private Player player;
-	private Thread aiThread;
-	private AIPlayer aiPlayer;
+	private Thread playerThread = null;
+	private Player player = null;
+	private Thread aiThread = null;
+	private AIPlayer aiPlayer = null;
 
 	private boolean isMultiplayer;
 	private boolean isServer;
@@ -63,6 +63,7 @@ public class GameActivity extends Activity {
 		
 		gameView = (GameView) findViewById(R.id.game);
 		surfaceHolder = gameView.getHolder();
+		initSinglePlayer();
 	}
 
 	@Override
@@ -70,6 +71,27 @@ public class GameActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.game, menu);
 		return true;
+	}
+	
+	
+	/**
+	 * Closes the game activity. Stop the threads. Just interrupt them as they are discarded
+	 * immediately after this anyways.
+	 */
+	@Override
+	public void onBackPressed(){
+		if (playerThread != null){
+			player.stop();
+			playerThread.interrupt();
+		}
+		if (aiThread != null){
+			aiPlayer.stop();
+			aiThread.interrupt();
+		}
+		if (gameThread != null){
+			gameThread.interrupt();
+		}
+		super.onBackPressed();
 	}
 	
 	
@@ -95,16 +117,24 @@ public class GameActivity extends Activity {
 		
 		player = new Player(0, playerNames[0], clients[0], surfaceHolder);
 		playerThread = new Thread(player);
+		playerThread.start();
 
 		aiPlayer = new AIPlayer(1, playerNames[1], clients[1]);
 		aiThread = new Thread(aiPlayer);
+		aiThread.start();
 
 		StartInfo startInfo = new StartInfo(playerNames, masters, generator);
+		/*
+		 * requires API 13
+		android.graphics.Point size = new android.graphics.Point();
+		getWindowManager().getDefaultDisplay().getSize(size);
+		GameMaster.setGameWidth(size.x);
+		GameMaster.setGameHeight(size.y);
+		*/
+		GameMaster.setGameWidth(getWindowManager().getDefaultDisplay().getWidth());
+		GameMaster.setGameHeight(getWindowManager().getDefaultDisplay().getHeight());
 		gameMaster = new GameMaster(startInfo);
 		gameThread = new Thread(gameMaster);
-
-		playerThread.start();
-		aiThread.start();
 		gameThread.start();
 	}
 }

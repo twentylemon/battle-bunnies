@@ -171,7 +171,7 @@ public class RandomGenerator implements TerrainGenerator, Serializable {
         for (int i = 0; i < c.length; i++){
             lower = false;
             int grassDepth = 30;
-            for(int j = c[i].length-1; j >= 0; j--){
+            for(int j = 0; j < c[i].length; j++){
                 if (c[i][j] != 0){
                     lower = true;
                     c[i][j] = 1;

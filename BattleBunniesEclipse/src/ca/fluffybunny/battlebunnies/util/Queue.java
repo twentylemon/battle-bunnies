@@ -1,5 +1,6 @@
 package ca.fluffybunny.battlebunnies.util;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
@@ -9,7 +10,7 @@ import java.util.LinkedList;
  * @version 1.0
  * @since 2013-11-23
  */
-public class Queue<T> {
+public class Queue<T extends Serializable> {
 
     private LinkedList<T> data;
 

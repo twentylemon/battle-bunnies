@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context=".GameActivity" >
     
-    <GameView
+    <ca.fluffybunny.battlebunnies.game.GameView
         android:id="@+id/game"
    	 	android:layout_width="match_parent"
     	android:layout_height="match_parent" />

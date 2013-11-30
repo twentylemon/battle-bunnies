@@ -17,6 +17,7 @@ import ca.fluffybunny.battlebunnies.R;
 import ca.fluffybunny.battlebunnies.util.ConnectionHandler;
 
 public class MainActivity extends Activity {
+	public static final String TAG = "fluffybunny";
 
 	private static final int REQUEST_CONNECT_DEVICE = 1;
 	private BluetoothAdapter mBluetoothAdapter = null;
@@ -64,6 +65,10 @@ public class MainActivity extends Activity {
      */
     public void onQuickPlayClicked(View view){
         //start the weapon select activity
+    	Intent intent = new Intent(this, GameActivity.class);
+    	String[] names = { "Fluffy", "Bunny" };
+    	intent.putExtra(GameActivity.PLAYER_NAMES, names);
+    	startActivity(intent);
     }
 
 

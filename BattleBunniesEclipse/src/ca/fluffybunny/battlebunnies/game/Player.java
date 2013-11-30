@@ -1,6 +1,6 @@
 package ca.fluffybunny.battlebunnies.game;
 
-import android.graphics.Canvas;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 /**
@@ -15,6 +15,7 @@ public class Player implements Runnable {
     protected Port port;
     protected GameInfo game;
     protected SurfaceHolder surfaceHolder;
+    protected GameCanvas gameCanvas;
 
     /**
      * Initializes this player with the name and port.
@@ -31,6 +32,15 @@ public class Player implements Runnable {
         surfaceHolder = holder;
     }
 
+    
+    /**
+     * Stops this runnable.
+     */
+    public void stop(){
+    	game.forceGameEnd();
+    	gameCanvas.stop();
+    }
+
 
     /**
      * Starts executing the active part of the class' code. This method is
@@ -41,8 +51,8 @@ public class Player implements Runnable {
     public void run(){
         game = (GameInfo) port.receive();
         
-        /*GameCanvas gameCanvas = new GameCanvas(game, canvas);
-        gameCanvas.start();*/
+        gameCanvas = new GameCanvas(game, surfaceHolder);
+        gameCanvas.start();
 
         while (!game.isGameOver()){
         	/**
@@ -62,6 +72,6 @@ public class Player implements Runnable {
         	 */
         }
         
-        //gameCanvas.stop();
+        stop();
     }
 }

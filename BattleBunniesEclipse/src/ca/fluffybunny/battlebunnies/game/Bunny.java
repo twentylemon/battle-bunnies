@@ -3,8 +3,12 @@ package ca.fluffybunny.battlebunnies.game;
 import java.io.Serializable;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
+import ca.fluffybunny.battebunnies.activities.MainActivity;
 import ca.fluffybunny.battlebunnies.util.Point;
 
 /**
@@ -18,6 +22,7 @@ public class Bunny extends Drawable implements Serializable {
 
 	private static final long serialVersionUID = 1L;
     private Point position;     //where we are located on the map
+    private float radius;		//how big the bunny is
     private int movesRemaining; //how many times we can move
     private int score;          //how many points we have
     private String name;    	//our display name
@@ -25,7 +30,7 @@ public class Bunny extends Drawable implements Serializable {
 
     public final static int DEFAULT_NUM_MOVES = 4;
     public final static int MOVE_SPEED = 50;
-    public final static int RADIUS = 10;
+    public final static int RADIUS = 30;
 
     /**
      * Initializes the bunny.
@@ -41,6 +46,7 @@ public class Bunny extends Drawable implements Serializable {
         this.score = score;
         this.movesRemaining = moves;
         this.position = loc;
+        this.radius = radius;
         extents = new Point[2];
         extents[0] = position.add(new Point(-radius, -radius));
         extents[1] = position.add(new Point(radius, radius));
@@ -110,29 +116,28 @@ public class Bunny extends Drawable implements Serializable {
 
 
 	@Override
-	public void draw(Canvas canvas) {
-		// TODO Auto-generated method stub
-		
+	public void draw(Canvas canvas){
+		Paint paint = new Paint();
+		paint.setColor(Color.RED);
+		canvas.drawCircle(position.x, position.y, radius, paint);
 	}
 
 
 	@Override
-	public int getOpacity() {
+	public int getOpacity(){
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 
 	@Override
-	public void setAlpha(int alpha) {
+	public void setAlpha(int alpha){
 		// TODO Auto-generated method stub
-		
 	}
 
 
 	@Override
-	public void setColorFilter(ColorFilter cf) {
+	public void setColorFilter(ColorFilter cf){
 		// TODO Auto-generated method stub
-		
 	}
 }

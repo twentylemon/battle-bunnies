@@ -1,5 +1,7 @@
 package ca.fluffybunny.battlebunnies.game;
 
+import android.util.Log;
+
 /**
  * The game server. All messages get sent to the GameMaster, then the GameMaster sends those
  * messages out to all other players. Then each player executes the action on their own device.
@@ -9,10 +11,11 @@ package ca.fluffybunny.battlebunnies.game;
  * @since 2013-11-24
  */
 public class GameMaster implements Runnable {
+	private final String TAG = "Game";
 	
 	private StartInfo info;
-	public final static int GAME_WIDTH = 500;
-	public final static int GAME_HEIGHT = 250;
+	private static int GAME_WIDTH = 500;
+	private static int GAME_HEIGHT = 250;
 	
 	/**
 	 * Default constructor.
@@ -23,6 +26,15 @@ public class GameMaster implements Runnable {
 		this.info = info;
 	}
 
+	
+	/**
+	 * Getters/Setters.
+	 */
+	public static void setGameWidth(int width){ GAME_WIDTH = width; }
+	public static void setGameHeight(int height){ GAME_HEIGHT = height; }
+	public static int getGameWidth(){ return GAME_WIDTH; }
+	public static int getGameHeight(){ return GAME_HEIGHT; }
+	
 	
 	/**
      * Starts executing the active part of the class' code. This method is
