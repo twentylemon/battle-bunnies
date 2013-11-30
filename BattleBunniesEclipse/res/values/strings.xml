@@ -11,5 +11,7 @@
     <string name="button_scan">Scan</string>
     <string name="scanning">Scanning</string>
     <string name="connect">Connect</string>
+    <string name="title_activity_game">GameActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

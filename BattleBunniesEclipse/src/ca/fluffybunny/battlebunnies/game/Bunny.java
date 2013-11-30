@@ -2,6 +2,9 @@ package ca.fluffybunny.battlebunnies.game;
 
 import java.io.Serializable;
 
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 import ca.fluffybunny.battlebunnies.util.Point;
 
 /**
@@ -11,7 +14,7 @@ import ca.fluffybunny.battlebunnies.util.Point;
  * @version 1.0
  * @since 2013-11-23
  */
-public class Bunny implements Serializable {
+public class Bunny extends Drawable implements Serializable {
 
 	private static final long serialVersionUID = 1L;
     private Point position;     //where we are located on the map
@@ -106,9 +109,30 @@ public class Bunny implements Serializable {
     }
 
 
-    /**
-     * Draws the bunny. To be called in OpenGL callbacks.
-     */
-    public void onDraw(){
-    }
+	@Override
+	public void draw(Canvas canvas) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public int getOpacity() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void setAlpha(int alpha) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void setColorFilter(ColorFilter cf) {
+		// TODO Auto-generated method stub
+		
+	}
 }

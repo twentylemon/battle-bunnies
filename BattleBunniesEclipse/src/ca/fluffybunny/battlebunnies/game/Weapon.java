@@ -2,6 +2,7 @@ package ca.fluffybunny.battlebunnies.game;
 
 import java.io.Serializable;
 
+import android.graphics.drawable.Drawable;
 import ca.fluffybunny.battlebunnies.util.Point;
 
 /**
@@ -11,7 +12,7 @@ import ca.fluffybunny.battlebunnies.util.Point;
  * @version 1.0
  * @since 2013-11-23
  */
-public abstract class Weapon implements Serializable, Cloneable {
+public abstract class Weapon extends Drawable implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
     protected double mass;              //how heavy the weapon is, decreased initial velocity
@@ -67,12 +68,6 @@ public abstract class Weapon implements Serializable, Cloneable {
         setFireSpeed(speed);
         setFireAngle(angle);
     }
-
-
-    /**
-     * To be called in OpenGL callbacks. Draws the weapon in flight.
-     */
-    public abstract void onDraw();
 
 
     /**
