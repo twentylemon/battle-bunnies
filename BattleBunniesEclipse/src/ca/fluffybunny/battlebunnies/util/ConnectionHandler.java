@@ -6,10 +6,6 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 
-
-
-
-
 import ca.fluffybunny.battebunnies.activities.MultiplayerLaunchActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -36,7 +32,7 @@ public class ConnectionHandler {
  //   private final Handler mHandler;
     private AcceptThread mAcceptThread;
     private ConnectThread mConnectThread;
-    private int mState;
+    public int mState;
     
     public static final int STATE_NONE = 0;     
     public static final int STATE_LISTEN = 1;     
@@ -55,7 +51,24 @@ public class ConnectionHandler {
     	return mySock;
     }
     
+    public synchronized void start() {
+        if (D) Log.d(TAG, "start");
+
+        // Cancel any thread attempting to make a connection
+        if (mConnectThread != null) {mConnectThread.cancel(); mConnectThread = null;}
+
+
+        // Start the thread to listen on a BluetoothServerSocket
+        if (mAcceptThread == null) {
+            mAcceptThread = new AcceptThread();
+            mAcceptThread.start();
+        }
+        mState=STATE_LISTEN;
+    }
+    
     public synchronized void connect(BluetoothDevice device) {
+    	
+    	if (D) Log.d(TAG, "connect to: " + device);
 
         if (mState == STATE_CONNECTING) {
             if (mConnectThread != null) {
@@ -63,12 +76,6 @@ public class ConnectionHandler {
             	mConnectThread = null;
             	}
         }
-
-        // Cancel any thread currently running a connection
-      //  if (mConnectedThread != null) {
-      //  	mConnectedThread.cancel(); 
-      //  	mConnectedThread = null;
-      //  }
 
         // Start the thread to connect with the given device
         mConnectThread = new ConnectThread(device);

@@ -52,7 +52,10 @@ public class MultiplayerLaunchActivity extends Activity {
 					Toast.makeText(MultiplayerLaunchActivity.this, "Make Discoverable to Host", Toast.LENGTH_LONG).show();
 		        	return;
 		        }
-				else return; //set up game, start as server
+				else if (conHandle.mState == ConnectionHandler.STATE_NONE) {
+		              // Start the Bluetooth chat services
+					conHandle.start();
+		            }; //set up game, start as server
 			} 
 		});
 		
@@ -100,6 +103,10 @@ public class MultiplayerLaunchActivity extends Activity {
                 // Attempt to connect to the device
                 conHandle.connect(device);
                 
+                if(conHandle.getBluetoothSocket()!=null){
+                	Toast.makeText(this, "Connecting to "+device.getName(), Toast.LENGTH_LONG).show();                	
+                	return;
+                }
                 
                 if(conHandle.getBluetoothSocket()!=null){
                 	Toast.makeText(this, "Connection Established ", Toast.LENGTH_LONG).show();                	
