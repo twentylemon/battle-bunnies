@@ -8,6 +8,9 @@ import java.util.UUID;
 
 
 
+
+
+import ca.fluffybunny.battebunnies.activities.MultiplayerLaunchActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -17,6 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 
 
@@ -39,10 +43,12 @@ public class ConnectionHandler {
     public static final int STATE_CONNECTING = 2; 
     public static final int STATE_CONNECTED = 3;  
     private BluetoothSocket mySock;
+    private Context cont;
 
     public ConnectionHandler(Context context) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
+        cont=context;
       //  mHandler = handler;
     }
     public BluetoothSocket getBluetoothSocket(){
@@ -166,6 +172,9 @@ public class ConnectionHandler {
 	            }
 	            mmSocket = tmp;
 	            mySock=tmp;
+	            if(mySock != null){
+	            Toast.makeText(cont, "Conection Established", Toast.LENGTH_LONG).show();
+	            }
 	        }
 
 	        public void run() {
