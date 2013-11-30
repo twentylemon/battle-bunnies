@@ -2,6 +2,7 @@ package ca.fluffybunny.battlebunnies.game;
 
 import java.io.Serializable;
 
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import ca.fluffybunny.battlebunnies.util.Point;
 
@@ -21,8 +22,17 @@ public abstract class Weapon extends Drawable implements Serializable, Cloneable
     protected Point fireLocation;       //where the shot was fired from
     protected double fireSpeed;         //initial fire speed, for use in position finding later
     protected double fireAngle;         //initial fire angle, for use in position finding later
+    protected String name;				//name as it appears in the list of weapons
 
     public final static double GRAVITY = -9.8;
+
+    /**
+     * Default constructor. Assigns the weapon's name.
+     * @param name the name of this weapon as it will appear in the list of weapons
+     */
+    public Weapon(String name){
+    	this.name = name;
+    }
 
     /**
      * Getters/Setters.
@@ -39,6 +49,7 @@ public abstract class Weapon extends Drawable implements Serializable, Cloneable
     public Point getFireLocation() { return fireLocation; }
     public double getFireSpeed(){ return fireSpeed; }
     public double getFireAngle(){ return fireAngle; }
+    public String getName(){ return name; }
 
 
     /**
@@ -74,6 +85,9 @@ public abstract class Weapon extends Drawable implements Serializable, Cloneable
      * To be called in OpenGL callbacks. Draws the explosion of the weapon.
      */
     public abstract void onExplode();
+
+    
+    public abstract void draw(Canvas canvas, double time);
 
 
     /**

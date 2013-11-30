@@ -2,18 +2,22 @@ package ca.fluffybunny.battebunnies.activities;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.SurfaceHolder;
+<<<<<<< HEAD
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+=======
+import android.view.SurfaceView;
+>>>>>>> 2a427bc8ec0683f1eeb0daca8a2be53a83229062
 import ca.fluffybunny.battlebunnies.R;
 import ca.fluffybunny.battlebunnies.game.AIPlayer;
 import ca.fluffybunny.battlebunnies.game.Channel;
 import ca.fluffybunny.battlebunnies.game.GameMaster;
-import ca.fluffybunny.battlebunnies.game.GameView;
 import ca.fluffybunny.battlebunnies.game.Player;
 import ca.fluffybunny.battlebunnies.game.Port;
 import ca.fluffybunny.battlebunnies.game.RandomGenerator;
@@ -32,11 +36,12 @@ public class GameActivity extends Activity {
 	private boolean isMultiplayer;
 	private boolean isServer;
 	private BluetoothDevice bluetoothDevice;
+	private BluetoothSocket bluetoothSocket;
 	private int aiDifficulty;
 	private int terrainType;
 	private String[] playerNames;
 	
-	private GameView gameView;
+	private SurfaceView gameView;
 	private SurfaceHolder surfaceHolder;
 	private SeekBar power;
 	private SeekBar angle;
@@ -49,6 +54,7 @@ public class GameActivity extends Activity {
 	public static final String IS_MULTIPLAYER = "isMultiplayer";
 	public static final String IS_SERVER = "isServer";
 	public static final String BLUETOOTH_DEVICE = "bluetoothDevice";
+	public static final String BLUETOOTH_SOCKET = "bluetoothSocket";
 	public static final String AI_DIFFICULTY = "aiDifficulty";
 	public static final String PLAYER_NAMES = "playerNames";
 	public static final String TERRAIN_TYPE = "terrainType";
@@ -66,13 +72,20 @@ public class GameActivity extends Activity {
 		isMultiplayer = intent.getBooleanExtra(IS_MULTIPLAYER, false);
 		isServer = intent.getBooleanExtra(IS_SERVER, false);
 		bluetoothDevice = intent.getParcelableExtra(BLUETOOTH_DEVICE);
+		bluetoothSocket = intent.getParcelableExtra(BLUETOOTH_SOCKET);
 		aiDifficulty = intent.getIntExtra(AI_DIFFICULTY, 0);
 		playerNames = intent.getStringArrayExtra(PLAYER_NAMES);
 		terrainType = intent.getIntExtra(TERRAIN_TYPE, TERRAIN_TYPE_RANDOM);
 		
-		gameView = (GameView) findViewById(R.id.game);
+		gameView = (SurfaceView) findViewById(R.id.game);
 		surfaceHolder = gameView.getHolder();
-		initSinglePlayer();
+		
+		if (isMultiplayer){
+			initMultiplayer();
+		}
+		else {
+			initSinglePlayer();
+		}
 	}
 	public void initControls(){
 		
@@ -118,7 +131,13 @@ public class GameActivity extends Activity {
 	
 	
 	/**
-	 * Initializes a single player game.
+	 * Initializes a single player game. Basically! We run three (four [well, five]) threads.
+	 * Most of them are blocking so it's ok!
+	 * GameMaster - needs master ports from a Channel
+	 * Player - needs corresponding client ports from a Channel
+	 * AIPlayer - needs corresponding client ports from a Channel
+	 * Player has a sub-thread that updates the canvas
+	 * In addition, the UI thread is always running, so five. Five threads.
 	 */
 	public void initSinglePlayer(){
 		TerrainGenerator generator = null;
@@ -158,5 +177,12 @@ public class GameActivity extends Activity {
 		gameMaster = new GameMaster(startInfo);
 		gameThread = new Thread(gameMaster);
 		gameThread.start();
+	}
+
+	
+	/**
+	 * Initializes a multiplayer game.
+	 */
+	public void initMultiplayer(){
 	}
 }
