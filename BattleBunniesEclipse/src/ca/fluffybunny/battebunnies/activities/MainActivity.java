@@ -34,6 +34,8 @@ public class MainActivity extends Activity {
             return;
         }
         
+        conHandle= new ConnectionHandler(this);
+        
     }
 
 
@@ -125,7 +127,7 @@ public class MainActivity extends Activity {
                 // Attempt to connect to the device
                 conHandle.connect(device);
                 
-                conHandle= new ConnectionHandler(this);
+                
                 if(conHandle.getBluetoothSocket()!=null){
                 	Toast.makeText(this, "Holy Jebus ", Toast.LENGTH_LONG).show();
                 	finish();
