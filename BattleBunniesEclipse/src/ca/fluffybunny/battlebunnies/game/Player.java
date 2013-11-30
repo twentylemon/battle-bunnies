@@ -1,5 +1,8 @@
 package ca.fluffybunny.battlebunnies.game;
 
+import android.graphics.Canvas;
+import android.view.SurfaceHolder;
+
 /**
  * This class handles the message passing for one player.
  * 
@@ -11,6 +14,8 @@ public class Player implements Runnable {
     protected String name;
     protected Port port;
     protected GameInfo game;
+    protected Canvas canvas;
+    protected SurfaceHolder surfaceHolder;
 
     /**
      * Initializes this player with the name and port.
@@ -18,11 +23,13 @@ public class Player implements Runnable {
      * @param id the id of this player
      * @param name the name of this player
      * @param port the communication port for this player
+     * @param canvas where to redraw the game each time
      */
-    public Player(int id, String name, Port port){
+    public Player(int id, String name, Port port, Canvas canvas){
         this.playerID = id;
         this.name = name;
         this.port = port;
+        this.canvas = canvas;
     }
 
 
@@ -34,6 +41,9 @@ public class Player implements Runnable {
     @Override
     public void run(){
         game = (GameInfo) port.receive();
+        
+        GameCanvas gameCanvas = new GameCanvas(game, canvas);
+        gameCanvas.start();
 
         while (!game.isGameOver()){
         	/**
@@ -52,5 +62,7 @@ public class Player implements Runnable {
         	 * wait for playerID = 1 to take their turn
         	 */
         }
+        
+        gameCanvas.stop();
     }
 }

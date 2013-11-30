@@ -1,5 +1,6 @@
 package ca.fluffybunny.battlebunnies.game;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 public class GameCanvas implements Runnable {
@@ -58,6 +59,15 @@ public class GameCanvas implements Runnable {
 			/**
 			 * update the canvas using the GameInfo
 			 */
+			Terrain terrain = game.getTerrain();
+			int[] data = new int[terrain.getWidth() * terrain.getHeight()];
+			for (int x = 0; x < terrain.getWidth(); x++){
+				for (int y = 0; y < terrain.getHeight(); y++){
+					data[x + y * terrain.getWidth()] = terrain.getPoint(x, y);
+				}
+			}
+			Bitmap map = Bitmap.createBitmap(data, terrain.getWidth(), terrain.getHeight(), Bitmap.Config.ARGB_8888);
+			canvas.drawBitmap(map, 0, 0, null);
 		}
 	}
 }
