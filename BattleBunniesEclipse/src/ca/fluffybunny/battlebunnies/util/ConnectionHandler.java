@@ -21,7 +21,7 @@ import android.util.Log;
 
 
 public class ConnectionHandler {
-	private static final UUID MY_UUID = UUID.fromString("IReallyHopeThisWorks");
+	private static final UUID MY_UUID = new UUID(15644184L,15649461L);
 	private static final String TAG = "ConnectionHandler";
     private static final boolean D = true;
     
