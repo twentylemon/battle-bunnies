@@ -66,7 +66,7 @@ public class Player implements Runnable {
         	 * on fire
         	 * 		send our fire action to the GameMaster
         	 * 		wait for our message to return
-        	 * 		execute the fire action on our device
+        	 * 		execute the fire action on our device (call gameCanvas.setFireTime() & setFiring())
         	 * 		our turn ends
         	 * wait for playerID = 1 to take their turn
         	 */

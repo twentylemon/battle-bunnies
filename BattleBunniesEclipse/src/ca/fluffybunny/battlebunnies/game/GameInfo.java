@@ -18,8 +18,9 @@ public class GameInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
     private Terrain terrain;
     private Bunny[] bunnies;
-    private List<Weapon> weaponList;
-    private int numShots;   //number of shots so far (turns = numShots / 2)
+    private int weaponID;				//weapon being fired
+    private List<Weapon> weaponList;	//list of all selectable weapons
+    private int numShots;   			//number of shots so far (turns = numShots / 2)
     private final static int MAX_TURNS = 10;
 
     /**
@@ -30,6 +31,7 @@ public class GameInfo implements Serializable {
      */
     public GameInfo(String[] names, Terrain terrain){
         numShots = 0;
+        weaponID = -1;
         this.terrain = terrain;
         Point[] startLocations = new Point[names.length];
         // TODO dymanicness this stuff?
@@ -43,7 +45,7 @@ public class GameInfo implements Serializable {
 
         //create the weapon list
         weaponList = new ArrayList<Weapon>();
-     //   weaponList.add()
+        weaponList.add(new RockWeapon());
     }
 
 
@@ -68,6 +70,7 @@ public class GameInfo implements Serializable {
     public Bunny getBunny(int id){ return bunnies[id]; }
     public List<Weapon> getWeaponList(){ return weaponList; }
     public Weapon getWeapon(int id){ return weaponList.get(id); }
+    public Weapon getFiredWeapon(){ return weaponList.get(weaponID); }
     public int getNumWeapons(){ return weaponList.size(); }
     public boolean isGameOver(){ return getTurnNumber() >= MAX_TURNS; }
     public int getNumShots(){ return numShots; }
@@ -83,6 +86,7 @@ public class GameInfo implements Serializable {
      */
     public void takeShot(int playerID, Weapon weapon){
     	numShots++;
+    	weaponID = weaponList.indexOf(weapon);
     	// TODO do the stuff
     }
 }
