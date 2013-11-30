@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.SurfaceHolder;
+import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import ca.fluffybunny.battlebunnies.R;
 import ca.fluffybunny.battlebunnies.game.AIPlayer;
 import ca.fluffybunny.battlebunnies.game.Channel;
@@ -35,6 +38,12 @@ public class GameActivity extends Activity {
 	
 	private GameView gameView;
 	private SurfaceHolder surfaceHolder;
+	private SeekBar power;
+	private SeekBar angle;
+	private Button fire;
+	
+	private int shotPower;
+	private int shotAngle;
 	
 	/** Intent keys */
 	public static final String IS_MULTIPLAYER = "isMultiplayer";
@@ -64,6 +73,19 @@ public class GameActivity extends Activity {
 		gameView = (GameView) findViewById(R.id.game);
 		surfaceHolder = gameView.getHolder();
 		initSinglePlayer();
+	}
+	public void initControls(){
+		
+		power = (SeekBar) findViewById(R.id.seekBar1);		
+		power.setOnSeekBarChangeListener(new OnSeekBarChangeListener() { 
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                shotPower = progress;
+            } 
+            public void onStartTrackingTouch(SeekBar seekBar) {} 
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+        
+       
 	}
 
 	@Override
