@@ -33,12 +33,7 @@ public class MainActivity extends Activity {
             finish();
             return;
         }
-        conHandle= new ConnectionHandler(this);
-        if(conHandle.getBluetoothSocket()!=null){
-        	Toast.makeText(this, "Holy Jebus ", Toast.LENGTH_LONG).show();
-        	finish();
-        	return;
-        }
+        
     }
 
 
@@ -58,6 +53,7 @@ public class MainActivity extends Activity {
             // Launch the DeviceListActivity to see devices and do scan        	
             Intent serverIntent = new Intent(this, DeviceListActivity.class);
             startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+            
             return true;
         }
         return false;
@@ -128,6 +124,13 @@ public class MainActivity extends Activity {
                 BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
                 // Attempt to connect to the device
                 conHandle.connect(device);
+                
+                conHandle= new ConnectionHandler(this);
+                if(conHandle.getBluetoothSocket()!=null){
+                	Toast.makeText(this, "Holy Jebus ", Toast.LENGTH_LONG).show();
+                	finish();
+                	return;
+                }
             }
             break;
         }
