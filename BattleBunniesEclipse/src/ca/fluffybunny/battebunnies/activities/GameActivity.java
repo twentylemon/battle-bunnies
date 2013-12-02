@@ -7,13 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.SurfaceHolder;
-<<<<<<< HEAD
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-=======
 import android.view.SurfaceView;
->>>>>>> 2a427bc8ec0683f1eeb0daca8a2be53a83229062
 import ca.fluffybunny.battlebunnies.R;
 import ca.fluffybunny.battlebunnies.game.AIPlayer;
 import ca.fluffybunny.battlebunnies.game.Channel;
