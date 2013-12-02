@@ -1,5 +1,7 @@
 package ca.fluffybunny.battlebunnies.game;
 
+import java.io.IOException;
+
 import android.util.Log;
 
 /**
@@ -79,6 +81,12 @@ public class GameMaster implements Runnable {
 					action.execute(game);	//execute the action on our game
 				}
 			}
+		}
+
+		for (int i = 0; i < info.getNumberOfPlayers(); i++){
+			try {
+				info.getPort(i).close();
+			} catch (IOException e){}
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package ca.fluffybunny.battlebunnies.game;
 
-import android.util.Log;
+import java.io.IOException;
+
 import android.view.SurfaceHolder;
 
 /**
@@ -39,6 +40,9 @@ public class Player implements Runnable {
     public void stop(){
     	game.forceGameEnd();
     	gameCanvas.stop();
+    	try {
+			port.close();
+		} catch (IOException e){}
     }
 
 
