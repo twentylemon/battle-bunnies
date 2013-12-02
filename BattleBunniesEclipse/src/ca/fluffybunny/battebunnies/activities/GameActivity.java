@@ -1,5 +1,7 @@
 package ca.fluffybunny.battebunnies.activities;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -7,19 +9,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.SurfaceHolder;
+<<<<<<< HEAD
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.view.SurfaceView;
+=======
+import android.view.SurfaceView;
+import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
+>>>>>>> 2b7df67eb9912652953fb75f5a69db28326646dc
 import ca.fluffybunny.battlebunnies.R;
 import ca.fluffybunny.battlebunnies.game.AIPlayer;
 import ca.fluffybunny.battlebunnies.game.Channel;
+import ca.fluffybunny.battlebunnies.game.GameInfo;
 import ca.fluffybunny.battlebunnies.game.GameMaster;
 import ca.fluffybunny.battlebunnies.game.Player;
 import ca.fluffybunny.battlebunnies.game.Port;
 import ca.fluffybunny.battlebunnies.game.RandomGenerator;
 import ca.fluffybunny.battlebunnies.game.StartInfo;
 import ca.fluffybunny.battlebunnies.game.TerrainGenerator;
+import ca.fluffybunny.battlebunnies.game.Weapon;
 
 public class GameActivity extends Activity {
 	
@@ -37,12 +49,16 @@ public class GameActivity extends Activity {
 	private int aiDifficulty;
 	private int terrainType;
 	private String[] playerNames;
+	private String[] temp = {"",""};
+	private List<Weapon> weaponList = new GameInfo(temp, 100, 100, new RandomGenerator()).getWeaponList();
 	
 	private SurfaceView gameView;
 	private SurfaceHolder surfaceHolder;
 	private SeekBar power;
 	private SeekBar angle;
 	private Button fire;
+	private TextView powtext;
+	private TextView angletext;
 	
 	private int shotPower;
 	private int shotAngle;
@@ -63,7 +79,7 @@ public class GameActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_game);
+		setContentView(R.layout.game_screen);
 		
 		Intent intent = getIntent();
 		isMultiplayer = intent.getBooleanExtra(IS_MULTIPLAYER, false);
@@ -77,6 +93,7 @@ public class GameActivity extends Activity {
 		gameView = (SurfaceView) findViewById(R.id.game);
 		surfaceHolder = gameView.getHolder();
 		
+		initControls();
 		if (isMultiplayer){
 			initMultiplayer();
 		}
@@ -86,6 +103,8 @@ public class GameActivity extends Activity {
 	}
 	public void initControls(){
 		
+		
+		
 		power = (SeekBar) findViewById(R.id.seekBar1);		
 		power.setOnSeekBarChangeListener(new OnSeekBarChangeListener() { 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
@@ -93,8 +112,16 @@ public class GameActivity extends Activity {
             } 
             public void onStartTrackingTouch(SeekBar seekBar) {} 
             public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
-        
+        });   
+		angle = (SeekBar) findViewById(R.id.seekBar2);		
+		angle.setOnSeekBarChangeListener(new OnSeekBarChangeListener() { 
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                shotAngle = progress;
+            } 
+            public void onStartTrackingTouch(SeekBar seekBar) {} 
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        }); 
+		
        
 	}
 
