@@ -9,18 +9,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.SurfaceHolder;
-<<<<<<< HEAD
-import android.widget.Button;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.view.SurfaceView;
-=======
 import android.view.SurfaceView;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
->>>>>>> 2b7df67eb9912652953fb75f5a69db28326646dc
 import ca.fluffybunny.battlebunnies.R;
 import ca.fluffybunny.battlebunnies.game.AIPlayer;
 import ca.fluffybunny.battlebunnies.game.Channel;
