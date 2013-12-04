@@ -56,7 +56,7 @@ public class ConnectionHandler {
      * 
      * @return BluetoothSocket
      */
-    public BluetoothSocket getBluetoothSocket(){
+    public synchronized BluetoothSocket getBluetoothSocket(){
     	return mySock;
     }
     

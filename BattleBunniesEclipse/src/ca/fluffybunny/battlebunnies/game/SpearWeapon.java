@@ -1,32 +1,31 @@
 package ca.fluffybunny.battlebunnies.game;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import ca.fluffybunny.battlebunnies.R;
 import ca.fluffybunny.battlebunnies.util.Point;
 
-public class GrenadeWeapon extends Weapon {
-
+public class SpearWeapon extends Weapon {
 	private static final long serialVersionUID = 1L;
 
-	private float RADIUS = 5;
-	private float BOOMRADIUS = 25;
-	private Paint PAINT = new Paint();
-	private Paint BOOMPAINT = new Paint();
+	private final float RADIUS = 10;
+	private final Paint PAINT = new Paint();
+	Bitmap bitmap ;
 
-	public GrenadeWeapon(){
-		name = "Toss a 'Nade";
-		explosionRadius=25;
-		PAINT.setColor(Color.parseColor("#EEC900"));
-		BOOMPAINT.setColor(Color.parseColor("#CD0000"));		
+	public SpearWeapon(){
+		name ="Chuck a Spear";
+		PAINT.setColor(Color.parseColor("#C0C0C0"));
+		
+		//bitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.spear);
 	}
 
 
 	@Override
 	public void explode(Canvas canvas, Point where){
-		RADIUS= BOOMRADIUS;
-		PAINT=BOOMPAINT;
 		draw(canvas, where);
 	}
 
@@ -41,30 +40,31 @@ public class GrenadeWeapon extends Weapon {
 	public void draw(Canvas canvas){
 		draw(canvas, fireLocation);
 	}
-
 	
-	/**
-	 * Draws this weapon on the canvas provided.
-	 * 
-	 * @param canvas where to draw
-	 * @param where where the weapon currently is { @see getPosition() }
-	 */
+
 	@Override
-	public void draw(Canvas canvas, Point where){
+	public void draw(Canvas canvas, Point where) {
 		canvas.drawCircle(where.x, where.y, RADIUS, PAINT);
+
 	}
 
+
 	@Override
-	public int getOpacity(){
+	public int getOpacity() {
+		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public void setAlpha(int alpha){
+	public void setAlpha(int alpha) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
-	public void setColorFilter(ColorFilter cf){
+	public void setColorFilter(ColorFilter cf) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

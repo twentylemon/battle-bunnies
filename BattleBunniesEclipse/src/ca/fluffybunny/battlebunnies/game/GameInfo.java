@@ -47,6 +47,9 @@ public class GameInfo implements Serializable {
         //create the weapon list
         weaponList = new ArrayList<Weapon>();
         weaponList.add(new RockWeapon());
+        weaponList.add(new SpearWeapon());
+        weaponList.add(new GrenadeWeapon());
+        
     }
 
 
