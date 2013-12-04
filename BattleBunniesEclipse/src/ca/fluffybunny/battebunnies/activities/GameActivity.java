@@ -67,6 +67,8 @@ public class GameActivity extends Activity {
 	private int shotPower;
 	private int shotAngle;
 	
+	public ConnectionHandler conHandle;
+	
 	/** Intent keys */
 	public static final String IS_MULTIPLAYER = "isMultiplayer";
 	public static final String IS_SERVER = "isServer";
@@ -85,6 +87,7 @@ public class GameActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_screen);
+		conHandle= new ConnectionHandler(this);
 		
 		Intent intent = getIntent();
 		isMultiplayer = intent.getBooleanExtra(IS_MULTIPLAYER, false);
@@ -98,7 +101,6 @@ public class GameActivity extends Activity {
 		
 		gameView = (SurfaceView) findViewById(R.id.game);
 		surfaceHolder = gameView.getHolder();
-		
 		initControls();
 		if (isMultiplayer){
 			initMultiplayer();
@@ -106,6 +108,8 @@ public class GameActivity extends Activity {
 		else {
 			initSinglePlayer();
 		}
+		
+		
 	}
 	public void initControls(){
 		
@@ -241,5 +245,43 @@ public class GameActivity extends Activity {
 	 * Initializes a multiplayer game.
 	 */
 	public void initMultiplayer(){
+		if(!isServer){
+			conHandle.start();
+			bluetoothSocket= conHandle.getBluetoothSocket();
+		}
+		
+		else{
+			conHandle.connect(bluetoothDevice);
+            
+            if(conHandle.getBluetoothSocket()!=null){
+            	Toast.makeText(this, "Connecting to "+bluetoothDevice.getName(), Toast.LENGTH_LONG).show();                	
+            	return;
+            }
+            
+            if(conHandle.getBluetoothSocket()!=null){
+            	Toast.makeText(this, "Connection Established ", Toast.LENGTH_LONG).show();                	
+            	return;
+            }
+            
+            bluetoothSocket= conHandle.getBluetoothSocket();
+            
+            TerrainGenerator generator = null;
+    		switch (terrainType){
+    		case TERRAIN_TYPE_RANDOM: default:
+    			generator = new RandomGenerator();
+    			break;
+    		}
+    		
+    		Channel[] channels = new Channel[NUM_PLAYERS];
+    		Port[] clients = new Port[NUM_PLAYERS];
+    		Port[] masters = new Port[NUM_PLAYERS];
+    		for (int i = 0; i < NUM_PLAYERS; i++){
+    			channels[i] = new Channel();
+    			clients[i] = channels[i].asClientPort();
+    			masters[i] = channels[i].asMasterPort();
+    		}
+    		
+			
+		}
 	}
 }
