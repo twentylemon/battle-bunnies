@@ -26,6 +26,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="26dp"
         android:layout_toRightOf="@+id/seekBar1"
+        android:max="180"
         android:layout_weight="0.50" />
 
     <Button
