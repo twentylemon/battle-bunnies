@@ -19,9 +19,9 @@ public class Terrain implements Serializable {
 	private static final long serialVersionUID = 1L;
     private int[][] map;    //the terrain map
 
-    public final static int AIR = Color.BLACK;
-    public final static int GRASS = Color.GREEN;
-    public final static int ROCK = Color.CYAN;
+    public final static int AIR = Color.parseColor("#E0FEFF");
+    public final static int GRASS = Color.parseColor("#6E8B3D");
+    public final static int ROCK = Color.parseColor("#8B6508");
 
     /**
      * Initializes the terrain. Nothing destroyed yet.
@@ -57,8 +57,8 @@ public class Terrain implements Serializable {
      * @return the highest Point on the x column
      */
     public Point getHighestPointAt(int x){
-        for (int j = map[x].length-1; j >= 0; j--){
-            if (map[x][j] == AIR){
+        for (int j = 0; j < map[x].length; j++){
+            if (map[x][j] != AIR){
                 return new Point(x, j);
             }
         }
