@@ -39,7 +39,7 @@ public class Bunny extends Drawable implements Serializable {
      * @param name the name to display on the screen
      * @param score how many points the bunny has
      * @param moves how many moves the bunny has remaining
-     * @param loc where the bunny starts
+     * @param loc where the bunny starts, (minX,minY) point
      * @param radius the size of the bunny (for extents)
      * @param image the image resource that this bunny should use to draw
      */
@@ -47,12 +47,15 @@ public class Bunny extends Drawable implements Serializable {
         this.name = name;
         this.score = score;
         this.movesRemaining = moves;
-        this.position = loc;
         this.radius = radius;
         this.resImage = image;
         extents = new Point[2];
+        this.position = loc;
         extents[0] = position.add(new Point(-radius, -radius));
         extents[1] = position.add(new Point(radius, radius));
+        extents[0] = loc;
+        extents[1] = extents[0].add(new Point(-2*radius, -2*radius));
+        position = new Point((extents[0].x + extents[1].x)/2.0, (extents[0].y + extents[1].y)/2.0);
     }
 
 
@@ -128,7 +131,7 @@ public class Bunny extends Drawable implements Serializable {
 		paint.setColor(Color.RED);
 		canvas.drawCircle(position.x, position.y, radius, paint);
 		*/
-		canvas.drawBitmap(bitmap, extents[0].x, extents[1].y, null);
+		canvas.drawBitmap(bitmap, extents[1].x, extents[1].y, null);
 	}
 
 
