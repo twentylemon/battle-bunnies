@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <PreferenceCategory>
-        <EditTextPreference android:title="Profile Name" android:key="name"/>        
-        <ListPreference android:key="bunny" android:entryValues="@array/charactersvals" android:title="Character" android:entries="@array/characters"/>
+        <EditTextPreference android:title="Profile Name" android:key="name" android:defaultValue="@string/flopsy"/>        
+        <ListPreference android:key="bunny" android:entryValues="@array/charactersvals" android:title="Character" android:entries="@array/characters" android:defaultValue="0"/>
     </PreferenceCategory>
 </PreferenceScreen>
 

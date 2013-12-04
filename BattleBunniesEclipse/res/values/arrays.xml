@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="characters">
+        <item>Blue Bunny</item>
+        <item>Red Bunny</item>
         <item>MacFluffy</item>
         <item>Lord Admiral Flufson </item>
         <item>Bunius Ceaser</item>
@@ -15,5 +17,7 @@
         <item>3</item>
         <item>4</item>
         <item>5</item>
+        <item>6</item>
+        <item>7</item>
     </string-array>
 </resources>
