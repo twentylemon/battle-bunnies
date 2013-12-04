@@ -1,5 +1,6 @@
 package ca.fluffybunny.battebunnies.activities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -10,9 +11,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 import ca.fluffybunny.battlebunnies.R;
 import ca.fluffybunny.battlebunnies.game.AIPlayer;
@@ -52,6 +55,7 @@ public class GameActivity extends Activity {
 	private Button fire;
 	private TextView powtext;
 	private TextView angletext;
+	private Spinner weaponsList;
 	
 	private int shotPower;
 	private int shotAngle;
@@ -115,6 +119,7 @@ public class GameActivity extends Activity {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         }); 
 		
+		populateSpinner();
        
 	}
 
@@ -123,6 +128,19 @@ public class GameActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.game, menu);
 		return true;
+	}
+	
+	private void populateSpinner(){
+		
+		weaponsList= (Spinner) findViewById(R.id.spinner1);
+		List<String> weap= new ArrayList<String>();
+		for(Weapon w: weaponList){
+			weap.add(w.getName());		
+		}
+		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item,weap);
+		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		weaponsList.setAdapter(dataAdapter);
 	}
 	
 	
@@ -190,7 +208,7 @@ public class GameActivity extends Activity {
 		GameMaster.setGameHeight(size.y);
 		*/
 		GameMaster.setGameWidth(getWindowManager().getDefaultDisplay().getWidth());
-		GameMaster.setGameHeight(getWindowManager().getDefaultDisplay().getHeight());
+		GameMaster.setGameHeight((int)(0.85 * getWindowManager().getDefaultDisplay().getHeight()));
 		gameMaster = new GameMaster(startInfo);
 		gameThread = new Thread(gameMaster);
 		gameThread.start();
