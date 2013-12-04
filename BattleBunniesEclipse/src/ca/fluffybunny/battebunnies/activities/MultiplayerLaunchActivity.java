@@ -11,9 +11,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 import ca.fluffybunny.battlebunnies.R;
-import ca.fluffybunny.battlebunnies.R.id;
-import ca.fluffybunny.battlebunnies.R.layout;
-import ca.fluffybunny.battlebunnies.R.menu;
 import ca.fluffybunny.battlebunnies.util.ConnectionHandler;
 
 public class MultiplayerLaunchActivity extends Activity {
@@ -52,11 +49,14 @@ public class MultiplayerLaunchActivity extends Activity {
 					Toast.makeText(MultiplayerLaunchActivity.this, "Make Discoverable to Host", Toast.LENGTH_LONG).show();
 		        	return;
 		        }
+				Toast.makeText(getApplicationContext(), "waiting for another player", Toast.LENGTH_LONG).show();
 				Intent intent = new Intent(MultiplayerLaunchActivity.this, GameActivity.class);
             	int[] images = { R.drawable.player_bunny, R.drawable.player2_bunny };
             	String[] names = { "Fluffy", "Bunny" };
             	intent.putExtra(GameActivity.IS_MULTIPLAYER, true);
             	intent.putExtra(GameActivity.IS_SERVER, false);
+            	intent.putExtra(GameActivity.PLAYER_NAMES, names);
+            	intent.putExtra(GameActivity.PLAYER_IMAGES, images);
             	startActivity(intent);
 			} 
 		});
@@ -110,6 +110,8 @@ public class MultiplayerLaunchActivity extends Activity {
             	intent.putExtra(GameActivity.BLUETOOTH_DEVICE, device);
             	intent.putExtra(GameActivity.IS_MULTIPLAYER, true);
             	intent.putExtra(GameActivity.IS_SERVER, true);
+            	intent.putExtra(GameActivity.PLAYER_NAMES, names);
+            	intent.putExtra(GameActivity.PLAYER_IMAGES, images);
             	startActivity(intent);
                 
               

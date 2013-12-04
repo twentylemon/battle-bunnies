@@ -1,14 +1,17 @@
 package ca.fluffybunny.battebunnies.activities;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -17,12 +20,13 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SeekBar;
-import android.widget.Toast;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import ca.fluffybunny.battlebunnies.R;
 import ca.fluffybunny.battlebunnies.game.AIPlayer;
+import ca.fluffybunny.battlebunnies.game.BluetoothChannel;
 import ca.fluffybunny.battlebunnies.game.Channel;
 import ca.fluffybunny.battlebunnies.game.GameInfo;
 import ca.fluffybunny.battlebunnies.game.GameMaster;
@@ -34,6 +38,7 @@ import ca.fluffybunny.battlebunnies.game.TerrainGenerator;
 import ca.fluffybunny.battlebunnies.game.Weapon;
 import ca.fluffybunny.battlebunnies.util.ConnectionHandler;
 
+@SuppressLint("NewApi")
 public class GameActivity extends Activity {
 	
 	private Thread gameThread;
@@ -146,7 +151,7 @@ public class GameActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.game, menu);
+		//getMenuInflater().inflate(R.menu.game, menu);
 		return true;
 	}
 	
@@ -195,12 +200,7 @@ public class GameActivity extends Activity {
 	 * In addition, the UI thread is always running, so five. Five threads.
 	 */
 	public void initSinglePlayer(){
-		TerrainGenerator generator = null;
-		switch (terrainType){
-		case TERRAIN_TYPE_RANDOM: default:
-			generator = new RandomGenerator();
-			break;
-		}
+        TerrainGenerator generator = getTerrainGenerator(terrainType);
 		
 		Channel[] channels = new Channel[NUM_PLAYERS];
 		Port[] clients = new Port[NUM_PLAYERS];
@@ -239,49 +239,88 @@ public class GameActivity extends Activity {
 		Toast.makeText(this, s, Toast.LENGTH_LONG).show();
 		
 	}
+	
+	
+	/**
+	 * Returns the terrain generator.
+	 * 
+	 * @param type the type of terrain generator to return
+	 * @return the terrain generator
+	 */
+	private TerrainGenerator getTerrainGenerator(int type){
+		TerrainGenerator generator = null;
+		switch (type){
+		case TERRAIN_TYPE_RANDOM: default:
+			generator = new RandomGenerator();
+			break;
+		}
+		return generator;
+	}
 
 	
 	/**
 	 * Initializes a multiplayer game.
 	 */
 	public void initMultiplayer(){
-		if(!isServer){
+		if (!isServer){
+			Toast.makeText(getApplicationContext(), "client", Toast.LENGTH_LONG).show();
+			/*
 			conHandle.start();
-			bluetoothSocket= conHandle.getBluetoothSocket();
+			bluetoothSocket = null;
+			bluetoothSocket = conHandle.getBluetoothSocket();
+			*/
+			try {
+				BluetoothServerSocket serverSocket = BluetoothAdapter.getDefaultAdapter().
+						listenUsingRfcommWithServiceRecord(ConnectionHandler.NAME, ConnectionHandler.MY_UUID);
+				bluetoothSocket = serverSocket.accept();
+				serverSocket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			Port port = new BluetoothChannel(bluetoothSocket);
+			player = new Player(1, playerNames[1], port, surfaceHolder, getApplicationContext());
+			playerThread = new Thread(player);
+			playerThread.start();
 		}
-		
-		else{
+		else {
+			Toast.makeText(getApplicationContext(), "server", Toast.LENGTH_LONG).show();
+			/*
 			conHandle.connect(bluetoothDevice);
+            bluetoothSocket = conHandle.getBluetoothSocket();
+            */
+			try {
+				bluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(ConnectionHandler.MY_UUID);
+				bluetoothSocket.connect();
+				Log.e("tag", "" + bluetoothSocket.isConnected());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
             
-            if(conHandle.getBluetoothSocket()!=null){
-            	Toast.makeText(this, "Connecting to "+bluetoothDevice.getName(), Toast.LENGTH_LONG).show();                	
-            	return;
-            }
-            
-            if(conHandle.getBluetoothSocket()!=null){
-            	Toast.makeText(this, "Connection Established ", Toast.LENGTH_LONG).show();                	
-            	return;
-            }
-            
-            bluetoothSocket= conHandle.getBluetoothSocket();
-            
-            TerrainGenerator generator = null;
-    		switch (terrainType){
-    		case TERRAIN_TYPE_RANDOM: default:
-    			generator = new RandomGenerator();
-    			break;
-    		}
+            TerrainGenerator generator = getTerrainGenerator(terrainType);
+
+    		Channel channel = new Channel();
+    		Port client = channel.asClientPort();
+    		Port server = channel.asMasterPort();
+    		Port remote = new BluetoothChannel(bluetoothSocket);
+    		Port[] masters = { server, remote };
     		
-    		Channel[] channels = new Channel[NUM_PLAYERS];
-    		Port[] clients = new Port[NUM_PLAYERS];
-    		Port[] masters = new Port[NUM_PLAYERS];
-    		for (int i = 0; i < NUM_PLAYERS; i++){
-    			channels[i] = new Channel();
-    			clients[i] = channels[i].asClientPort();
-    			masters[i] = channels[i].asMasterPort();
-    		}
-    		
-			
+    		player = new Player(0, playerNames[0], client, surfaceHolder, getApplicationContext());
+    		playerThread = new Thread(player);
+    		playerThread.start();
+
+    		StartInfo startInfo = new StartInfo(playerImages, playerNames, masters, generator);
+    		/*
+    		 * requires API 13
+    		android.graphics.Point size = new android.graphics.Point();
+    		getWindowManager().getDefaultDisplay().getSize(size);
+    		GameMaster.setGameWidth(size.x);
+    		GameMaster.setGameHeight(size.y);
+    		*/
+    		GameMaster.setGameWidth(getWindowManager().getDefaultDisplay().getWidth());
+    		GameMaster.setGameHeight((int)(0.85 * getWindowManager().getDefaultDisplay().getHeight()));
+    		gameMaster = new GameMaster(startInfo);
+    		gameThread = new Thread(gameMaster);
+    		gameThread.start();
 		}
 	}
 }

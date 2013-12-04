@@ -167,12 +167,12 @@ public class DeviceListActivity extends Activity {
     };
 	
 	private class BTDevice {
-	String name, mac;
-	public BTDevice(String n, String m){	
-		name=n;
-		mac=m;	
+		String name, mac;
+		public BTDevice(String n, String m){	
+			name=n;
+			mac=m;	
+		}
 	}
-}
 
 }
 
