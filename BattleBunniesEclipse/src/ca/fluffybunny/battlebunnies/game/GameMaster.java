@@ -2,8 +2,6 @@ package ca.fluffybunny.battlebunnies.game;
 
 import java.io.IOException;
 
-import android.util.Log;
-
 /**
  * The game server. All messages get sent to the GameMaster, then the GameMaster sends those
  * messages out to all other players. Then each player executes the action on their own device.
@@ -45,7 +43,7 @@ public class GameMaster implements Runnable {
 	 */
 	@Override
 	public void run(){
-		GameInfo game = new GameInfo(info.getNames(), GAME_WIDTH, GAME_HEIGHT, info.getTerrainGenerator());
+		GameInfo game = new GameInfo(info.getImages(), info.getNames(), GAME_WIDTH, GAME_HEIGHT, info.getTerrainGenerator());
 		
 		//send the game info to each player
 		for (int i = 0; i < info.getNumberOfPlayers(); i++){

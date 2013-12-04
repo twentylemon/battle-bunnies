@@ -2,6 +2,7 @@ package ca.fluffybunny.battlebunnies.game;
 
 import java.io.Serializable;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -26,6 +27,7 @@ public class Bunny extends Drawable implements Serializable {
     private String name;    	//our display name
     private Point[] extents;    //how big on the map the bunny is (for collision detection)
     private int resImage;
+    private Bitmap bitmap;
 
     public final static int DEFAULT_NUM_MOVES = 4;
     public final static int MOVE_SPEED = 50;
@@ -74,10 +76,12 @@ public class Bunny extends Drawable implements Serializable {
     public void setScore(int score){ this.score = score; }
     public void setName(String name){ this.name = name; }
     public void setExtents(Point[] extents){ this.extents = extents; }
+    public void setBitmapImage(Bitmap bitmap){ this.bitmap = bitmap; }
     public int getMovesRemaining(){ return movesRemaining; }
     public int getScore(){ return score; }
     public Point getPosition(){ return position; }
     public String getName(){ return name; }
+    public int getImageResource(){ return resImage; }
 
 
     /**
@@ -119,9 +123,12 @@ public class Bunny extends Drawable implements Serializable {
 
 	@Override
 	public void draw(Canvas canvas){
+		/*
 		Paint paint = new Paint();
 		paint.setColor(Color.RED);
 		canvas.drawCircle(position.x, position.y, radius, paint);
+		*/
+		canvas.drawBitmap(bitmap, extents[0].x, extents[1].y, null);
 	}
 
 

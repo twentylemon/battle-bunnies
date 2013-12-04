@@ -21,7 +21,7 @@ public class AIPlayer extends Player {
 	 * @param port our communication port (a Channel)
 	 */
 	public AIPlayer(int id, String name, Port port){
-		super(id, name, port, null);
+		super(id, name, port, null, null);
 		rand = new Random();
 	}
 

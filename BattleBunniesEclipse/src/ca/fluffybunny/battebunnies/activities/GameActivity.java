@@ -49,6 +49,7 @@ public class GameActivity extends Activity {
 	private BluetoothSocket bluetoothSocket;
 	private int aiDifficulty;
 	private int terrainType;
+	private int[] playerImages;
 	private String[] playerNames;
 	private int[] moreTemp = { R.drawable.player_bunny, R.drawable.player2_bunny };
 	private String[] temp = {"",""};
@@ -72,6 +73,7 @@ public class GameActivity extends Activity {
 	public static final String BLUETOOTH_DEVICE = "bluetoothDevice";
 	public static final String BLUETOOTH_SOCKET = "bluetoothSocket";
 	public static final String AI_DIFFICULTY = "aiDifficulty";
+	public static final String PLAYER_IMAGES = "playerImages";
 	public static final String PLAYER_NAMES = "playerNames";
 	public static final String TERRAIN_TYPE = "terrainType";
 	
@@ -90,6 +92,7 @@ public class GameActivity extends Activity {
 		bluetoothDevice = intent.getParcelableExtra(BLUETOOTH_DEVICE);
 		bluetoothSocket = intent.getParcelableExtra(BLUETOOTH_SOCKET);
 		aiDifficulty = intent.getIntExtra(AI_DIFFICULTY, 0);
+		playerImages = intent.getIntArrayExtra(PLAYER_IMAGES);
 		playerNames = intent.getStringArrayExtra(PLAYER_NAMES);
 		terrainType = intent.getIntExtra(TERRAIN_TYPE, TERRAIN_TYPE_RANDOM);
 		
@@ -204,7 +207,7 @@ public class GameActivity extends Activity {
 			masters[i] = channels[i].asMasterPort();
 		}
 		
-		player = new Player(0, playerNames[0], clients[0], surfaceHolder);
+		player = new Player(0, playerNames[0], clients[0], surfaceHolder, getApplicationContext());
 		playerThread = new Thread(player);
 		playerThread.start();
 
@@ -212,7 +215,7 @@ public class GameActivity extends Activity {
 		aiThread = new Thread(aiPlayer);
 		aiThread.start();
 
-		StartInfo startInfo = new StartInfo(playerNames, masters, generator);
+		StartInfo startInfo = new StartInfo(playerImages, playerNames, masters, generator);
 		/*
 		 * requires API 13
 		android.graphics.Point size = new android.graphics.Point();

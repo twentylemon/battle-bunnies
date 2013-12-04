@@ -2,6 +2,9 @@ package ca.fluffybunny.battlebunnies.game;
 
 import java.io.IOException;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.SurfaceHolder;
 
 /**
@@ -17,6 +20,7 @@ public class Player implements Runnable {
     protected GameInfo game;
     protected SurfaceHolder surfaceHolder;
     protected GameCanvas gameCanvas;
+    protected Context context;
 
     /**
      * Initializes this player with the name and port.
@@ -26,11 +30,12 @@ public class Player implements Runnable {
      * @param port the communication port for this player
      * @param holder the surface that has the canvas to draw to
      */
-    public Player(int id, String name, Port port, SurfaceHolder holder){
+    public Player(int id, String name, Port port, SurfaceHolder holder, Context context){
         this.playerID = id;
         this.name = name;
         this.port = port;
         surfaceHolder = holder;
+        this.context = context;
     }
 
     
@@ -54,6 +59,11 @@ public class Player implements Runnable {
     @Override
     public void run(){
         game = (GameInfo) port.receive();
+        
+        for (int i = 0; i < game.getNumberOfPlayers(); i++){
+        	Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), game.getBunny(i).getImageResource());
+        	game.getBunny(i).setBitmapImage(bitmap);
+        }
         
         gameCanvas = new GameCanvas(game, surfaceHolder);
         gameCanvas.start();
