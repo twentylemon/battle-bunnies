@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
@@ -11,9 +12,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.Toast;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,6 +32,7 @@ import ca.fluffybunny.battlebunnies.game.RandomGenerator;
 import ca.fluffybunny.battlebunnies.game.StartInfo;
 import ca.fluffybunny.battlebunnies.game.TerrainGenerator;
 import ca.fluffybunny.battlebunnies.game.Weapon;
+import ca.fluffybunny.battlebunnies.util.ConnectionHandler;
 
 public class GameActivity extends Activity {
 	
@@ -119,6 +124,13 @@ public class GameActivity extends Activity {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         }); 
 		
+		fire= (Button) findViewById(R.id.button1);	
+		fire.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) { 
+				fireZeMissiles();
+			}
+		});
 		populateSpinner();
        
 	}
@@ -212,6 +224,12 @@ public class GameActivity extends Activity {
 		gameMaster = new GameMaster(startInfo);
 		gameThread = new Thread(gameMaster);
 		gameThread.start();
+	}
+	
+	private void fireZeMissiles(){
+		String s="Ze Missiles Zey are Fireing, Power: "+shotPower+" ,Angle: "+shotAngle;
+		Toast.makeText(this, s, Toast.LENGTH_LONG).show();
+		
 	}
 
 	
