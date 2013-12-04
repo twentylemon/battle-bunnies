@@ -50,8 +50,9 @@ public class GameActivity extends Activity {
 	private int aiDifficulty;
 	private int terrainType;
 	private String[] playerNames;
+	private int[] moreTemp = { R.drawable.player_bunny, R.drawable.player2_bunny };
 	private String[] temp = {"",""};
-	private List<Weapon> weaponList = new GameInfo(temp, 100, 100, new RandomGenerator()).getWeaponList();
+	private List<Weapon> weaponList = new GameInfo(moreTemp, temp, 100, 100, new RandomGenerator()).getWeaponList();
 	
 	private SurfaceView gameView;
 	private SurfaceHolder surfaceHolder;

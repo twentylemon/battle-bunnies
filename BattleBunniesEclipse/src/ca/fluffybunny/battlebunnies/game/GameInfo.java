@@ -26,10 +26,11 @@ public class GameInfo implements Serializable {
     /**
      * Initializes a new game.
      *
+     * @param images which images each bunny is using
      * @param names the names of all the players
      * @param terrain the terrain to be used in this game
      */
-    public GameInfo(String[] names, Terrain terrain){
+    public GameInfo(int[] images, String[] names, Terrain terrain){
         numShots = 0;
         weaponID = -1;
         this.terrain = terrain;
@@ -40,7 +41,7 @@ public class GameInfo implements Serializable {
 
         bunnies = new Bunny[2];
         for (int i = 0; i < bunnies.length; i++){
-            bunnies[i] = new Bunny(names[i], startLocations[i]);
+            bunnies[i] = new Bunny(names[i], startLocations[i], images[i]);
         }
 
         //create the weapon list
@@ -52,13 +53,14 @@ public class GameInfo implements Serializable {
     /**
      * Initializes a new game given a size and terrain generator.
      *
+     * @param images which images each bunny is using
      * @param names the names of all the players
      * @param width the width of the terrain
      * @param height the height of the terrain
      * @param generator the terrain generator...
      */
-    public GameInfo(String[] names, int width, int height, TerrainGenerator generator){
-        this(names, new Terrain(width, height, generator));
+    public GameInfo(int[] images, String[] names, int width, int height, TerrainGenerator generator){
+        this(images, names, new Terrain(width, height, generator));
     }
 
 

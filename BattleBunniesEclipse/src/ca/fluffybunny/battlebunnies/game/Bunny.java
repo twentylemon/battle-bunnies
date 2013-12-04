@@ -7,8 +7,6 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
-import ca.fluffybunny.battebunnies.activities.MainActivity;
 import ca.fluffybunny.battlebunnies.util.Point;
 
 /**
@@ -27,6 +25,7 @@ public class Bunny extends Drawable implements Serializable {
     private int score;          //how many points we have
     private String name;    	//our display name
     private Point[] extents;    //how big on the map the bunny is (for collision detection)
+    private int resImage;
 
     public final static int DEFAULT_NUM_MOVES = 4;
     public final static int MOVE_SPEED = 50;
@@ -40,13 +39,15 @@ public class Bunny extends Drawable implements Serializable {
      * @param moves how many moves the bunny has remaining
      * @param loc where the bunny starts
      * @param radius the size of the bunny (for extents)
+     * @param image the image resource that this bunny should use to draw
      */
-    public Bunny(String name, int score, int moves, Point loc, int radius){
+    public Bunny(String name, int score, int moves, Point loc, int radius, int image){
         this.name = name;
         this.score = score;
         this.movesRemaining = moves;
         this.position = loc;
         this.radius = radius;
+        this.resImage = image;
         extents = new Point[2];
         extents[0] = position.add(new Point(-radius, -radius));
         extents[1] = position.add(new Point(radius, radius));
@@ -58,9 +59,10 @@ public class Bunny extends Drawable implements Serializable {
      *
      * @param name the name to display on the screen
      * @param loc where the bunny starts
+     * @param image the image resource that this bunny should use to draw
      */
-    public Bunny(String name, Point loc){
-        this(name, 0, DEFAULT_NUM_MOVES, loc, RADIUS);
+    public Bunny(String name, Point loc, int image){
+        this(name, 0, DEFAULT_NUM_MOVES, loc, RADIUS, image);
     }
 
 
