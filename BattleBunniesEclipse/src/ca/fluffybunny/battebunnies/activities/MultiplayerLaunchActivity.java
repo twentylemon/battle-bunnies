@@ -52,10 +52,12 @@ public class MultiplayerLaunchActivity extends Activity {
 					Toast.makeText(MultiplayerLaunchActivity.this, "Make Discoverable to Host", Toast.LENGTH_LONG).show();
 		        	return;
 		        }
-				else if (conHandle.mState == ConnectionHandler.STATE_NONE) {
-		              
-					conHandle.start();
-		            }; //set up game, start as server
+				Intent intent = new Intent(MultiplayerLaunchActivity.this, GameActivity.class);
+            	int[] images = { R.drawable.player_bunny, R.drawable.player2_bunny };
+            	String[] names = { "Fluffy", "Bunny" };
+            	intent.putExtra(GameActivity.IS_MULTIPLAYER, true);
+            	intent.putExtra(GameActivity.IS_SERVER, false);
+            	startActivity(intent);
 			} 
 		});
 		
@@ -101,21 +103,16 @@ public class MultiplayerLaunchActivity extends Activity {
                                      .getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
                 // Get the BLuetoothDevice object
                 BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-                // Attempt to connect to the device
-                conHandle.connect(device);
                 
-                if(conHandle.getBluetoothSocket()!=null){
-                	Toast.makeText(this, "Connecting to "+device.getName(), Toast.LENGTH_LONG).show();                	
-                	return;
-                }
+                Intent intent = new Intent(this, GameActivity.class);
+            	int[] images = { R.drawable.player_bunny, R.drawable.player2_bunny };
+            	String[] names = { "Fluffy", "Bunny" };
+            	intent.putExtra(GameActivity.BLUETOOTH_DEVICE, device);
+            	intent.putExtra(GameActivity.IS_MULTIPLAYER, true);
+            	intent.putExtra(GameActivity.IS_SERVER, true);
+            	startActivity(intent);
                 
-                if(conHandle.getBluetoothSocket()!=null){
-                	Toast.makeText(this, "Connection Established ", Toast.LENGTH_LONG).show();                	
-                	return;
-                }
-                
-              //get game info from host
-	          //start game as non server
+              
             }
             break;
         }
