@@ -56,6 +56,8 @@ public abstract class Weapon extends Drawable implements Serializable, Cloneable
             fireSpeed * time * Math.sin(fireAngle) + GRAVITY * time*time / 2.0
         ));
     }
+    
+ 
 
 
     /**
