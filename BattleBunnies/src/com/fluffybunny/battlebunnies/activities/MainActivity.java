@@ -84,14 +84,12 @@ public class MainActivity extends Activity {
      */
     public void onQuickPlayClicked(View view){
         //start the weapon select activity
-    	/*
-    	Intent intent = new Intent(this, GameActivity.class);
+    	Intent intent = new Intent(this, GameActivitySP.class);
     	int[] images = { R.drawable.player_bunny, R.drawable.player2_bunny };
     	String[] names = { "Fluffy", "Bunny" };
-    	intent.putExtra(GameActivity.PLAYER_IMAGES, images);
-    	intent.putExtra(GameActivity.PLAYER_NAMES, names);
+    	intent.putExtra(GameActivitySP.PLAYER_IMAGES, images);
+    	intent.putExtra(GameActivitySP.PLAYER_NAMES, names);
     	startActivity(intent);
-    	*/
     }
 
 

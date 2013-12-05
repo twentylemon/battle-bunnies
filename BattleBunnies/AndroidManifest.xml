@@ -42,6 +42,12 @@
             android:label="@string/title_activity_device_list" 
             android:theme="@android:style/Theme.Dialog">
         </activity>
+        <activity
+            android:name="com.fluffybunny.battlebunnies.activities.GameActivitySP"
+            android:label="@string/title_activity_device_list" 
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+        </activity>
     </application>
 
 </manifest>

@@ -5,7 +5,10 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -55,10 +58,10 @@ public class GameActivitySP extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game_activity_sp);
 		
-		game = makeGameInfo();
-		
 		gameView = (SurfaceView) findViewById(R.id.game);
 		surfaceHolder = gameView.getHolder();
+		
+		game = makeGameInfo();
 		
 		power = (SeekBar) findViewById(R.id.seekBar1);		
 		power.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){ 
@@ -99,7 +102,17 @@ public class GameActivitySP extends Activity {
 	
 	private void firePressed(){
 		String selected = (String) weaponSpinner.getSelectedItem();
-		FireAction action = new FireAction(game.getMyID(), shotPower, shotAngle, game.getWeaponList().indexOf(selected));
+		//index of should be searching for a weapon
+		Weapon weapon = null;
+		int id = -1;
+		for (Weapon w : game.getWeaponList()){
+			id++;
+			if (w.getName().equals(selected)){
+				weapon = w;
+				break;
+			}
+		}
+		FireAction action = new FireAction(game.getMyID(), shotPower, shotAngle, id);
 		action.execute(game);
 		// TODO wait for projectile, then AI turn
 	}
@@ -146,6 +159,10 @@ public class GameActivitySP extends Activity {
 		
 		GameInfo g = new GameInfo(playerImages, playerNames, width, height, generator);
 		g.setID(0);
+		for (int i = 0; i < playerNames.length; i++){
+			Bitmap bitmap = BitmapFactory.decodeResource(getResources(), g.getBunny(i).getImageResource());
+			g.getBunny(i).setBitmapImage(bitmap);
+		}
 		g.getBunny(0).setGameCanvas(new GameCanvas(g, surfaceHolder));
 		return g;
 	}

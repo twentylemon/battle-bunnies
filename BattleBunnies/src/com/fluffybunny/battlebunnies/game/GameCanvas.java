@@ -2,6 +2,7 @@ package com.fluffybunny.battlebunnies.game;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 import com.fluffybunny.battlebunnies.util.Point;
@@ -70,6 +71,19 @@ public class GameCanvas implements Runnable {
 		Canvas canvas = null;
 		while (running){
 			canvas = surfaceHolder.lockCanvas();
+			if (canvas == null){
+				Log.e("tag", "canvas is null");
+				try {
+					surfaceHolder.unlockCanvasAndPost(canvas);
+				} catch (IllegalArgumentException e){}
+				try {
+					Thread.sleep(1000);
+					continue;
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					continue;
+				}
+			}
 			canvas.drawBitmap(game.getTerrain().getBitmap(), 0, 0, new Paint());
 			
 			//draw the bunnies
