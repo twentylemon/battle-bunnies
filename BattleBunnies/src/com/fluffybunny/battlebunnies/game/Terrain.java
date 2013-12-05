@@ -2,6 +2,7 @@ package com.fluffybunny.battlebunnies.game;
 
 import java.io.Serializable;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 
 import com.fluffybunny.battlebunnies.util.Point;
@@ -17,6 +18,7 @@ public class Terrain implements Serializable {
 	private static final long serialVersionUID = 1L;
 
     private int[][] map;    //the terrain map
+    private Bitmap bitmap;	//the game map image
 
     public final static int AIR = Color.parseColor("#E0FEFF");
     public final static int GRASS = Color.parseColor("#6E8B3D");
@@ -31,6 +33,7 @@ public class Terrain implements Serializable {
      */
     public Terrain(int width, int height, TerrainGenerator generator){
         map = generator.generateTerrain(width, height);
+        generateBitmap();
     }
 
 
@@ -38,6 +41,7 @@ public class Terrain implements Serializable {
      * Getters/Setters.
      */
     public void destroyPoint(int x, int y){ map[x][y] = AIR; }
+    public Bitmap getBitmap(){ return bitmap; }
     public int getWidth(){ return map.length; }
     public int getHeight(){ return map[0].length; }
     public int getPoint(int x, int y){
@@ -48,6 +52,20 @@ public class Terrain implements Serializable {
     		return AIR;
     	}
     	return map[x][y];
+    }
+    
+    
+    /**
+     * Regenerates the bitmap for this terrain.
+     */
+    private void generateBitmap(){
+    	int[] data = new int[getWidth() * getHeight()];
+    	for (int x = 0; x < getWidth(); x++){
+    		for (int y = 0; y < getHeight(); y++){
+    			data[x + y * getWidth()] = getPoint(x, y);
+			}
+		}
+		bitmap = Bitmap.createBitmap(data, getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
     }
 
 
@@ -87,5 +105,6 @@ public class Terrain implements Serializable {
                 }
             }
         }
+        generateBitmap();
     }
 }

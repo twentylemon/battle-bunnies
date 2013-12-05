@@ -29,7 +29,7 @@ public class Point implements Serializable {
     }
 
     /**
-     * Setters.
+     * Getters/Setters.
      */
     public void setX(int x){ this.x = x; }
     public void setY(int y){ this.y = y; }
@@ -37,10 +37,22 @@ public class Point implements Serializable {
 
     /**
      * Adds this point to another and returns the result.
+     * 
      * @param p the other point to add to this one
      * @return the result of adding the two points
      */
     public Point add(Point p){
         return new Point(x + p.x, y + p.y);
+    }
+
+    
+    /**
+     * Returns the distance between this point and another
+     * 
+     * @param p the other point
+     * @return the distance between this and p
+     */
+    public double distance(Point p){
+    	return (p.x - x)*(p.x - x) + (p.y - y)*(p.y - y);
     }
 }
