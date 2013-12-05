@@ -109,7 +109,7 @@ public class GameCanvas implements Runnable {
 				}
 				
 				surfaceHolder.unlockCanvasAndPost(canvas);
-			} catch (NullPointerException e){}
+			} catch (NullPointerException e){System.out.println("Called it");}
 		}
 	}
 }

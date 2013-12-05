@@ -37,6 +37,15 @@ public class Player implements Runnable {
         surfaceHolder = holder;
         this.context = context;
     }
+    
+    public void fireSomething(int shotPower, int shotAngle, Weapon weap){
+    	game.takeShot(playerID,weap);
+    	game.getBunny(playerID).fireWeapon(shotPower,shotAngle,weap);
+		gameCanvas.setFireTime(System.currentTimeMillis());
+		gameCanvas.setFiring(true);
+		
+
+    }
 
     
     /**

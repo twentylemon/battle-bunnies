@@ -3,6 +3,7 @@ package ca.fluffybunny.battebunnies.activities;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -116,8 +117,7 @@ public class GameActivity extends Activity {
 		
 		
 	}
-	public void initControls(){
-		
+	public void initControls(){		
 		
 		
 		power = (SeekBar) findViewById(R.id.seekBar1);		
@@ -141,7 +141,7 @@ public class GameActivity extends Activity {
 		fire.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) { 
-				fireZeMissiles();
+				firePressed();
 			}
 		});
 		populateSpinner();
@@ -166,6 +166,16 @@ public class GameActivity extends Activity {
 				android.R.layout.simple_spinner_item,weap);
 		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		weaponsList.setAdapter(dataAdapter);
+	}
+	
+	private void firePressed(){
+		String s=(String) weaponsList.getSelectedItem();
+		Weapon weap= null;
+		for(Weapon w: weaponList){
+			if(w.getName().equals(s)) weap =w;
+		}		
+		player.fireSomething(shotPower, shotAngle, weap);
+
 	}
 	
 	
