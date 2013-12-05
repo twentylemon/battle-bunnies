@@ -1,6 +1,7 @@
 package com.fluffybunny.battlebunnies.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -100,9 +101,9 @@ public class MainActivity extends Activity {
      * @param view the button clicked
      */
     public void onMultiplayerClicked(View view){
-    	/*
+    	
     	Intent j = new Intent(MainActivity.this, MultiplayerLaunchActivity.class);
         startActivity(j);
-        */
+      
     }
 }

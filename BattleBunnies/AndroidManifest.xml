@@ -28,6 +28,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+         <activity
+            android:name="com.fluffybunny.battlebunnies.activities.MultiplayerLaunchActivity"
+            android:label="@string/title_activity_multiplayer" >
+        </activity>
         <activity
             android:name="com.fluffybunny.battlebunnies.activities.MultiplayerActivity"
             android:label="@string/title_activity_multiplayer" >
