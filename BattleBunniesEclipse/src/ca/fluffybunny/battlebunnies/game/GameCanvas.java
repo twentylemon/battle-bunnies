@@ -61,6 +61,7 @@ public class GameCanvas implements Runnable {
 		long lastLoopTime = System.currentTimeMillis();
 		long currentTime, delta;
 		firing = false;
+		Canvas canvas = null;
 		while (running){
 			currentTime = System.currentTimeMillis();
 			delta = currentTime - lastLoopTime;
@@ -72,7 +73,7 @@ public class GameCanvas implements Runnable {
 			}
 
 			try {
-				Canvas canvas = surfaceHolder.lockCanvas();
+				canvas = surfaceHolder.lockCanvas();
 				Terrain terrain = game.getTerrain();
 				int[] data = new int[terrain.getWidth() * terrain.getHeight()];
 				for (int x = 0; x < terrain.getWidth(); x++){
@@ -109,7 +110,9 @@ public class GameCanvas implements Runnable {
 				}
 				
 				surfaceHolder.unlockCanvasAndPost(canvas);
-			} catch (NullPointerException e){}
+			} catch (NullPointerException e){
+				surfaceHolder.unlockCanvasAndPost(canvas);
+			}
 		}
 	}
 }
