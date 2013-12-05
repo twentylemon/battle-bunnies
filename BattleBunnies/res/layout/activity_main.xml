@@ -1,16 +1,55 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity" >
+    android:background="@drawable/background"
+    tools:context=".MainActivity"
+    tools:ignore="MergeRootFrame" >
 
-    <TextView
+    <Button
+        android:id="@+id/quickPlayButton"
+        style="@style/ButtonText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignBottom="@+id/campaignButton"
+        android:layout_marginBottom="16dp"
+        android:layout_toLeftOf="@+id/multiplayerButton"
+        android:background="@drawable/but_grn"
+        android:onClick="onQuickPlayClicked"
+        android:text="@string/quick_play" />
+
+    <Button
+        android:id="@+id/campaignButton"
+        style="@style/ButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/multiplayerButton"
+        android:background="@drawable/but_grn"
+        android:onClick="onCampaignClicked"
+        android:text="@string/campaign" />
+
+    <Button
+        android:id="@+id/profileButton"
+        style="@style/ButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/quickPlayButton"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/but_grn"
+        android:onClick="onProfileClicked"
+        android:text="@string/profile" />
+
+    <Button
+        android:id="@+id/multiplayerButton"
+        style="@style/ButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/campaignButton"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/but_grn"
+        android:onClick="onMultiplayerClicked"
+        android:text="@string/multiplayer" />
 
 </RelativeLayout>

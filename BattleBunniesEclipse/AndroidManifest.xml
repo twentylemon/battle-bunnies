@@ -49,7 +49,7 @@
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
         <activity
-            android:name="ca.fluffybunny.battebunnies.activities.MultiplayerLaunchActivity"
+            android:name="com.fluffybunny.battlebunnies.activities.MultiplayerLaunchActivity"
             android:label="@string/title_activity_multi_launch" 
             android:screenOrientation="landscape" >
         </activity>

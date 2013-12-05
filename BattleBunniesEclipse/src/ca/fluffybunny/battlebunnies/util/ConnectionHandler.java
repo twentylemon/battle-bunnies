@@ -6,7 +6,9 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 
-import ca.fluffybunny.battebunnies.activities.MultiplayerLaunchActivity;
+
+import com.fluffybunny.battlebunnies.activities.MultiplayerLaunchActivity;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -21,7 +23,7 @@ import android.widget.Toast;
 
 
 public class ConnectionHandler {
-	public static final UUID MY_UUID = new UUID(15644184L,15649461L);
+	public static final UUID MY_UUID = UUID.fromString("c432a87b-933c-4504-84fb-c0f8505c5a88");
 	public static final String TAG = "ConnectionHandler";
     private static final boolean D = true;
     

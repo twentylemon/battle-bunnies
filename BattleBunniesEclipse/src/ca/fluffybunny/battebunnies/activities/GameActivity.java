@@ -108,6 +108,15 @@ public class GameActivity extends Activity {
 		gameView = (SurfaceView) findViewById(R.id.game);
 		surfaceHolder = gameView.getHolder();
 		initControls();
+		if(bluetoothDevice==null){
+			Toast.makeText(getApplicationContext(), "no device found", Toast.LENGTH_LONG).show();
+		}
+		else{
+			Toast.makeText(getApplicationContext(),bluetoothDevice.getName(), Toast.LENGTH_LONG).show();
+		}
+		Toast.makeText(getApplicationContext(),ConnectionHandler.MY_UUID.toString(), Toast.LENGTH_LONG).show();
+		if(isServer)Toast.makeText(getApplicationContext(),"I am the server", Toast.LENGTH_LONG).show();
+		
 		if (isMultiplayer){
 			initMultiplayer();
 		}
@@ -280,10 +289,20 @@ public class GameActivity extends Activity {
 			bluetoothSocket = conHandle.getBluetoothSocket();
 			*/
 			try {
+				System.out.println("Making the server socket");
 				BluetoothServerSocket serverSocket = BluetoothAdapter.getDefaultAdapter().
-						listenUsingRfcommWithServiceRecord(ConnectionHandler.NAME, ConnectionHandler.MY_UUID);
+						listenUsingInsecureRfcommWithServiceRecord(ConnectionHandler.NAME, ConnectionHandler.MY_UUID);
+						
+				
+				
+				
 				bluetoothSocket = serverSocket.accept();
+				
 				serverSocket.close();
+				System.out.println("Closed the server socket");
+				
+				if(bluetoothSocket.isConnected())System.out.println("Socket Connected");
+				if(!bluetoothSocket.isConnected())System.out.println("Socket not Connected");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -299,8 +318,11 @@ public class GameActivity extends Activity {
             bluetoothSocket = conHandle.getBluetoothSocket();
             */
 			try {
-				bluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(ConnectionHandler.MY_UUID);
+				bluetoothSocket = bluetoothDevice.createInsecureRfcommSocketToServiceRecord(ConnectionHandler.MY_UUID);
+				
 				bluetoothSocket.connect();
+				if(bluetoothSocket.isConnected())System.out.println("Socket Connected");
+				if(!bluetoothSocket.isConnected())System.out.println("Socket not Connected");
 				Log.e("tag", "" + bluetoothSocket.isConnected());
 			} catch (IOException e) {
 				e.printStackTrace();

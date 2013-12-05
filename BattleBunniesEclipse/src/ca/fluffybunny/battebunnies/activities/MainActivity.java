@@ -2,6 +2,8 @@ package ca.fluffybunny.battebunnies.activities;
 
 
 
+import com.fluffybunny.battlebunnies.activities.MultiplayerLaunchActivity;
+
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
