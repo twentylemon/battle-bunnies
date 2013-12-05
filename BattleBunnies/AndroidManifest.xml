@@ -3,6 +3,8 @@
     package="com.fluffybunny.battlebunnies"
     android:versionCode="1"
     android:versionName="1.0" >
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -14,13 +16,22 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.fluffybunny.battlebunnies.MainActivity"
+            android:name="com.fluffybunny.battlebunnies.activities.MainActivity"
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.fluffybunny.battlebunnies.activities.MultiplayerActivity"
+            android:label="@string/title_activity_multiplayer" >
+        </activity>
+        <activity
+            android:name="com.fluffybunny.battlebunnies.activities.DeviceListActivity"
+            android:label="@string/title_activity_device_list" 
+            android:theme="@android:style/Theme.Dialog">
         </activity>
     </application>
 
