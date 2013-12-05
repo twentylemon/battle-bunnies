@@ -77,6 +77,16 @@ public class Bunny extends Drawable implements Serializable {
     public Point getPosition(){ return position; }
     public String getName(){ return name; }
     public int getImageResource(){ return resImage; }
+    
+
+    /**
+     * Sets and starts the GameCanvas
+     * @param canvas the game cavnas
+     */
+    public void setGameCanvas(GameCanvas canvas){
+    	gameCanvas = canvas;
+    	gameCanvas.start();
+    }
 
 
     /**
@@ -102,6 +112,7 @@ public class Bunny extends Drawable implements Serializable {
         // TODO change speed according to the weapon's mass
         double speed = power;
         weapon.initFire(extents[1], speed, angle);
+        gameCanvas.setFiring(true);
     }
 
 

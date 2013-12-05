@@ -14,6 +14,7 @@ public class GameInfo implements Serializable {
     private int weaponID;				//weapon being fired
     private List<Weapon> weaponList;	//list of all selectable weapons
     private int numShots;   			//number of shots so far (turns = numShots / 2)
+    private int myID;					//this player's player id
 	
 	public static final int MAX_TURNS = 10;
 
@@ -63,6 +64,8 @@ public class GameInfo implements Serializable {
     /**
      * Getters/Setters.
      */
+    public void setID(int id){ myID = id; }
+    public int getMyID(){ return myID; }
     public Terrain getTerrain(){ return terrain; }
     public int getNumberOfPlayers(){ return bunnies.length; }
     public Bunny getBunny(int id){ return bunnies[id]; }
@@ -84,7 +87,7 @@ public class GameInfo implements Serializable {
     public void takeShot(FireAction fire){
     	numShots++;
     	int playerID = fire.getPlayerID();
-    	int weaponID = fire.getWeaponID();
+    	weaponID = fire.getWeaponID();
     	getBunny(playerID).fireWeapon(fire.getPower(), fire.getAngle(), getWeapon(weaponID));
     	// TODO calculate the score?
     }
@@ -98,7 +101,7 @@ public class GameInfo implements Serializable {
      */
     public void addScore(FireAction fire, Point landing){
     	int playerID = fire.getPlayerID();
-    	int weaponID = fire.getWeaponID();
+    	weaponID = fire.getWeaponID();
     	int max = (int)getWeapon(weaponID).getScoreValue();
     	// TODO this
     }

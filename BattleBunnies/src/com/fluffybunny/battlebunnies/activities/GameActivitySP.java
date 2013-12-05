@@ -18,6 +18,8 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 
 import com.fluffybunny.battlebunnies.R;
+import com.fluffybunny.battlebunnies.game.FireAction;
+import com.fluffybunny.battlebunnies.game.GameCanvas;
 import com.fluffybunny.battlebunnies.game.GameInfo;
 import com.fluffybunny.battlebunnies.game.RandomGenerator;
 import com.fluffybunny.battlebunnies.game.TerrainGenerator;
@@ -37,7 +39,7 @@ public class GameActivitySP extends Activity {
 	private SeekBar power;
 	private SeekBar angle;
 	private Button fire;
-	private Spinner weaponsSpinner;
+	private Spinner weaponSpinner;
 
 	private int shotPower;
 	private int shotAngle;
@@ -96,6 +98,10 @@ public class GameActivitySP extends Activity {
 	
 	
 	private void firePressed(){
+		String selected = (String) weaponSpinner.getSelectedItem();
+		FireAction action = new FireAction(game.getMyID(), shotPower, shotAngle, game.getWeaponList().indexOf(selected));
+		action.execute(game);
+		// TODO wait for projectile, then AI turn
 	}
 	
 
@@ -105,7 +111,7 @@ public class GameActivitySP extends Activity {
 	 * @param weaponList the list of all the weapons
 	 */
 	private void populateSpinner(List<Weapon> weaponList){
-		weaponsSpinner = (Spinner) findViewById(R.id.spinner1);
+		weaponSpinner = (Spinner) findViewById(R.id.spinner1);
 		List<String> weap = new ArrayList<String>();
 		for (Weapon w : weaponList){
 			weap.add(w.getName());
@@ -113,10 +119,15 @@ public class GameActivitySP extends Activity {
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item,weap);
 		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		weaponsSpinner.setAdapter(dataAdapter);
+		weaponSpinner.setAdapter(dataAdapter);
 	}
 	
 	
+	/**
+	 * Returns the game info for this game.
+	 * 
+	 * @return the GameInfo
+	 */
 	private GameInfo makeGameInfo(){
 		Intent intent = getIntent();
 		aiDifficulty = intent.getIntExtra(AI_DIFFICULTY, 0);
@@ -133,6 +144,9 @@ public class GameActivitySP extends Activity {
 			break;
 		}
 		
-		return new GameInfo(playerImages, playerNames, width, height, generator);
+		GameInfo g = new GameInfo(playerImages, playerNames, width, height, generator);
+		g.setID(0);
+		g.getBunny(0).setGameCanvas(new GameCanvas(g, surfaceHolder));
+		return g;
 	}
 }

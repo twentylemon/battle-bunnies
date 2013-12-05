@@ -4,6 +4,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
+import com.fluffybunny.battlebunnies.util.Point;
+
 public class GameCanvas implements Runnable {
 	
 	private GameInfo game;
@@ -77,7 +79,23 @@ public class GameCanvas implements Runnable {
 			
 			//draw the weapon, if any
 			if (firing){
-				
+				long currentTime = System.currentTimeMillis();
+				Point pos = game.getFiredWeapon().getPosition((currentTime - fireTime)/1000.0);
+				//check if we went off the screen
+				if (pos.x < 0 || pos.x >= game.getTerrain().getWidth()){
+					firing = false;
+				}
+				//check if we hit the terrain
+				else if (game.getTerrain().getPoint(pos.x, pos.y) != Terrain.AIR){
+					game.getFiredWeapon().explode(canvas, pos);
+					game.getTerrain().destroyTerrain(pos, game.getFiredWeapon());
+					firing = false;
+				}
+				// TODO check if we hit bunnies
+				//else of, just keep flying
+				else {
+					game.getFiredWeapon().draw(canvas, pos);
+				}
 			}
 			
 			surfaceHolder.unlockCanvasAndPost(canvas);
