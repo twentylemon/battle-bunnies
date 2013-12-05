@@ -64,6 +64,11 @@ public class AIPlayer extends Player {
         		humanAction.execute(game);				//execute the action
         	}
         	
+        	try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
         	Action myAction = getShot();		//get the shot we are going to take
         	port.send(myAction);				//send our shot to the game master
         	myAction = (Action) port.receive();	//get our action back

@@ -42,10 +42,10 @@ public class Terrain implements Serializable {
     public int getHeight(){ return map[0].length; }
     public int getPoint(int x, int y){
     	if (y >= getHeight()){
-    		return AIR;
+    		return ROCK;
     	}
     	else if (y < 0){
-    		return ROCK;
+    		return AIR;
     	}
     	return map[x][y];
     }

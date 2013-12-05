@@ -29,6 +29,6 @@ public class FireAction extends Action {
 	 */
 	@Override
 	public void execute(GameInfo game){
-		game.takeShot(getPlayerID(), weapon);
+		game.takeShot(getPlayerID(), game.getFiredWeapon());
 	}
 }

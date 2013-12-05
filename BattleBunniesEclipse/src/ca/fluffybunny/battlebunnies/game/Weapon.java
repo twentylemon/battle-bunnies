@@ -24,7 +24,7 @@ public abstract class Weapon extends Drawable implements Serializable, Cloneable
     protected double fireAngle;         //initial fire angle, for use in position finding later
     protected String name;				//name as it appears in the list of weapons
 
-    public final static double GRAVITY = -9.8;
+    public final static double GRAVITY = 9.8;
 
     /**
      * Getters/Setters.
@@ -34,7 +34,7 @@ public abstract class Weapon extends Drawable implements Serializable, Cloneable
     public void setScoreValue(double score){ scoreValue = score; }
     public void setFireLocation(Point loc){ fireLocation = loc; }
     public void setFireSpeed(double speed){ fireSpeed = speed; }
-    public void setFireAngle(double angle){ fireAngle = angle; }
+    public void setFireAngle(double angle){ fireAngle = Math.toRadians(angle); }
     public double getMass(){ return mass; }
     public double getExplosionRadius(){ return explosionRadius; }
     public double getScoreValue(){ return scoreValue; }

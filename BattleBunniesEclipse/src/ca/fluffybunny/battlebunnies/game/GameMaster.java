@@ -75,8 +75,10 @@ public class GameMaster implements Runnable {
 			for (int playerID = 0; playerID < game.getNumberOfPlayers(); playerID++){
 				Action action = null;
 				while (!(action instanceof FireAction)){
+					Log.e("tag", "waiting for player "+playerID);
 					action = (Action) info.getPort(playerID).receive();
 					for (int i = 0; i < game.getNumberOfPlayers(); i++){
+						Log.e("tag", "sending player " + action.getPlayerID() + " action to player "+i);
 						info.getPort(i).send(action);	//send the action to each player
 					}
 					action.execute(game);	//execute the action on our game
@@ -89,5 +91,6 @@ public class GameMaster implements Runnable {
 				info.getPort(i).close();
 			} catch (IOException e){}
 		}
+		Log.e("tag", "game is over");
 	}
 }

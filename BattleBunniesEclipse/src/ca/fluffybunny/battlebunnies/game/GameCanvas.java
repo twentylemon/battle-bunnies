@@ -3,6 +3,7 @@ package ca.fluffybunny.battlebunnies.game;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import ca.fluffybunny.battlebunnies.util.Point;
 
@@ -25,6 +26,7 @@ public class GameCanvas implements Runnable {
 		this.game = game;
 		this.surfaceHolder = surfaceHolder;
 		fireTime = 0;
+		firing = false;
 	}
 
 	
@@ -33,7 +35,8 @@ public class GameCanvas implements Runnable {
 	 */
 	public void setFireTime(double time){ fireTime = time; }
 	public void setFiring(boolean fire){ firing = fire; }
-
+	public boolean isFiring(){ return firing; }
+	
 	
 	/**
 	 * Starts the thread.
@@ -66,15 +69,15 @@ public class GameCanvas implements Runnable {
 			currentTime = System.currentTimeMillis();
 			delta = currentTime - lastLoopTime;
 			lastLoopTime = currentTime;
-			if (delta < 10){
+			/*if (delta < 10){
 				try {	//block the thread for a bit
 					Thread.sleep(10 - delta);
 				} catch (InterruptedException e){}
-			}
+			}*/
 
-			try {
+			//try {
 				canvas = surfaceHolder.lockCanvas();
-				Terrain terrain = game.getTerrain();
+				/*Terrain terrain = game.getTerrain();
 				int[] data = new int[terrain.getWidth() * terrain.getHeight()];
 				for (int x = 0; x < terrain.getWidth(); x++){
 					for (int y = 0; y < terrain.getHeight(); y++){
@@ -82,7 +85,7 @@ public class GameCanvas implements Runnable {
 					}
 				}
 				Bitmap map = Bitmap.createBitmap(data, terrain.getWidth(), terrain.getHeight(), Bitmap.Config.ARGB_8888);
-				canvas.drawBitmap(map, 0, 0, new Paint());
+				canvas.drawBitmap(map, 0, 0, new Paint());*/
 				
 				//draw the bunnies
 				for (int i = 0; i < game.getNumberOfPlayers(); i++){
@@ -90,14 +93,18 @@ public class GameCanvas implements Runnable {
 				}
 				
 				//draw the weapon, if any
-				if (firing){
-					Point position = game.getFiredWeapon().getPosition(currentTime - fireTime);
+				if (firing && currentTime - fireTime > 0){
+					Log.e("tag", "firing " + game.getFiredWeapon().toString());
+					Point position = game.getFiredWeapon().getPosition((currentTime - fireTime)/1000.0);
+					Log.e("tag", "firing ("+position.x+","+position.y+") " + ((currentTime - fireTime)/1000.0));
 					//check if it went out of bounds
 					if (position.x < 0 || position.x >= game.getTerrain().getWidth()){
+						Log.e("tag", "position off screen");
 						firing = false;
 					}
 					//check if we hit the terrain
 					else if (game.getTerrain().getPoint(position.x, position.y) != Terrain.AIR){
+						Log.e("tag", "hitting terrain");
 						game.getFiredWeapon().explode(canvas, position);
 						game.getTerrain().destroyTerrain(position, game.getFiredWeapon());
 						firing = false;
@@ -105,14 +112,15 @@ public class GameCanvas implements Runnable {
 					// TODO check if we hit bunnies
 					//else it's ok, just continue flying
 					else {
+						Log.e("tag", "drawing");
 						game.getFiredWeapon().draw(canvas, position);
 					}
 				}
 				
 				surfaceHolder.unlockCanvasAndPost(canvas);
-			} catch (NullPointerException e){
+			/*} catch (NullPointerException e){
 				surfaceHolder.unlockCanvasAndPost(canvas);
-			}
+			}*/
 		}
 	}
 }

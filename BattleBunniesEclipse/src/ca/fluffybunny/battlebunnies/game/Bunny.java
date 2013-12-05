@@ -109,7 +109,7 @@ public class Bunny extends Drawable implements Serializable {
     public void fireWeapon(double power, double angle, Weapon weapon){
         // TODO change speed according to the weapon's mass
         double speed = power;
-        weapon.onFire(position, speed, angle);
+        weapon.onFire(extents[1], speed, angle);
     }
 
 

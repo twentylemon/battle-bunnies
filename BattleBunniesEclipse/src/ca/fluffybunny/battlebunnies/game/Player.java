@@ -5,6 +5,7 @@ import java.io.IOException;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 /**
@@ -21,6 +22,8 @@ public class Player implements Runnable {
     protected SurfaceHolder surfaceHolder;
     protected GameCanvas gameCanvas;
     protected Context context;
+    protected Object lock;
+    protected Action action;
 
     /**
      * Initializes this player with the name and port.
@@ -36,15 +39,41 @@ public class Player implements Runnable {
         this.port = port;
         surfaceHolder = holder;
         this.context = context;
+        lock = new Object();
     }
     
-    public void fireSomething(int shotPower, int shotAngle, Weapon weap){
-    	game.takeShot(playerID,weap);
-    	game.getBunny(playerID).fireWeapon(shotPower,shotAngle,weap);
+    
+    /**
+     * Tells the player to send a fire action to the server.
+     * 
+     * @param power
+     * @param angle
+     * @param weap
+     */
+    public synchronized void fireSomething(int power, int angle, Weapon weap){
+		/*
+    	game.takeShot(playerID, weap);
+    	game.getBunny(playerID).fireWeapon(shotPower, shotAngle, weap);
 		gameCanvas.setFireTime(System.currentTimeMillis());
 		gameCanvas.setFiring(true);
-		
+		*/
+		action = makeFireAction(power, angle, weap);
+		notify();
+    }
+    
+    
+    private FireAction makeFireAction(int power, int angle, Weapon weapon){
+    	game.getBunny(playerID).fireWeapon(power, angle, weapon);
+    	return new FireAction(playerID, weapon);
+    }
 
+    
+    private synchronized void waitForUserInput(){
+		try {
+			wait();
+		} catch (InterruptedException e){
+			e.printStackTrace();
+		}
     }
 
     
@@ -93,6 +122,49 @@ public class Player implements Runnable {
         	 * 		our turn ends
         	 * wait for playerID = 1 to take their turn
         	 */
+        	if (playerID == 0){
+        		waitForUserInput();	//after this returns, we have our fire action
+        		port.send(action);
+        		action = (FireAction) port.receive();
+        		action.execute(game);
+    			gameCanvas.setFireTime(System.currentTimeMillis());
+    			gameCanvas.setFiring(true);
+    			
+    			//other player
+    			while (gameCanvas.isFiring()){
+    				Log.e("tag","canvas is still firing");
+    				try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+    			}
+
+    			action = null;
+    			while (!(action instanceof FireAction)){
+    				action = (Action) port.receive();
+    				action.execute(game);
+    			}
+    			gameCanvas.setFireTime(System.currentTimeMillis());
+    			gameCanvas.setFiring(true);
+        	}
+        	else {
+    			//other player
+    			action = null;
+    			while (!(action instanceof FireAction)){
+    				action = (Action) port.receive();
+    				action.execute(game);
+    			}
+    			gameCanvas.setFireTime(System.currentTimeMillis());
+    			gameCanvas.setFiring(true);
+   
+        		waitForUserInput();	//after this returns, we have our fire action
+        		port.send(action);
+        		action = (FireAction) port.receive();
+        		action.execute(game);
+    			gameCanvas.setFireTime(System.currentTimeMillis());
+    			gameCanvas.setFiring(true);
+        	}
         }
         
         stop();
