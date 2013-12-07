@@ -77,7 +77,7 @@ public class GameCanvas implements Runnable {
 				try {
 					Thread.sleep(1000);
 					continue;
-				} catch (InterruptedException e) {
+				} catch (InterruptedException e){
 					e.printStackTrace();
 					continue;
 				}
