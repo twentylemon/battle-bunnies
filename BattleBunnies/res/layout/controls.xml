@@ -17,13 +17,18 @@
         android:layout_marginLeft="26dp"
         android:max="211"
         android:layout_weight="0.50" />
-    
-     <SeekBar
+
+    <SeekBar
         android:id="@+id/seekBar2"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="26dp"
+        android:layout_marginTop="13dp"
         android:max="180"
+        android:progress="90"
+        android:progressDrawable="@drawable/progress_drawable"
+        android:thumb="@drawable/thumb_drawable" />
+
         android:layout_weight="0.50" />
 
     <Button

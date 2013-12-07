@@ -40,7 +40,7 @@ public class ScoreBox extends Drawable {
 		else{
 			rect = new RectF(width - minWidth , 0, width, (int)(height * 0.15));
 			temp = PAINTBOX2;
-			xloc = width - (int)(width * 0.15) + 10;
+			xloc = width - minWidth + 10;
 		}
 		
 		can.drawRoundRect(rect, 10, 10, temp);
