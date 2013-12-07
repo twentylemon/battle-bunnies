@@ -25,8 +25,8 @@ public class ScoreBox extends Drawable {
 
 	
 	public void draw(Canvas can, int score, int player){
-		RectF rect=null;
-		Paint temp=null;
+		RectF rect = null;
+		Paint temp = null;
 		int xloc = 10;
 		int yloc = (int)(height * 0.15) - 15;
 		int size = (int)(height*0.15) - 15;
@@ -34,7 +34,7 @@ public class ScoreBox extends Drawable {
 		int minWidth = (int)PAINTTEXT.measureText("P"+(player+1)+": "+ score) + 15;
 		
 		if (player == 0){
-			rect = new RectF(0,0,minWidth,(int)(height*0.15));
+			rect = new RectF(0, 0, minWidth, (int)(height*0.15));
 			temp = PAINTBOX1;			
 		}
 		else {

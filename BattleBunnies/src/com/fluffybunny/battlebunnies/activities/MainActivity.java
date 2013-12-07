@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
     public void onQuickPlayClicked(View view){
         //start the weapon select activity
     	Intent intent = new Intent(this, GameActivitySP.class);
-    	int[] images = { R.drawable.player_bunny, new Random().nextInt(NUM_BUNNIES-1) + 1 };
+    	int[] images = { R.drawable.player_bunny, getImage(new Random().nextInt(NUM_BUNNIES-1) + 1) };
     	String[] names = { "Fluffy", "Bunny" };
     	intent.putExtra(GameActivitySP.PLAYER_IMAGES, images);
     	intent.putExtra(GameActivitySP.PLAYER_NAMES, names);
