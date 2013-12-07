@@ -30,13 +30,15 @@ public class ScoreBox extends Drawable {
 		int xloc = 10;
 		int yloc = (int)(height * 0.15) - 15;
 		int size = (int)(height*0.15) - 15;
+		PAINTTEXT.setTextSize(size);
+		int minWidth = (int)PAINTTEXT.measureText("P"+(player+1)+": "+ score) + 15;
 		
-		if(player == 1){
-			rect = new RectF(0,0,(int)(width*0.15),(int)(height*0.15));
+		if(player == 0){
+			rect = new RectF(0,0,minWidth,(int)(height*0.15));
 			temp = PAINTBOX1;			
 		}
 		else{
-			rect = new RectF(width - (int)(width * 0.15) , 0, width, (int)(height * 0.15));
+			rect = new RectF(width - minWidth , 0, width, (int)(height * 0.15));
 			temp = PAINTBOX2;
 			xloc = width - (int)(width * 0.15) + 10;
 		}
@@ -44,7 +46,6 @@ public class ScoreBox extends Drawable {
 		can.drawRoundRect(rect, 10, 10, temp);
 		PAINTTEXT.setTextSize(size);
 		can.drawText("P"+(player+1)+": "+ score, xloc, yloc, PAINTTEXT);
-		
 		
 	}
 	
