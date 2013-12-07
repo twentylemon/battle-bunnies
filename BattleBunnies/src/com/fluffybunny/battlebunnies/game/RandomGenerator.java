@@ -3,8 +3,6 @@ package com.fluffybunny.battlebunnies.game;
 import java.io.Serializable;
 import java.util.Random;
 
-import android.util.Log;
-
 /**
  * Generates a random terrain.
  *
