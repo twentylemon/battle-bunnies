@@ -1,9 +1,10 @@
-package com.fluffybunny.battlebunnies.activities;
+package com.fluffybunny.battlebunnies.bluetooth;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
 import java.io.OutputStream;
 import java.io.StreamCorruptedException;
 import java.util.UUID;
@@ -344,11 +345,9 @@ public class ConnectionHandler {
      * It handles all incoming and outgoing transmissions.
      */
     private class ConnectedThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final InputStream mmInStream;
-        private final OutputStream mmOutStream;
-        private ObjectInputStream inStream;
-        private ObjectOutputStream outStream;
+        protected final BluetoothSocket mmSocket;
+        protected final InputStream mmInStream;
+        protected final OutputStream mmOutStream;
 
         public ConnectedThread(BluetoothSocket socket) {
             Log.d(TAG, "create ConnectedThread");
@@ -366,14 +365,6 @@ public class ConnectionHandler {
 
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
-            try {
-				inStream = new ObjectInputStream(mmInStream);
-				outStream = new ObjectOutputStream(mmOutStream);
-			} catch (StreamCorruptedException e){
-				e.printStackTrace();
-			} catch (IOException e){
-				e.printStackTrace();
-			}
         }
 
         public void run() {
@@ -423,4 +414,43 @@ public class ConnectionHandler {
         }
     }
 
+    
+    private class GameThread extends ConnectedThread {
+    	private ObjectInputStream in;
+    	private ObjectOutputStream out;
+
+		public GameThread(BluetoothSocket socket) {
+			super(socket);
+			try {
+				in = new ObjectInputStream(mmInStream);
+				out = new ObjectOutputStream(mmOutStream);
+			} catch (StreamCorruptedException e){
+				e.printStackTrace();
+			} catch (IOException e){
+				e.printStackTrace();
+			}
+		}
+		
+		public Object read(){
+			try {
+				return in.readObject();
+			} catch (OptionalDataException e){
+				e.printStackTrace();
+			} catch (ClassNotFoundException e){
+				e.printStackTrace();
+			} catch (IOException e){
+				e.printStackTrace();
+			}
+			return null;
+		}
+    	
+		public void write(Object obj){
+			try {
+				out.writeObject(obj);
+			} catch (IOException e){
+				e.printStackTrace();
+			}
+		}
+    }
+    
 }

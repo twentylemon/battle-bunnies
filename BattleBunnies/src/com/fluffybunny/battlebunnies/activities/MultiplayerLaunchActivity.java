@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.fluffybunny.battlebunnies.R;
+import com.fluffybunny.battlebunnies.bluetooth.MultiplayerActivity;
 
 public class MultiplayerLaunchActivity extends Activity {
 	

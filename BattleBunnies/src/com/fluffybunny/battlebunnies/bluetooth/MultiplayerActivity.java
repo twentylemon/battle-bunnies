@@ -1,9 +1,10 @@
-package com.fluffybunny.battlebunnies.activities;
+package com.fluffybunny.battlebunnies.bluetooth;
 
 
 import com.fluffybunny.battlebunnies.R;
 import com.fluffybunny.battlebunnies.R.layout;
 import com.fluffybunny.battlebunnies.R.menu;
+import com.fluffybunny.battlebunnies.activities.DeviceListActivity;
 
 import android.os.Bundle;
 import android.os.Handler;
