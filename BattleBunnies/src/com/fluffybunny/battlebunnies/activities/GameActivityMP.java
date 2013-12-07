@@ -2,6 +2,7 @@ package com.fluffybunny.battlebunnies.activities;
 
 import android.content.Intent;
 
+import com.fluffybunny.battlebunnies.game.GameCanvas;
 import com.fluffybunny.battlebunnies.game.GameInfo;
 
 /**
@@ -25,9 +26,6 @@ public class GameActivityMP extends GameActivitySP {
 	 */
 	@Override
 	protected GameInfo makeGameInfo(){
-		Intent intent = getIntent();
-		
-		isServer = intent.getBooleanExtra(IS_SERVER, false);
 		
 		//server side, we are going to create the game info and send it to the other player
 		if (isServer){
@@ -37,9 +35,14 @@ public class GameActivityMP extends GameActivitySP {
 		}
 		//client side, we are going to receive the game info and add in stuff for the canvas etc
 		else {
-			
+			//receive g
+			GameInfo g = null;
+			g.setID(1);
+			g.getBunny(0).setGameCanvas(null);
+			game.getTerrain().setBitmapSize(size.x, size.y);
+			gameCanvas = new GameCanvas(g, surfaceHolder);
+			g.getBunny(1).setGameCanvas(gameCanvas);
 		}
-		
 		return null;
 	}
 	
@@ -49,5 +52,24 @@ public class GameActivityMP extends GameActivitySP {
 	 */
 	@Override
 	protected void firePressed(){
+		if (!gameCanvas.isFiring()){
+			if (isServer){
+			}
+			else {
+			}
+		}
+	}
+	
+	
+	/**
+	 * Sets up stuff. Like UI stuff and stuff.
+	 */
+	@Override
+	protected void setup(){
+		super.setup();
+
+		Intent intent = getIntent();
+		
+		isServer = intent.getBooleanExtra(IS_SERVER, false);
 	}
 }

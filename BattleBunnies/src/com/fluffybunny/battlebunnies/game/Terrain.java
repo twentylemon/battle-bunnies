@@ -20,6 +20,7 @@ public class Terrain extends Drawable implements Serializable {
 
     private int[][] map;    //the terrain map
     private Bitmap bitmap;	//the game map image
+    private int bitWidth, bitHeight;
 
     public final static int AIR = Color.parseColor("#E0FEFF");
     public final static int GRASS = Color.parseColor("#6E8B3D");
@@ -34,6 +35,7 @@ public class Terrain extends Drawable implements Serializable {
      */
     public Terrain(int width, int height, Terrain.Generator generator){
         map = generator.generate(width, height);
+        bitWidth = bitHeight = 0;
         generateBitmap();
     }
 
@@ -58,6 +60,19 @@ public class Terrain extends Drawable implements Serializable {
     
     
     /**
+     * Changes the size of the bitmap this terrain will produce.
+     * 
+     * @param width the new width of the bitmap
+     * @param height the new height of the bitmap
+     */
+    public void setBitmapSize(int width, int height){
+    	bitWidth = width;
+    	bitHeight = height;
+    	generateBitmap();
+    }
+    
+    
+    /**
      * Regenerates the bitmap for this terrain.
      */
     private void generateBitmap(){
@@ -68,6 +83,9 @@ public class Terrain extends Drawable implements Serializable {
 			}
 		}
 		bitmap = Bitmap.createBitmap(data, getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+		if (bitWidth != 0 && bitHeight != 0){
+	    	bitmap = Bitmap.createScaledBitmap(bitmap, bitWidth, bitHeight, true);
+		}
     }
 
 

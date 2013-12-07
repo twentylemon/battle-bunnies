@@ -55,43 +55,17 @@ public class GameActivitySP extends Activity {
 	
 	protected GameInfo game;
 	protected GameCanvas gameCanvas;
+	protected android.graphics.Point size;
+	protected Terrain.Generator generator;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game_activity_sp);
 		
-		gameView = (SurfaceView) findViewById(R.id.game);
-		surfaceHolder = gameView.getHolder();
+		setup();
 		
 		game = makeGameInfo();
-		
-		power = (SeekBar) findViewById(R.id.seekBar1);		
-		power.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){ 
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
-                shotPower = progress;
-            } 
-            public void onStartTrackingTouch(SeekBar seekBar){} 
-            public void onStopTrackingTouch(SeekBar seekBar){}
-        });
-		
-		angle = (SeekBar) findViewById(R.id.seekBar2);		
-		angle.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){ 
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
-                shotAngle =  180 - progress;
-            } 
-            public void onStartTrackingTouch(SeekBar seekBar){} 
-            public void onStopTrackingTouch(SeekBar seekBar){}
-        });
-		shotAngle = 90;
-		
-		fire = (Button) findViewById(R.id.button1);	
-		fire.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View arg0){ 
-				firePressed();
-			}
-		});
 		
 		populateSpinner(game.getWeaponList());
 	}
@@ -188,24 +162,7 @@ public class GameActivitySP extends Activity {
 	 * @return the GameInfo
 	 */
 	protected GameInfo makeGameInfo(){
-		Intent intent = getIntent();
-		aiDifficulty = intent.getIntExtra(AI_DIFFICULTY, 0);
-		playerImages = intent.getIntArrayExtra(PLAYER_IMAGES);
-		playerNames = intent.getStringArrayExtra(PLAYER_NAMES);
-		terrainType = intent.getIntExtra(TERRAIN_TYPE, TERRAIN_TYPE_RANDOM);
-		android.graphics.Point size = new android.graphics.Point();
-		getWindowManager().getDefaultDisplay().getSize(size);
-		int width = size.x;
-		int height = (int)(0.85 * size.y);
-		
-		Terrain.Generator generator;
-		switch (terrainType){
-		case TERRAIN_TYPE_RANDOM: default:
-			generator = new RandomGenerator();
-			break;
-		}
-
-		GameInfo g = new GameInfo(playerImages, playerNames, width, height, generator);
+		GameInfo g = new GameInfo(playerImages, playerNames, size.x, size.y, generator);
 		g.setID(0);
 		for (int i = 0; i < playerNames.length; i++){
 			Bitmap bitmap = BitmapFactory.decodeResource(getResources(), g.getBunny(i).getImageResource());
@@ -214,5 +171,56 @@ public class GameActivitySP extends Activity {
 		gameCanvas = new GameCanvas(g, surfaceHolder);
 		g.getBunny(0).setGameCanvas(gameCanvas);
 		return g;
+	}
+
+	
+	/**
+	 * Sets up the buttons and stuff. Called first to set up the UI and class variables.
+	 */
+	protected void setup(){
+		gameView = (SurfaceView) findViewById(R.id.game);
+		surfaceHolder = gameView.getHolder();
+
+		Intent intent = getIntent();
+		aiDifficulty = intent.getIntExtra(AI_DIFFICULTY, 0);
+		playerImages = intent.getIntArrayExtra(PLAYER_IMAGES);
+		playerNames = intent.getStringArrayExtra(PLAYER_NAMES);
+		terrainType = intent.getIntExtra(TERRAIN_TYPE, TERRAIN_TYPE_RANDOM);
+		android.graphics.Point size = new android.graphics.Point();
+		getWindowManager().getDefaultDisplay().getSize(size);
+		size.y = (int)(0.85 * size.y);
+		
+		switch (terrainType){
+		case TERRAIN_TYPE_RANDOM: default:
+			generator = new RandomGenerator();
+			break;
+		}
+		
+		power = (SeekBar) findViewById(R.id.seekBar1);		
+		power.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){ 
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                shotPower = progress;
+            }
+            public void onStartTrackingTouch(SeekBar seekBar){} 
+            public void onStopTrackingTouch(SeekBar seekBar){}
+        });
+		
+		angle = (SeekBar) findViewById(R.id.seekBar2);		
+		angle.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){ 
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                shotAngle =  180 - progress;
+            }
+            public void onStartTrackingTouch(SeekBar seekBar){} 
+            public void onStopTrackingTouch(SeekBar seekBar){}
+        });
+		shotAngle = 90;
+		
+		fire = (Button) findViewById(R.id.button1);	
+		fire.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0){ 
+				firePressed();
+			}
+		});
 	}
 }
