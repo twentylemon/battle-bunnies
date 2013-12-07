@@ -5,7 +5,7 @@
     android:background="@drawable/background"
     android:orientation="horizontal" >
 
-        android:layout_weight="0.50" />
+
 
     
 
@@ -51,5 +51,25 @@
         android:layout_alignParentTop="true" 
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"/>
+
+    <TextView
+        android:id="@+id/powText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/spinner1"
+        android:layout_alignLeft="@+id/seekBar1"
+        android:text="Power: "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView1"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignRight="@+id/seekBar2"
+        android:layout_marginRight="15dp"
+        android:text="Angle: "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>
