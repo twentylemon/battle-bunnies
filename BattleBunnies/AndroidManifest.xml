@@ -35,7 +35,7 @@
             android:label="@string/title_activity_multiplayer" >
         </activity>
         <activity
-            android:name="com.fluffybunny.battlebunnies.activities.MultiplayerActivity"
+            android:name="com.fluffybunny.battlebunnies.bluetooth.MultiplayerActivity"
             android:label="@string/title_activity_multiplayer" >
         </activity>
         <activity
