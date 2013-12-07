@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@drawable/background2"
     android:orientation="horizontal" >
 
 
@@ -11,13 +11,14 @@
 
     <Button
         android:id="@+id/button1"
-        android:layout_width="wrap_content"
+        android:layout_width="162dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/but_grn"
+        style="@style/ButtonText"
         android:text="@string/fire" />
 
     <SeekBar
@@ -28,7 +29,9 @@
         android:layout_marginTop="13dp"        
         android:layout_toRightOf="@+id/spinner1"
         android:layout_marginLeft="23dp"
-        android:max="211" />
+        android:max="211" 
+        android:progressDrawable="@drawable/progress_drawable"
+        android:thumb="@drawable/thumb_drawable"/>
 
     <SeekBar
         android:id="@+id/seekBar2"
@@ -50,17 +53,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" 
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"/>
-
-    <TextView
-        android:id="@+id/powText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/spinner1"
-        android:layout_alignLeft="@+id/seekBar1"
-        android:layout_marginTop="14dp"
-        android:text="Power: "
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_marginTop="5dp"
+        />
 
     <TextView
         android:id="@+id/angleText"
@@ -69,8 +63,38 @@
         android:layout_alignBaseline="@+id/powText"
         android:layout_alignBottom="@+id/powText"
         android:layout_alignLeft="@+id/seekBar2"
-        android:layout_marginLeft="14dp"
+        android:layout_marginLeft="0dp"
         android:text="Angle: "
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/powText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/seekBar1"
+        android:layout_below="@+id/seekBar1"
+        android:text="Power: "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/buttonLeft"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/spinner1"
+        android:layout_toRightOf="@+id/seekBar1"
+        android:layout_marginTop="13dp"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/left" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/spinner1"
+        android:layout_toLeftOf="@+id/seekBar2"
+        android:layout_marginTop="13dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/right"
+        android:text="" />
 
 </RelativeLayout>
