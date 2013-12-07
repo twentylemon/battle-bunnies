@@ -65,7 +65,6 @@ public class Bunny extends Drawable implements Serializable {
     /**
      * Getters/Setters.
      */
-    public void setPosition(Point position){ this.position = position; }
     public void setMovesRemaining(int movesRemaining){ this.movesRemaining = movesRemaining; }
     public void setScore(int score){ this.score = score; }
     public void setName(String name){ this.name = name; }
@@ -86,6 +85,22 @@ public class Bunny extends Drawable implements Serializable {
     public void setGameCanvas(GameCanvas canvas){
     	gameCanvas = canvas;
     	gameCanvas.start();
+    }
+    
+    
+    /**
+     * Changes the position of the bunny. The extents are updated as well.
+     * 
+     * @param position where to bunny should end up
+     * @throws NullPointerException if bitmap is not initialized
+     */
+    public void setPosition(Point position){
+    	this.position = position;
+    	Point size = new Point(bitmap.getWidth() / 2, bitmap.getHeight() / 2);
+    	Point e0 = position.add(size);
+    	size.x = -size.x; size.y = -size.y;
+    	Point e1 = position.add(size);
+    	setExtents(e0, e1);
     }
 
 
@@ -113,6 +128,16 @@ public class Bunny extends Drawable implements Serializable {
         double speed = power;
         weapon.initFire(extents[1], speed, angle);
         gameCanvas.setFiring(true);
+    }
+
+    
+    /**
+     * Causes the bunny to fall down due to gravity.
+     * 
+     * @param terrain the terrain to fall onto
+     */
+    public void fall(Terrain terrain){
+    	
     }
 
 

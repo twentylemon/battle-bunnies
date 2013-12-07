@@ -42,6 +42,7 @@ public class Terrain implements Serializable {
      */
     public void destroyPoint(int x, int y){ map[x][y] = AIR; }
     public Bitmap getBitmap(){ return bitmap; }
+    public boolean isOnMap(int x, int y){ return x >= 0 && x < getWidth() && y >= 0 && y < getHeight(); }
     public int getWidth(){ return map.length; }
     public int getHeight(){ return map[0].length; }
     public int getPoint(int x, int y){
@@ -99,10 +100,12 @@ public class Terrain implements Serializable {
         radius = radius * radius;   //square for use below
         for (int i = xmin; i <= xmax; i++){
             for (int j = ymin; j <= ymax; j++){
-                double dist = (i - center.x)*(i - center.x) + (j - center.y)*(j - center.y);
-                if (dist < radius){ //the point (i,j) is in the circle
-                    destroyPoint(i, j);
-                }
+            	if (isOnMap(i, j)){
+	                double dist = (i - center.x)*(i - center.x) + (j - center.y)*(j - center.y);
+	                if (dist < radius){ //the point (i,j) is in the circle
+	                    destroyPoint(i, j);
+	                }
+            	}
             }
         }
         generateBitmap();

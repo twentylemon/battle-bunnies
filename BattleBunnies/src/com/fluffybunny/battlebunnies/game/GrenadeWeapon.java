@@ -12,13 +12,13 @@ public class GrenadeWeapon extends Weapon {
 	private static final long serialVersionUID = 1L;
 
 	private float RADIUS = 5;
-	private float BOOMRADIUS = 25;
+	private float BOOMRADIUS = 50;
 	private Paint PAINT = new Paint();
 	private Paint BOOMPAINT = new Paint();
 
 	public GrenadeWeapon(){
 		name = "Toss a 'Nade";
-		explosionRadius=25;
+		explosionRadius = BOOMRADIUS;
 		PAINT.setColor(Color.parseColor("#EEC900"));
 		BOOMPAINT.setColor(Color.parseColor("#CD0000"));
 		scoreValue = 25;
@@ -27,9 +27,7 @@ public class GrenadeWeapon extends Weapon {
 
 	@Override
 	public void explode(Canvas canvas, Point where){
-		RADIUS= BOOMRADIUS;
-		PAINT=BOOMPAINT;
-		draw(canvas, where);
+		canvas.drawCircle(where.x, where.y, BOOMRADIUS, BOOMPAINT);
 	}
 
 	

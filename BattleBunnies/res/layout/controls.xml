@@ -14,18 +14,15 @@
         android:id="@+id/seekBar1"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_marginLeft="26dp"
-        android:layout_toRightOf="@+id/spinner1"
+        android:max="211"
         android:layout_weight="0.50" />
     
      <SeekBar
         android:id="@+id/seekBar2"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_marginLeft="26dp"
-        android:layout_toRightOf="@+id/seekBar1"
         android:max="180"
         android:layout_weight="0.50" />
 
@@ -33,7 +30,6 @@
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/seekBar2"
-        android:text="FIRE" />
+        android:text="@string/fire" />
 
 </LinearLayout>

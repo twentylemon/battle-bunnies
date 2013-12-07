@@ -13,6 +13,7 @@
     <string name="connect">Connect</string>
     <string name="title_activity_game">GameActivity</string>
     <string name="flopsy">Flopsy</string>
+    <string name="fire">FIRE</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_multiplayer">MultiplayerActivity</string>
     <string name="title_activity_device_list">DeviceListActivity</string>
