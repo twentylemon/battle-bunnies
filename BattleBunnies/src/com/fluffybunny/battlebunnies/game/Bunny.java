@@ -19,7 +19,7 @@ public class Bunny extends Drawable implements Serializable {
     private Bitmap bitmap;		//what to display for our image
     private GameCanvas gameCanvas;
 
-    public final static int DEFAULT_NUM_MOVES = 4;
+    public final static int DEFAULT_NUM_MOVES = 15;
     public final static int MOVE_SPEED = 50;
     public final static int RADIUS = 32;
     
@@ -175,16 +175,19 @@ public class Bunny extends Drawable implements Serializable {
      * @throws NullPointerException if bitmap has not been initialized
      */
     public void moveSideways(boolean left, Terrain terrain){
-    	int x = 0;
-    	if (left){
-    		x = Math.max(0, position.x - MOVE_SPEED);
+    	if (movesRemaining > 0){
+    		movesRemaining--;
+	    	int x = 0;
+	    	if (left){
+	    		x = Math.max(0, position.x - MOVE_SPEED);
+	    	}
+	    	else {
+	    		x = Math.min(terrain.getWidth() - 1, position.x + MOVE_SPEED);
+	    	}
+	    	Point pos = terrain.getHighestPointAt(x);
+	    	pos.y -= bitmap.getHeight() / 2;
+	    	setPosition(pos);
     	}
-    	else {
-    		x = Math.min(terrain.getWidth() - 1, position.x + MOVE_SPEED);
-    	}
-    	Point pos = terrain.getHighestPointAt(x);
-    	pos.y -= bitmap.getHeight() / 2;
-    	setPosition(pos);
     }
 
 

@@ -83,6 +83,14 @@ public class GameActivitySP extends Activity {
 		return true;
 	}
 	
+	@Override
+	public void onBackPressed(){
+		if (gameCanvas != null){
+			gameCanvas.stop();
+		}
+		super.onBackPressed();
+	}
+	
 	
 	/**
 	 * Blocks the UI thread waiting for the canvas to finish firing.
@@ -125,7 +133,12 @@ public class GameActivitySP extends Activity {
 	 * @param left true if they are moving left, false if right
 	 */
 	protected void moveBunny(int playerID, boolean left){
-		new MoveAction(playerID, left).execute(game);
+		if (game.getBunny(playerID).getMovesRemaining() <= 0){
+			Toast.makeText(getApplicationContext(), "No more moves remaining.", Toast.LENGTH_LONG).show();
+		}
+		else {
+			new MoveAction(playerID, left).execute(game);
+		}
 	}
 	
 	
@@ -288,8 +301,8 @@ public class GameActivitySP extends Activity {
 		moveLeft = (Button) findViewById(R.id.buttonLeft);	
 		moveLeft.setOnClickListener(new OnClickListener(){
 			@Override
-			public void onClick(View arg0){ 
-				moveBunny(game.getMyID(),true);
+			public void onClick(View arg0){
+				moveBunny(game.getMyID(), true);
 			}
 		});
 		
@@ -297,7 +310,7 @@ public class GameActivitySP extends Activity {
 		moveRight.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0){ 
-				moveBunny(game.getMyID(),false);
+				moveBunny(game.getMyID(), false);
 			}
 		});
 	}

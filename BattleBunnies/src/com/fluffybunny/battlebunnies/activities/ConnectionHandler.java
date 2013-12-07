@@ -2,7 +2,10 @@ package com.fluffybunny.battlebunnies.activities;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.StreamCorruptedException;
 import java.util.UUID;
 
 import android.bluetooth.BluetoothAdapter;
@@ -344,6 +347,8 @@ public class ConnectionHandler {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
+        private ObjectInputStream inStream;
+        private ObjectOutputStream outStream;
 
         public ConnectedThread(BluetoothSocket socket) {
             Log.d(TAG, "create ConnectedThread");
@@ -361,6 +366,14 @@ public class ConnectionHandler {
 
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
+            try {
+				inStream = new ObjectInputStream(mmInStream);
+				outStream = new ObjectOutputStream(mmOutStream);
+			} catch (StreamCorruptedException e){
+				e.printStackTrace();
+			} catch (IOException e){
+				e.printStackTrace();
+			}
         }
 
         public void run() {
