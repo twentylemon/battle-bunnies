@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 public class Bunny extends Drawable implements Serializable {
 	private static final long serialVersionUID = 1L;

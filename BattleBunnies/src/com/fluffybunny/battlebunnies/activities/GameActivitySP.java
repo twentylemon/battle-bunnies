@@ -81,7 +81,8 @@ public class GameActivitySP extends Activity {
             } 
             public void onStartTrackingTouch(SeekBar seekBar){} 
             public void onStopTrackingTouch(SeekBar seekBar){}
-        }); 
+        });
+		shotAngle = 90;
 		
 		fire = (Button) findViewById(R.id.button1);	
 		fire.setOnClickListener(new OnClickListener(){

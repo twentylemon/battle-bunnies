@@ -11,9 +11,9 @@ public class ScoreBox extends Drawable {
 	public int pscore;
 	public int width;
 	public int height;
-	private Paint PAINTBOX1=new Paint();
-	private Paint PAINTBOX2=new Paint();
-	private Paint PAINTTEXT=new Paint();
+	private Paint PAINTBOX1 = new Paint();
+	private Paint PAINTBOX2 = new Paint();
+	private Paint PAINTTEXT = new Paint();
 	
 	public ScoreBox(int width, int height){
 		this.width = width;
@@ -33,11 +33,11 @@ public class ScoreBox extends Drawable {
 		PAINTTEXT.setTextSize(size);
 		int minWidth = (int)PAINTTEXT.measureText("P"+(player+1)+": "+ score) + 15;
 		
-		if(player == 0){
+		if (player == 0){
 			rect = new RectF(0,0,minWidth,(int)(height*0.15));
 			temp = PAINTBOX1;			
 		}
-		else{
+		else {
 			rect = new RectF(width - minWidth , 0, width, (int)(height * 0.15));
 			temp = PAINTBOX2;
 			xloc = width - minWidth + 10;
@@ -46,31 +46,22 @@ public class ScoreBox extends Drawable {
 		can.drawRoundRect(rect, 10, 10, temp);
 		PAINTTEXT.setTextSize(size);
 		can.drawText("P"+(player+1)+": "+ score, xloc, yloc, PAINTTEXT);
-		
 	}
 	
 	@Override
-	public void draw(Canvas arg0) {
-		// TODO Auto-generated method stub
-
+	public void draw(Canvas arg0){
 	}
 
 	@Override
-	public int getOpacity() {
-		// TODO Auto-generated method stub
+	public int getOpacity(){
 		return 0;
 	}
 
 	@Override
 	public void setAlpha(int arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void setColorFilter(ColorFilter arg0) {
-		// TODO Auto-generated method stub
-
 	}
-
 }
