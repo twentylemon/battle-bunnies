@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 public class Bunny extends Drawable implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -111,6 +112,18 @@ public class Bunny extends Drawable implements Serializable {
     public void setExtents(Point p1, Point p2){
         extents[0] = p1;
         extents[1] = p2;
+    }
+ 
+    
+    /**
+     * Returns true if the point is inside this bunny's extents.
+     * 
+     * @param point the point to test
+     * @return true if point is in our extents
+     */
+    public boolean inExtents(Point point){
+    	return point.x < extents[0].x && point.x > extents[1].x &&
+    			point.y < extents[0].y && point.y > extents[1].y;
     }
 
 
