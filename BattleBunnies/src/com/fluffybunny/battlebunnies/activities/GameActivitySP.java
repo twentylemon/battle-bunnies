@@ -39,22 +39,22 @@ public class GameActivitySP extends Activity {
 	
 	public static final int TERRAIN_TYPE_RANDOM = 0;
 	
-	private SurfaceView gameView;
-	private SurfaceHolder surfaceHolder;
-	private SeekBar power;
-	private SeekBar angle;
-	private Button fire;
-	private Spinner weaponSpinner;
+	protected SurfaceView gameView;
+	protected SurfaceHolder surfaceHolder;
+	protected SeekBar power;
+	protected SeekBar angle;
+	protected Button fire;
+	protected Spinner weaponSpinner;
 
-	private int shotPower;
-	private int shotAngle;
-	private int aiDifficulty;
-	private int terrainType;
-	private int[] playerImages;
-	private String[] playerNames;
+	protected int shotPower;
+	protected int shotAngle;
+	protected int aiDifficulty;
+	protected int terrainType;
+	protected int[] playerImages;
+	protected String[] playerNames;
 	
-	private GameInfo game;
-	private GameCanvas gameCanvas;
+	protected GameInfo game;
+	protected GameCanvas gameCanvas;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +117,7 @@ public class GameActivitySP extends Activity {
 	/**
 	 * Blocks the UI thread waiting for the canvas to finish firing.
 	 */
-	private void waitForCanvas(){
+	protected void waitForCanvas(){
 		while (gameCanvas.isFiring()){
 			try {
 				Thread.sleep(100);
@@ -131,8 +131,9 @@ public class GameActivitySP extends Activity {
 	
 	/**
 	 * Handles the fire button being pressed.
+	 * The entire turn gets played out when fire is pressed.
 	 */
-	private void firePressed(){
+	protected void firePressed(){
 		if (!gameCanvas.isFiring()){
 			String selected = (String) weaponSpinner.getSelectedItem();
 			//index of should be searching for a weapon
@@ -167,7 +168,7 @@ public class GameActivitySP extends Activity {
 	 * 
 	 * @param weaponList the list of all the weapons
 	 */
-	private void populateSpinner(List<Weapon> weaponList){
+	protected void populateSpinner(List<Weapon> weaponList){
 		weaponSpinner = (Spinner) findViewById(R.id.spinner1);
 		List<String> weap = new ArrayList<String>();
 		for (Weapon w : weaponList){
@@ -182,10 +183,11 @@ public class GameActivitySP extends Activity {
 	
 	/**
 	 * Returns the game info for this game.
+	 * The gameCanvas must also be initialized in this method.
 	 * 
 	 * @return the GameInfo
 	 */
-	private GameInfo makeGameInfo(){
+	protected GameInfo makeGameInfo(){
 		Intent intent = getIntent();
 		aiDifficulty = intent.getIntExtra(AI_DIFFICULTY, 0);
 		playerImages = intent.getIntArrayExtra(PLAYER_IMAGES);
