@@ -28,11 +28,8 @@ public class RandomGenerator implements Terrain.Generator, Serializable {
     public int[][] generate(int width, int height) {
         int[][] terrain = new int[width][height];
         Random rng = new Random();
-        Log.e("tag", "calling topline");
         topline(terrain, width, height);
-        Log.e("tag", "calling smooth");
-        smooth(terrain, 1 + rng.nextInt(width / 10));
-        Log.e("tag", "calling fillLower");
+        smooth(terrain, rng.nextInt(width / 100));
         fillLower(terrain, Terrain.GRASS, Terrain.ROCK, Terrain.AIR);
         return terrain;
     }

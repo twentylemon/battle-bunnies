@@ -111,10 +111,10 @@ public class GameInfo implements Serializable {
     		for (Point extent : extents){
         		if (extent.distance(landing) < radius){
         			if (playerID == i){
-        				getBunny(i).addScore(-score);
+        				getBunny(playerID).addScore(-score);
         			}
         			else {
-        				getBunny(i).addScore(score);
+        				getBunny(playerID).addScore(score);
         			}
         		}
     		}

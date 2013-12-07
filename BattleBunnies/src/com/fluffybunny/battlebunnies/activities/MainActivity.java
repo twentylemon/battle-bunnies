@@ -1,5 +1,7 @@
 package com.fluffybunny.battlebunnies.activities;
 
+import java.util.Random;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ public class MainActivity extends Activity {
 	
 	public static final String TAG = "BattleBunnies";
 	public static final String PREFERENCES = "com.fluffybunny.battlebunnies";
+	public static final int NUM_BUNNIES = 8;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -85,7 +88,7 @@ public class MainActivity extends Activity {
     public void onQuickPlayClicked(View view){
         //start the weapon select activity
     	Intent intent = new Intent(this, GameActivitySP.class);
-    	int[] images = { R.drawable.player_bunny, R.drawable.player2_bunny };
+    	int[] images = { R.drawable.player_bunny, getImage(new Random().nextInt(NUM_BUNNIES-1) + 1) };
     	String[] names = { "Fluffy", "Bunny" };
     	intent.putExtra(GameActivitySP.PLAYER_IMAGES, images);
     	intent.putExtra(GameActivitySP.PLAYER_NAMES, names);

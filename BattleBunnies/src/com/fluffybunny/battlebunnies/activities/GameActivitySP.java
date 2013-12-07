@@ -77,11 +77,12 @@ public class GameActivitySP extends Activity {
 		angle = (SeekBar) findViewById(R.id.seekBar2);		
 		angle.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){ 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
-                shotAngle = progress;
+                shotAngle =  180 - progress;
             } 
             public void onStartTrackingTouch(SeekBar seekBar){} 
             public void onStopTrackingTouch(SeekBar seekBar){}
-        }); 
+        });
+		shotAngle = 90;
 		
 		fire = (Button) findViewById(R.id.button1);	
 		fire.setOnClickListener(new OnClickListener(){
