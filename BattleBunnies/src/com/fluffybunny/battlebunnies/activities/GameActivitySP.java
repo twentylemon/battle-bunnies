@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.SurfaceHolder;
@@ -198,10 +199,19 @@ public class GameActivitySP extends Activity {
 			break;
 		}
 		
+		angleText =  (TextView) findViewById(R.id.angleText);	
+		angleText.setTextColor(Color.parseColor("#000000"));
+		angleText.setText("Angle: " + 90);
+		powerText =  (TextView) findViewById(R.id.powText);
+		powerText.setTextColor(Color.parseColor("#000000"));
+		powerText.setText("Power: " + 0);
+		
 		power = (SeekBar) findViewById(R.id.seekBar1);		
 		power.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){ 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
                 shotPower = progress;
+                powerText.setText("Power: "+ shotPower);
+                
             }
             public void onStartTrackingTouch(SeekBar seekBar){} 
             public void onStopTrackingTouch(SeekBar seekBar){}
@@ -211,6 +221,12 @@ public class GameActivitySP extends Activity {
 		angle.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){ 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
                 shotAngle =  180 - progress;
+                String temp= "";
+                int temp2= Math.abs(shotAngle - 90);
+                if(shotAngle < 90) {temp = " Left" ;}
+                if(shotAngle > 90) {temp = " Right" ;}
+                angleText.setText("Angle: " + temp2+ temp);
+                if(shotAngle == 90) {angleText.setText("Angle: UP" );}
             }
             public void onStartTrackingTouch(SeekBar seekBar){} 
             public void onStopTrackingTouch(SeekBar seekBar){}
@@ -225,5 +241,6 @@ public class GameActivitySP extends Activity {
 			}
 		});
 		angleText =  (TextView) findViewById(R.id.angleText);	
+		powerText =  (TextView) findViewById(R.id.powText);
 	}
 }
