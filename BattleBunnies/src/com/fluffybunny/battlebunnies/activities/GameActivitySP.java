@@ -27,6 +27,7 @@ import com.fluffybunny.battlebunnies.R;
 import com.fluffybunny.battlebunnies.game.FireAction;
 import com.fluffybunny.battlebunnies.game.GameCanvas;
 import com.fluffybunny.battlebunnies.game.GameInfo;
+import com.fluffybunny.battlebunnies.game.MoveAction;
 import com.fluffybunny.battlebunnies.game.RandomGenerator;
 import com.fluffybunny.battlebunnies.game.Terrain;
 import com.fluffybunny.battlebunnies.game.Weapon;
@@ -132,7 +133,7 @@ public class GameActivitySP extends Activity {
 	 * @param left true if they are moving left, false if right
 	 */
 	protected void moveBunny(int playerID, boolean left){
-		game.getBunny(playerID).moveSideways(left, game.getTerrain());
+		new MoveAction(playerID, left).execute(game);
 	}
 	
 	

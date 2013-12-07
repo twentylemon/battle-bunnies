@@ -7,7 +7,6 @@ import android.content.Intent;
 import com.fluffybunny.battlebunnies.game.FireAction;
 import com.fluffybunny.battlebunnies.game.GameCanvas;
 import com.fluffybunny.battlebunnies.game.GameInfo;
-import com.fluffybunny.battlebunnies.game.Weapon;
 
 /**
  * The multiplayer game screen
