@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -20,6 +19,7 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fluffybunny.battlebunnies.R;
@@ -45,6 +45,8 @@ public class GameActivitySP extends Activity {
 	protected SeekBar angle;
 	protected Button fire;
 	protected Spinner weaponSpinner;
+	protected TextView powerText;
+	protected TextView angleText;
 
 	protected int shotPower;
 	protected int shotAngle;
@@ -186,7 +188,7 @@ public class GameActivitySP extends Activity {
 		playerImages = intent.getIntArrayExtra(PLAYER_IMAGES);
 		playerNames = intent.getStringArrayExtra(PLAYER_NAMES);
 		terrainType = intent.getIntExtra(TERRAIN_TYPE, TERRAIN_TYPE_RANDOM);
-		android.graphics.Point size = new android.graphics.Point();
+		size = new android.graphics.Point();
 		getWindowManager().getDefaultDisplay().getSize(size);
 		size.y = (int)(0.85 * size.y);
 		
@@ -222,5 +224,6 @@ public class GameActivitySP extends Activity {
 				firePressed();
 			}
 		});
+		angleText =  (TextView) findViewById(R.id.angleText);	
 	}
 }
