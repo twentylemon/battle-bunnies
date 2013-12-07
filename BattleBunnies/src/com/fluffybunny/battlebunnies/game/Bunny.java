@@ -79,7 +79,7 @@ public class Bunny extends Drawable implements Serializable {
 
     /**
      * Sets and starts the GameCanvas
-     * @param canvas the game cavnas
+     * @param canvas the game canvas
      */
     public void setGameCanvas(GameCanvas canvas){
     	if (gameCanvas != null){

@@ -83,16 +83,6 @@ public class GameActivitySP extends Activity {
 	
 	
 	/**
-	 * Stop the canvas thread on back pressed.
-	 */
-	@Override
-	public void onBackPressed(){
-		gameCanvas.stop();
-		super.onBackPressed();
-	}
-	
-	
-	/**
 	 * Blocks the UI thread waiting for the canvas to finish firing.
 	 */
 	protected void waitForCanvas(){
@@ -158,6 +148,29 @@ public class GameActivitySP extends Activity {
 	
 	
 	/**
+	 * Checks for the game being over. If it is, the activity ends.
+	 */
+	protected void checkEndGame(){
+		if (game.isGameOver()){
+			waitForCanvas();
+			gameCanvas.stop();
+			int myScore = game.getBunny(game.getMyID()).getScore();
+			int aiScore = game.getBunny(game.otherID(game.getMyID())).getScore();
+			if (myScore > aiScore){
+				Toast.makeText(getApplicationContext(), "You won! " + myScore + " to " + aiScore, Toast.LENGTH_LONG).show();
+			}
+			else if (myScore < aiScore){
+				Toast.makeText(getApplicationContext(), "Failure. " + myScore + " to " + aiScore, Toast.LENGTH_LONG).show();
+			}
+			else {	//tie game
+				Toast.makeText(getApplicationContext(), "You may or may not have won.", Toast.LENGTH_LONG).show();
+			}
+			onBackPressed();
+		}
+	}
+	
+	
+	/**
 	 * Handles the fire button being pressed.
 	 * The entire turn gets played out when fire is pressed.
 	 */
@@ -165,12 +178,7 @@ public class GameActivitySP extends Activity {
 		if (!gameCanvas.isFiring()){
 			myTurn();
 			otherTurn();
-			
-			if (game.isGameOver()){
-				waitForCanvas();
-				Toast.makeText(getApplicationContext(), "You may or may not have won.", Toast.LENGTH_LONG).show();
-				onBackPressed();
-			}
+			checkEndGame();
 		}
 	}
 	
