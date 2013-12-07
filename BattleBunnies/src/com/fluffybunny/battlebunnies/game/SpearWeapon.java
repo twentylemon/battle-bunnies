@@ -11,13 +11,13 @@ public class SpearWeapon extends Weapon {
 
 	private final float RADIUS = 10;
 	private final Paint PAINT = new Paint();
-	Bitmap bitmap ;
+	Bitmap bitmap;
 
 	public SpearWeapon(){
 		name ="Chuck a Spear";
 		PAINT.setColor(Color.parseColor("#C0C0C0"));
 		scoreValue = 100;
-		
+		explosionRadius = 1;
 		//bitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.spear);
 	}
 

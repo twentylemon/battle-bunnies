@@ -1,9 +1,6 @@
 package com.fluffybunny.battlebunnies.game;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -29,7 +26,7 @@ public class GameCanvas implements Runnable {
 		fireTime = 0;
 		firing = false;
 		running = false;
-		scoreBox = new ScoreBox(game.getTerrain().getWidth(),game.getTerrain().getHeight());
+		scoreBox = new ScoreBox(game.getTerrain().getWidth(), game.getTerrain().getHeight());
 	}
 
 	
@@ -83,7 +80,6 @@ public class GameCanvas implements Runnable {
 					Thread.sleep(1000);
 					continue;
 				} catch (InterruptedException e){
-					e.printStackTrace();
 					continue;
 				}
 			}
@@ -95,9 +91,6 @@ public class GameCanvas implements Runnable {
 				game.getBunny(i).draw(canvas);
 				scoreBox.draw(canvas, game.getBunny(i).getScore(), i);
 			}
-			
-			
-			
 			
 			//draw the weapon, if any
 			if (firing){
@@ -112,6 +105,7 @@ public class GameCanvas implements Runnable {
 						game.getBunny(0).inExtents(pos) || game.getBunny(1).inExtents(pos)){
 					game.getFiredWeapon().explode(canvas, pos);
 					game.getTerrain().destroyTerrain(pos, game.getFiredWeapon());
+					game.addScore(game.getFireAction(), pos);
 					firing = false;
 				}
 				//else of, just keep flying

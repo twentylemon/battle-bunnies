@@ -172,8 +172,10 @@ public class GameActivitySP extends Activity {
 		playerImages = intent.getIntArrayExtra(PLAYER_IMAGES);
 		playerNames = intent.getStringArrayExtra(PLAYER_NAMES);
 		terrainType = intent.getIntExtra(TERRAIN_TYPE, TERRAIN_TYPE_RANDOM);
-		int width = getWindowManager().getDefaultDisplay().getWidth();
-		int height = (int)(0.85 * getWindowManager().getDefaultDisplay().getHeight());
+		android.graphics.Point size = new android.graphics.Point();
+		getWindowManager().getDefaultDisplay().getSize(size);
+		int width = size.x;
+		int height = (int)(0.85 * size.y);
 		
 		Terrain.Generator generator;
 		switch (terrainType){

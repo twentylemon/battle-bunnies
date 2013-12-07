@@ -31,7 +31,7 @@ public class RandomGenerator implements Terrain.Generator, Serializable {
         Log.e("tag", "calling topline");
         topline(terrain, width, height);
         Log.e("tag", "calling smooth");
-        smooth(terrain, rng.nextInt(width / 10));
+        smooth(terrain, 1 + rng.nextInt(width / 10));
         Log.e("tag", "calling fillLower");
         fillLower(terrain, Terrain.GRASS, Terrain.ROCK, Terrain.AIR);
         return terrain;
