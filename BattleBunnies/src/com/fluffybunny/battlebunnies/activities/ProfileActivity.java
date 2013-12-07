@@ -10,6 +10,8 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -29,6 +31,7 @@ public class ProfileActivity extends Activity {
 	protected TextView levView;
 	protected EditText nameEdit;
 	protected Spinner chars;
+	protected Button save;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +42,7 @@ public class ProfileActivity extends Activity {
 	}
 	
 	private void setupPrefs(){
-		String name = prefs.getString("playerName", "Rusty");
+		String name = prefs.getString(PLAYER_NAME, "Rusty");
 		int wins = prefs.getInt(PLAYER_WINS, 0);
 		int loss = prefs.getInt(PLAYER_LOSS, 0);
 		int level = prefs.getInt(PLAYER_LEV, 0);
@@ -48,6 +51,18 @@ public class ProfileActivity extends Activity {
 		lossView= (TextView) findViewById(R.id.loss);	
 		levView= (TextView) findViewById(R.id.lev);	
 		nameEdit= (EditText) findViewById(R.id.nameEntry);	
+		chars =(Spinner) findViewById(R.id.chars);
+		
+		setupSpinner();
+		
+		save = (Button) findViewById(R.id.saveButton);	
+		save.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0){ 
+				SharedPreferences.Editor editor = prefs.edit();
+			    editor.putString(PLAYER_NAME, nameEdit.getText().toString());
+			}
+		});
 		
 		winView.setText(wins);
 		lossView.setText(loss);
