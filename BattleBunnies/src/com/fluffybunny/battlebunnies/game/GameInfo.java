@@ -13,6 +13,7 @@ public class GameInfo implements Serializable {
     private List<Weapon> weaponList;	//list of all selectable weapons
     private int numShots;   			//number of shots so far (turns = numShots / 2)
     private int myID;					//this player's player id
+    private FireAction fireAction;		//the most recent shot taken
 	
 	public static final int MAX_TURNS = 10;
 
@@ -70,6 +71,7 @@ public class GameInfo implements Serializable {
     public List<Weapon> getWeaponList(){ return weaponList; }
     public Weapon getWeapon(int id){ return weaponList.get(id); }
     public Weapon getFiredWeapon(){ return weaponList.get(weaponID); }
+    public FireAction getFireAction(){ return fireAction; }
     public int getNumWeapons(){ return weaponList.size(); }
     public boolean isGameOver(){ return getTurnNumber() >= MAX_TURNS; }
     public int getNumShots(){ return numShots; }
@@ -83,11 +85,11 @@ public class GameInfo implements Serializable {
      * @param fire the fire action
      */
     public void takeShot(FireAction fire){
+    	fireAction = fire;
     	numShots++;
     	int playerID = fire.getPlayerID();
     	weaponID = fire.getWeaponID();
     	getBunny(playerID).fireWeapon(fire.getPower(), fire.getAngle(), getWeapon(weaponID));
-    	// TODO calculate the score?
     }
     
     
@@ -100,7 +102,22 @@ public class GameInfo implements Serializable {
     public void addScore(FireAction fire, Point landing){
     	int playerID = fire.getPlayerID();
     	weaponID = fire.getWeaponID();
-    	int max = (int)getWeapon(weaponID).getScoreValue();
-    	// TODO this
+    	int score = (int)getWeapon(weaponID).getScoreValue();
+    	double radius = getWeapon(weaponID).getExplosionRadius();
+    	radius = radius * radius;
+    	
+    	for (int i = 0; i < getNumberOfPlayers(); i++){
+    		Point[] extents = getBunny(i).getExtents();
+    		for (Point extent : extents){
+        		if (extent.distance(landing) < radius){
+        			if (playerID == i){
+        				getBunny(i).addScore(-score);
+        			}
+        			else {
+        				getBunny(i).addScore(score);
+        			}
+        		}
+    		}
+    	}
     }
 }

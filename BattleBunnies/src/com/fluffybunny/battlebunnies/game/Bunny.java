@@ -74,6 +74,7 @@ public class Bunny extends Drawable implements Serializable {
     public int getScore(){ return score; }
     public Point getPosition(){ return position; }
     public String getName(){ return name; }
+    public Point[] getExtents(){ return extents; }
     public int getImageResource(){ return resImage; }
     
 
