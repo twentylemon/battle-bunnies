@@ -1,44 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
     android:orientation="horizontal" >
 
-    <Spinner
-        android:id="@+id/spinner1"
-        android:layout_width="162dp"
-        android:layout_marginTop="3dp"
-        android:layout_height="wrap_content" />
+        android:layout_weight="0.50" />
+
     
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/but_grn"
+        android:text="@string/fire" />
 
     <SeekBar
         android:id="@+id/seekBar1"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="26dp"
-        android:max="211"
-        android:layout_weight="0.50" />
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="13dp"        
+        android:layout_toRightOf="@+id/spinner1"
+        android:layout_marginLeft="23dp"
+        android:max="211" />
 
     <SeekBar
         android:id="@+id/seekBar2"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="26dp"
-        android:layout_marginTop="13dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"        
+        android:layout_toLeftOf="@+id/button1"
+        android:layout_marginRight="23dp"
         android:max="180"
         android:progress="90"
         android:progressDrawable="@drawable/progress_drawable"
         android:thumb="@drawable/thumb_drawable" />
 
-        android:layout_weight="0.50" />
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_marginTop="3dp"
-        android:background="@drawable/but_grn" 
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="162dp"
         android:layout_height="wrap_content"
-        android:text="@string/fire" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" 
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"/>
 
-</LinearLayout>
+</RelativeLayout>
