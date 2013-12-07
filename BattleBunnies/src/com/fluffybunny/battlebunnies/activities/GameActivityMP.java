@@ -39,6 +39,29 @@ public class GameActivityMP extends GameActivitySP {
 			btHandler.stop();
 		}
 	}
+	
+
+	/**
+	 * Stops the bluetooth handler and the game canvas.
+	 */
+	@Override
+	public void onBackPressed(){
+		btHandler.stop();
+		super.onBackPressed();
+	}
+	
+	
+	/**
+	 * Starts the game. The client is always player 2, so they have to wait for
+	 * player 1's turn first.
+	 */
+	protected void startGame(){
+		if (isServer){
+		}
+		else {
+			otherTurn();
+		}
+	}
 		
 	
 	/**
@@ -127,17 +150,7 @@ public class GameActivityMP extends GameActivitySP {
 	 */
 	@Override
 	protected void firePressed(){
-		if (!gameCanvas.isFiring()){
-			if (isServer){
-				myTurn();
-				otherTurn();
-			}
-			else {
-				otherTurn();
-				myTurn();
-			}
-			checkEndGame();
-		}
+		super.firePressed();
 	}
 	
 	

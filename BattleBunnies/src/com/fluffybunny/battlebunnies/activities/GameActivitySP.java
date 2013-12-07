@@ -71,11 +71,11 @@ public class GameActivitySP extends Activity {
 		setContentView(R.layout.activity_game_activity_sp);
 		RelativeLayout conts= (RelativeLayout) findViewById(R.id.controler);
 		conts.setBackgroundResource(R.drawable.background_red);
+
 		setup();
-		
 		game = makeGameInfo();
-		
 		populateSpinner(game.getWeaponList());
+		startGame();
 	}
 
 	@Override
@@ -91,6 +91,13 @@ public class GameActivitySP extends Activity {
 			gameCanvas.stop();
 		}
 		super.onBackPressed();
+	}
+	
+	
+	/**
+	 * Starts the game. More useful in multiplayer.
+	 */
+	protected void startGame(){
 	}
 	
 	
@@ -194,6 +201,7 @@ public class GameActivitySP extends Activity {
 	protected void firePressed(){
 		if (!gameCanvas.isFiring()){
 			myTurn();
+			checkEndGame();
 			otherTurn();
 			checkEndGame();
 		}
