@@ -77,6 +77,7 @@ public class GameInfo implements Serializable {
     public int getNumShots(){ return numShots; }
     public int getTurnNumber(){ return numShots / 2; }
     public void forceGameEnd(){ numShots = Integer.MAX_VALUE; }
+    public int otherID(int id){ return id == 0 ? 1 : 0; }
     
     
     /**

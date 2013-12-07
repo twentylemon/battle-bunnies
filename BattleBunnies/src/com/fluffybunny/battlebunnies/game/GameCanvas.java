@@ -78,10 +78,8 @@ public class GameCanvas implements Runnable {
 				} catch (IllegalArgumentException e){}
 				try {
 					Thread.sleep(1000);
-					continue;
-				} catch (InterruptedException e){
-					continue;
-				}
+				} catch (InterruptedException e){}
+				continue;
 			}
 			game.getTerrain().draw(canvas);
 			
