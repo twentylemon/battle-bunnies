@@ -1,9 +1,13 @@
 package com.fluffybunny.battlebunnies.activities;
 
+import java.util.Random;
+
 import android.content.Intent;
 
+import com.fluffybunny.battlebunnies.game.FireAction;
 import com.fluffybunny.battlebunnies.game.GameCanvas;
 import com.fluffybunny.battlebunnies.game.GameInfo;
+import com.fluffybunny.battlebunnies.game.Weapon;
 
 /**
  * The multiplayer game screen
@@ -17,6 +21,29 @@ public class GameActivityMP extends GameActivitySP {
 	public static final String IS_SERVER = "isServer";
 
 	private boolean isServer;
+		
+	
+	/**
+	 * Performs the player's turn.
+	 */
+	@Override
+	protected void myTurn(){
+		FireAction action = new FireAction(game.getMyID(), shotPower, shotAngle, getSelectedWeapon());
+		action.execute(game);
+		waitForCanvas();
+	}
+	
+	
+	/**
+	 * Performs the other player's turn. In single player, the AI takes his turn.
+	 */
+	@Override
+	protected void otherTurn(){
+		Random rand = new Random();
+		new FireAction(1, 80 + rand.nextInt(80), 90 + rand.nextInt(60), rand.nextInt(game.getNumWeapons())).execute(game);
+		gameCanvas.setFiring(true);
+	}
+	
 	
 	/**
 	 * Create the game info for the mutliplayer game.
@@ -26,7 +53,6 @@ public class GameActivityMP extends GameActivitySP {
 	 */
 	@Override
 	protected GameInfo makeGameInfo(){
-		
 		//server side, we are going to create the game info and send it to the other player
 		if (isServer){
 			GameInfo g = super.makeGameInfo();

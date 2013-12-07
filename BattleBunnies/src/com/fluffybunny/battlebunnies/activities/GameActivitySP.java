@@ -107,29 +107,63 @@ public class GameActivitySP extends Activity {
 	
 	
 	/**
+	 * Returns the currently selected weapon id.
+	 * 
+	 * @return the current selected weapon
+	 */
+	protected int getSelectedWeapon(){
+		String selected = (String) weaponSpinner.getSelectedItem();
+		//index of should be searching for a weapon
+		int id = -1;
+		for (Weapon w : game.getWeaponList()){
+			id++;
+			if (w.getName().equals(selected)){
+				return id;
+			}
+		}
+		return 0;
+	}
+
+
+	/**
+	 * Moves the bunny specified.
+	 * 
+	 * @param playerID the bunny to move
+	 * @param left true if they are moving left, false if right
+	 */
+	protected void moveBunny(int playerID, boolean left){
+		game.getBunny(playerID).moveSideways(left, game.getTerrain());
+	}
+	
+	
+	/**
+	 * Performs the player's turn.
+	 */
+	protected void myTurn(){
+		FireAction action = new FireAction(game.getMyID(), shotPower, shotAngle, getSelectedWeapon());
+		action.execute(game);
+		waitForCanvas();
+	}
+	
+	
+	/**
+	 * Performs the other player's turn. In single player, the AI takes his turn.
+	 */
+	protected void otherTurn(){
+		Random rand = new Random();
+		new FireAction(1, 80 + rand.nextInt(80), 90 + rand.nextInt(60), rand.nextInt(game.getNumWeapons())).execute(game);
+		gameCanvas.setFiring(true);
+	}
+	
+	
+	/**
 	 * Handles the fire button being pressed.
 	 * The entire turn gets played out when fire is pressed.
 	 */
 	protected void firePressed(){
 		if (!gameCanvas.isFiring()){
-			String selected = (String) weaponSpinner.getSelectedItem();
-			//index of should be searching for a weapon
-			int id = -1;
-			for (Weapon w : game.getWeaponList()){
-				id++;
-				if (w.getName().equals(selected)){
-					break;
-				}
-			}
-			FireAction action = new FireAction(game.getMyID(), shotPower, shotAngle, id);
-			action.execute(game);
-			waitForCanvas();
-
-			Random rand = new Random();
-			Weapon weapon = game.getWeaponList().get(rand.nextInt(game.getNumWeapons()));
-			game.getBunny(1).fireWeapon(80 + rand.nextInt(80), 90 + rand.nextInt(60), weapon);
-			new FireAction(1, 80 + rand.nextInt(80), 90 + rand.nextInt(60), rand.nextInt(game.getNumWeapons())).execute(game);
-			gameCanvas.setFiring(true);
+			myTurn();
+			otherTurn();
 			
 			if (game.isGameOver()){
 				waitForCanvas();
@@ -199,19 +233,18 @@ public class GameActivitySP extends Activity {
 			break;
 		}
 		
-		angleText =  (TextView) findViewById(R.id.angleText);	
+		angleText = (TextView) findViewById(R.id.angleText);	
 		angleText.setTextColor(Color.parseColor("#000000"));
-		angleText.setText("Angle: " + 90);
-		powerText =  (TextView) findViewById(R.id.powText);
+		angleText.setText("Angle: 90\u00B0");
+		powerText = (TextView) findViewById(R.id.powText);
 		powerText.setTextColor(Color.parseColor("#000000"));
-		powerText.setText("Power: " + 0);
+		powerText.setText("Power: 0");
 		
 		power = (SeekBar) findViewById(R.id.seekBar1);		
 		power.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){ 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
                 shotPower = progress;
                 powerText.setText("Power: "+ shotPower);
-                
             }
             public void onStartTrackingTouch(SeekBar seekBar){} 
             public void onStopTrackingTouch(SeekBar seekBar){}
@@ -221,12 +254,12 @@ public class GameActivitySP extends Activity {
 		angle.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){ 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
                 shotAngle =  180 - progress;
-                String temp= "";
-                int temp2= Math.abs(shotAngle - 90);
-                if(shotAngle < 90) {temp = " Left" ;}
-                if(shotAngle > 90) {temp = " Right" ;}
-                angleText.setText("Angle: " + temp2+ temp);
-                if(shotAngle == 90) {angleText.setText("Angle: UP" );}
+                String temp = "";
+                int temp2 = Math.abs(shotAngle - 90);
+                if (shotAngle < 90){ temp = " Left" ; }
+                if (shotAngle > 90){ temp = " Right" ; }
+                angleText.setText("Angle: " + temp2 + "\u00B0" + temp);
+                if (shotAngle == 90){ angleText.setText("Angle: UP" ); }
             }
             public void onStartTrackingTouch(SeekBar seekBar){} 
             public void onStopTrackingTouch(SeekBar seekBar){}
@@ -240,7 +273,7 @@ public class GameActivitySP extends Activity {
 				firePressed();
 			}
 		});
-		angleText =  (TextView) findViewById(R.id.angleText);	
-		powerText =  (TextView) findViewById(R.id.powText);
+		angleText = (TextView) findViewById(R.id.angleText);	
+		powerText = (TextView) findViewById(R.id.powText);
 	}
 }
