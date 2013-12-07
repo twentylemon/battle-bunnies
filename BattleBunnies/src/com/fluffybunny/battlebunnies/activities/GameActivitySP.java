@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
@@ -68,7 +69,8 @@ public class GameActivitySP extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game_activity_sp);
-		
+		RelativeLayout conts= (RelativeLayout) findViewById(R.id.controler);
+		conts.setBackgroundResource(R.drawable.background_red);
 		setup();
 		
 		game = makeGameInfo();

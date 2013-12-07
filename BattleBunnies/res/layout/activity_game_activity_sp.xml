@@ -17,11 +17,13 @@
     </FrameLayout>
     
     <FrameLayout
+        
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.15" >
 
-        <include      
+        <include
+        android:id="@+id/controler"      
         layout="@layout/controls" />
 
     </FrameLayout>    
