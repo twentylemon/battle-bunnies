@@ -122,6 +122,7 @@ public class GameActivityMP extends GameActivitySP {
 					Log.e("GameActivityMP", "waiting for bluetooth to connect");
 				}
 			}
+			Log.e("game", "sending GameInfo");
 			btHandler.write(g);
 			return g;
 		}
@@ -134,14 +135,23 @@ public class GameActivityMP extends GameActivitySP {
 					Log.e("GameActivityMP", "waiting for bluetooth to connect");
 				}
 			}
+			Log.e("game", "receiving GameInfo");
 			GameInfo g = (GameInfo) btHandler.read();
+			while (g == null){
+				try {
+					Log.e("game", "receiving GameInfo, it was null");
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					Log.e("GameActivityMP", "gameinfo received was null");
+				}
+			}
 			g.setID(1);
 			g.getBunny(0).setGameCanvas(null);
 			game.getTerrain().setBitmapSize(size.x, size.y);
 			gameCanvas = new GameCanvas(g, surfaceHolder);
 			g.getBunny(1).setGameCanvas(gameCanvas);
+			return g;
 		}
-		return null;
 	}
 	
 	

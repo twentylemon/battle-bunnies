@@ -32,6 +32,7 @@
         </activity>
         <activity
             android:name="com.fluffybunny.battlebunnies.activities.MultiplayerLaunchActivity"
+            android:screenOrientation="landscape"
             android:label="@string/title_activity_multiplayer" >
         </activity>
         <activity

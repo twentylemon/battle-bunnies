@@ -6,14 +6,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.StreamCorruptedException;
-
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-
+import android.util.Log;
 import com.fluffybunny.battlebunnies.activities.GameActivityMP;
 
+@SuppressLint("NewApi")
 public class BluetoothHandler {
 
 	
@@ -82,9 +83,9 @@ public class BluetoothHandler {
 	 */
 	public synchronized void connected(BluetoothSocket socket, BluetoothDevice device){
         stop();
+        setState(STATE_CONNECTED);
         connectedThread = new ConnectedThread(socket);
         connectedThread.start();
-        setState(STATE_CONNECTED);
 	}
 	
 	
@@ -126,6 +127,11 @@ public class BluetoothHandler {
 	}
 	
 	
+	/**
+	 * Reads an object from the stream.
+	 * 
+	 * @return an object sent
+	 */
 	public Object read(){
 		ConnectedThread t;
 		synchronized (this){
@@ -162,36 +168,38 @@ public class BluetoothHandler {
      */
     private class ServerThread extends Thread {
 
-        private final BluetoothServerSocket mmServerSocket;
+        private final BluetoothServerSocket serverSocket;
 
         public ServerThread(){
+        	Log.e("bt", "started ServerThread");
             BluetoothServerSocket tmp = null;
 
             try {
                 tmp = adapter.listenUsingRfcommWithServiceRecord(GameActivityMP.NAME, GameActivityMP.MY_UUID);
             } catch (IOException e){}
-            mmServerSocket = tmp;
+            serverSocket = tmp;
         }
 
-        public void run() {
+        public void run(){
             BluetoothSocket socket = null;
 
             // Listen to the server socket if we're not connected
             while (currentState != STATE_CONNECTED){
                 try {
-                    socket = mmServerSocket.accept();
+                    socket = serverSocket.accept();
                 } catch (IOException e){
                     socket = null;
                 }
 
                 //if a connection was accepted
                 if (socket != null){
+                	Log.e("server", "server has socket, connected = " + socket.isConnected());
                     synchronized (BluetoothHandler.this){
                         switch (currentState){
                         case STATE_LISTEN:
                         case STATE_CONNECTING:
-                            //start the connected thread.
-                            connected(socket, socket.getRemoteDevice());
+                            //start the connected thread
+                        	connected(socket, socket.getRemoteDevice());
                             break;
                         case STATE_NONE:
                         case STATE_CONNECTED:
@@ -206,9 +214,9 @@ public class BluetoothHandler {
             }
         }
 
-        public void cancel() {
+        public void cancel(){
             try {
-                mmServerSocket.close();
+            	serverSocket.close();
             } catch (IOException e){}
         }
     }
@@ -224,7 +232,8 @@ public class BluetoothHandler {
         private final BluetoothSocket socket;
         private final BluetoothDevice device;
 
-        public ClientThread(BluetoothDevice device) {
+        public ClientThread(BluetoothDevice device){
+        	Log.e("bt", "started ClientThread");
             this.device = device;
             BluetoothSocket tmp = null;
 
@@ -235,7 +244,7 @@ public class BluetoothHandler {
             socket = tmp;
         }
 
-        public void run() {
+        public void run(){
             //always cancel discovery because it will slow down a connection
             adapter.cancelDiscovery();
 
@@ -246,10 +255,10 @@ public class BluetoothHandler {
                 connectionFailed();
                 try {
                     socket.close();
-                } catch (IOException e2){}
-                //start the service over to restart listening mode
-                BluetoothHandler.this.startServer();
-                return;
+                } catch (IOException e2){
+                	startClient(device);
+                	return;
+                }
             }
 
             //reset the ClientThread because we're done
@@ -278,7 +287,8 @@ public class BluetoothHandler {
         private ObjectInputStream inStream;
         private ObjectOutputStream outStream;
 
-        public ConnectedThread(BluetoothSocket socket){
+		public ConnectedThread(BluetoothSocket socket){
+        	Log.e("bt", "started ConnectedThread " + socket.isConnected());
             this.socket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
@@ -287,20 +297,27 @@ public class BluetoothHandler {
             try {
                 tmpIn = socket.getInputStream();
                 tmpOut = socket.getOutputStream();
-            } catch (IOException e){}
+            } catch (IOException e){
+	            Log.e("bt", "IOException on socket.getStream()");
+            }
 
             try {
 				inStream = new ObjectInputStream(tmpIn);
 	            outStream = new ObjectOutputStream(tmpOut);
 			} catch (StreamCorruptedException e){
+	            Log.e("bt", "StreamCorruptedException");
 				e.printStackTrace();
 			} catch (IOException e){
+	            Log.e("bt", "IOException");
 				e.printStackTrace();
 			}
+            Log.e("bt", "inStream = " + inStream.toString());
+            Log.e("bt", "outStream = " + outStream.toString());
         }
 
         public void run(){
             //keep listening to the InputStream while connected
+        	Log.e("tag", "connected thread is running");
             while (currentState == STATE_CONNECTED){
             	try {
 					Thread.sleep(250);
@@ -325,12 +342,13 @@ public class BluetoothHandler {
         public void write(Object obj){
         	try {
 				outStream.writeObject(obj);
+				outStream.flush();
 			} catch (IOException e){
 				e.printStackTrace();
 			}
         }
 
-        public void cancel() {
+        public void cancel(){
             try {
                 socket.close();
             } catch (IOException e){}

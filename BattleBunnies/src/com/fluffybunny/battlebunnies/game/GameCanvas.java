@@ -72,7 +72,6 @@ public class GameCanvas implements Runnable {
 		while (running){
 			canvas = surfaceHolder.lockCanvas();
 			if (canvas == null){
-				Log.e("tag", "canvas is null");
 				try {
 					surfaceHolder.unlockCanvasAndPost(canvas);
 				} catch (IllegalArgumentException e){}
