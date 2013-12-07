@@ -82,7 +82,7 @@ public class GameCanvas implements Runnable {
 				try {
 					Thread.sleep(1000);
 					continue;
-				} catch (InterruptedException e) {
+				} catch (InterruptedException e){
 					e.printStackTrace();
 					continue;
 				}
@@ -107,13 +107,13 @@ public class GameCanvas implements Runnable {
 				if (pos.x < 0 || pos.x >= game.getTerrain().getWidth()){
 					firing = false;
 				}
-				//check if we hit the terrain
-				else if (game.getTerrain().getPoint(pos.x, pos.y) != Terrain.AIR){
+				//check if we hit the terrain or bunnies
+				else if (game.getTerrain().getPoint(pos.x, pos.y) != Terrain.AIR ||
+						game.getBunny(0).inExtents(pos) || game.getBunny(1).inExtents(pos)){
 					game.getFiredWeapon().explode(canvas, pos);
 					game.getTerrain().destroyTerrain(pos, game.getFiredWeapon());
 					firing = false;
 				}
-				// TODO check if we hit bunnies
 				//else of, just keep flying
 				else {
 					game.getFiredWeapon().draw(canvas, pos);

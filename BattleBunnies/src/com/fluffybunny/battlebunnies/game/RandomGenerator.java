@@ -171,7 +171,7 @@ public class RandomGenerator implements Terrain.Generator, Serializable {
      * @param soil represents the color of the under soil
      * @param sky represents the color of the sky
      */
-    public void fillLower(int[][] c, int top, int soil,int sky){
+    public void fillLower(int[][] c, int top, int soil, int sky){
         boolean lower = false;
         for (int i = 0; i < c.length; i++){
             lower = false;

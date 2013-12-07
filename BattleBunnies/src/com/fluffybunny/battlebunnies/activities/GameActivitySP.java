@@ -2,6 +2,7 @@ package com.fluffybunny.battlebunnies.activities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -112,20 +113,33 @@ public class GameActivitySP extends Activity {
 	
 	
 	private void firePressed(){
-		String selected = (String) weaponSpinner.getSelectedItem();
-		//index of should be searching for a weapon
-		Weapon weapon = null;
-		int id = -1;
-		for (Weapon w : game.getWeaponList()){
-			id++;
-			if (w.getName().equals(selected)){
-				weapon = w;
-				break;
+		if (!gameCanvas.isFiring()){
+			String selected = (String) weaponSpinner.getSelectedItem();
+			//index of should be searching for a weapon
+			int id = -1;
+			for (Weapon w : game.getWeaponList()){
+				id++;
+				if (w.getName().equals(selected)){
+					break;
+				}
 			}
+			FireAction action = new FireAction(game.getMyID(), shotPower, shotAngle, id);
+			action.execute(game);
+			
+			while (gameCanvas.isFiring()){
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e){}
+			}
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e){}
+			Random rand = new Random();
+			Weapon weapon = game.getWeaponList().get(rand.nextInt(game.getNumWeapons()));
+			game.getBunny(1).fireWeapon(80 + rand.nextInt(80), 90 + rand.nextInt(60), weapon);
+			new FireAction(1, 80 + rand.nextInt(80), 90 + rand.nextInt(60), rand.nextInt(game.getNumWeapons())).execute(game);
+			gameCanvas.setFiring(true);
 		}
-		FireAction action = new FireAction(game.getMyID(), shotPower, shotAngle, id);
-		action.execute(game);
-		// TODO wait for projectile, then AI turn
 	}
 	
 
@@ -168,7 +182,6 @@ public class GameActivitySP extends Activity {
 			break;
 		}
 
-		Log.e("tag", "making terrain");
 		GameInfo g = new GameInfo(playerImages, playerNames, width, height, generator);
 		g.setID(0);
 		for (int i = 0; i < playerNames.length; i++){
@@ -177,7 +190,6 @@ public class GameActivitySP extends Activity {
 		}
 		gameCanvas = new GameCanvas(g, surfaceHolder);
 		g.getBunny(0).setGameCanvas(gameCanvas);
-		Log.e("tag", "game info done");
 		return g;
 	}
 }

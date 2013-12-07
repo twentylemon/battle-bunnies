@@ -54,8 +54,8 @@ public class MainActivity extends Activity {
      * @param view the button clicked
      */
     public void onProfileClicked(View view){
-    	//Intent j = new Intent(MainActivity.this, ProfileActivity.class);
-        //startActivityForResult(j, 0);
+    	//Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+        //startActivity(intent);
     }
 
 
@@ -99,9 +99,7 @@ public class MainActivity extends Activity {
      * @param view the button clicked
      */
     public void onMultiplayerClicked(View view){
-    	
-    	Intent j = new Intent(MainActivity.this, MultiplayerLaunchActivity.class);
-        startActivity(j);
-      
+    	Intent intent = new Intent(MainActivity.this, MultiplayerLaunchActivity.class);
+        startActivity(intent);
     }
 }
