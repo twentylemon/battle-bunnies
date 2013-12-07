@@ -46,6 +46,8 @@ public class GameActivitySP extends Activity {
 	protected SeekBar power;
 	protected SeekBar angle;
 	protected Button fire;
+	protected Button moveLeft;
+	protected Button moveRight;
 	protected Spinner weaponSpinner;
 	protected TextView powerText;
 	protected TextView angleText;
@@ -282,7 +284,21 @@ public class GameActivitySP extends Activity {
 				firePressed();
 			}
 		});
-		angleText = (TextView) findViewById(R.id.angleText);	
-		powerText = (TextView) findViewById(R.id.powText);
+		
+		moveLeft = (Button) findViewById(R.id.buttonLeft);	
+		moveLeft.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0){ 
+				moveBunny(game.getMyID(),true);
+			}
+		});
+		
+		moveRight = (Button) findViewById(R.id.buttonRight);	
+		moveRight.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0){ 
+				moveBunny(game.getMyID(),false);
+			}
+		});
 	}
 }
