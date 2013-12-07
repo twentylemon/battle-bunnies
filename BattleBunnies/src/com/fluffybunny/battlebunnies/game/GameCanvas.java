@@ -1,6 +1,9 @@
 package com.fluffybunny.battlebunnies.game;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -12,6 +15,7 @@ public class GameCanvas implements Runnable {
 	private boolean running;
 	private double fireTime;
 	private boolean firing;
+	private ScoreBox scoreBox;
 
 	/**
 	 * Default constructor.
@@ -25,6 +29,7 @@ public class GameCanvas implements Runnable {
 		fireTime = 0;
 		firing = false;
 		running = false;
+		scoreBox = new ScoreBox(game.getTerrain().getWidth(),game.getTerrain().getHeight());
 	}
 
 	
@@ -86,9 +91,13 @@ public class GameCanvas implements Runnable {
 			
 			//draw the bunnies
 			for (int i = 0; i < game.getNumberOfPlayers(); i++){
-				game.getBunny(i).fall(game.getTerrain());
+				game.getBunny(i).fall(game.getTerrain());				
 				game.getBunny(i).draw(canvas);
+				scoreBox.draw(canvas, game.getBunny(i).getScore(), i);
 			}
+			
+			
+			
 			
 			//draw the weapon, if any
 			if (firing){
