@@ -114,6 +114,9 @@ public class GameActivitySP extends Activity {
 	}
 	
 	
+	/**
+	 * Blocks the UI thread waiting for the canvas to finish firing.
+	 */
 	private void waitForCanvas(){
 		while (gameCanvas.isFiring()){
 			try {
