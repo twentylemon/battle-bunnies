@@ -7,8 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 
-import com.fluffybunny.battlebunnies.util.Point;
-
 public class Bunny extends Drawable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -126,7 +124,11 @@ public class Bunny extends Drawable implements Serializable {
     public void fireWeapon(double power, double angle, Weapon weapon){
         // TODO change speed according to the weapon's mass
         double speed = power;
-        weapon.initFire(extents[1], speed, angle);
+        Point point = new Point(extents[0].x, extents[1].y);
+        if (gameCanvas.getGameInfo().getMyID() != 0){
+        	point = new Point(extents[0].x, extents[1].y);
+        }
+        weapon.initFire(point, speed, angle);
         gameCanvas.setFiring(true);
     }
 
@@ -137,7 +139,18 @@ public class Bunny extends Drawable implements Serializable {
      * @param terrain the terrain to fall onto
      */
     public void fall(Terrain terrain){
-    	
+    	/*
+    	Point pos = new Point(position.x, position.y);
+    	while (terrain.isOnMap(pos.x, pos.y) && terrain.getPoint(pos.x, pos.y) == Terrain.AIR){
+    		pos.setY(pos.y + 1);
+    		Log.e("tag", "inc");
+    	}
+    	pos.setY(Math.max(pos.y, terrain.getHeight()) - 1);
+    	setPosition(pos);
+    	*/
+    	Point pos = terrain.getHighestPointAt(position.x);
+    	pos.y -= bitmap.getHeight() / 2;
+    	setPosition(pos);
     }
 
 

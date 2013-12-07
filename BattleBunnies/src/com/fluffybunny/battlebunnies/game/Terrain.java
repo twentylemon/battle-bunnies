@@ -3,9 +3,10 @@ package com.fluffybunny.battlebunnies.game;
 import java.io.Serializable;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
-
-import com.fluffybunny.battlebunnies.util.Point;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 
 /**
  * The game terrain map.
@@ -14,7 +15,7 @@ import com.fluffybunny.battlebunnies.util.Point;
  * @version 1.0
  * @since 2013-11-23 
  */
-public class Terrain implements Serializable {
+public class Terrain extends Drawable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
     private int[][] map;    //the terrain map
@@ -31,8 +32,8 @@ public class Terrain implements Serializable {
      * @param height the height of the map
      * @param generator tool to generate the terrain
      */
-    public Terrain(int width, int height, TerrainGenerator generator){
-        map = generator.generateTerrain(width, height);
+    public Terrain(int width, int height, Terrain.Generator generator){
+        map = generator.generate(width, height);
         generateBitmap();
     }
 
@@ -110,4 +111,46 @@ public class Terrain implements Serializable {
         }
         generateBitmap();
     }
+
+
+    /**
+     * Draws this terrain onto the canvas.
+     * 
+     * @param canvas the canvas to draw on
+     */
+	@Override
+	public void draw(Canvas canvas){
+		canvas.drawBitmap(bitmap, 0, 0, null);
+	}
+
+
+	@Override
+	public int getOpacity(){
+		return 0;
+	}
+
+
+	@Override
+	public void setAlpha(int alpha){
+	}
+
+
+	@Override
+	public void setColorFilter(ColorFilter cf){
+	}
+	
+	
+	public interface Generator {
+	    /**
+	     * Returns the terrain that should be used by the map. It is an integer array of pixel colours,
+	     * such that is (x,y) is Terrain.AIR then it is not occupied by any terrain, otherwise the colour
+	     * is displayed. The terrain will be in the form { new int[width][height] }.
+	     * (0,0) is the top left corner.
+	     *
+	     * @param width the width of the terrain
+	     * @param height the height of the terrain
+	     * @return the terrain
+	     */
+	    public int[][] generate(int width, int height);
+	}
 }

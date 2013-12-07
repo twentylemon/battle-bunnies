@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fluffybunny.battlebunnies.util.Point;
-
 public class GameInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -56,7 +54,7 @@ public class GameInfo implements Serializable {
      * @param height the height of the terrain
      * @param generator the terrain generator...
      */
-    public GameInfo(int[] images, String[] names, int width, int height, TerrainGenerator generator){
+    public GameInfo(int[] images, String[] names, int width, int height, Terrain.Generator generator){
         this(images, names, new Terrain(width, height, generator));
     }
 

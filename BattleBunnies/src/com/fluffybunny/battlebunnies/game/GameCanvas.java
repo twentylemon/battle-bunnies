@@ -1,11 +1,8 @@
 package com.fluffybunny.battlebunnies.game;
 
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.util.Log;
 import android.view.SurfaceHolder;
-
-import com.fluffybunny.battlebunnies.util.Point;
 
 public class GameCanvas implements Runnable {
 	
@@ -36,6 +33,7 @@ public class GameCanvas implements Runnable {
 	 */
 	public void setFireTime(double time){ fireTime = time; }
 	public boolean isFiring(){ return firing; }
+	public GameInfo getGameInfo(){ return game; }
 	public void setFiring(boolean fire){
 		firing = fire;
 		if (firing){
@@ -84,10 +82,11 @@ public class GameCanvas implements Runnable {
 					continue;
 				}
 			}
-			canvas.drawBitmap(game.getTerrain().getBitmap(), 0, 0, new Paint());
+			game.getTerrain().draw(canvas);
 			
 			//draw the bunnies
 			for (int i = 0; i < game.getNumberOfPlayers(); i++){
+				game.getBunny(i).fall(game.getTerrain());
 				game.getBunny(i).draw(canvas);
 			}
 			

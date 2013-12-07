@@ -3,6 +3,8 @@ package com.fluffybunny.battlebunnies.game;
 import java.io.Serializable;
 import java.util.Random;
 
+import android.util.Log;
+
 /**
  * Generates a random terrain.
  *
@@ -10,7 +12,7 @@ import java.util.Random;
  * @version 1.0
  * @since 2013-11-23
  */
-public class RandomGenerator implements TerrainGenerator, Serializable {
+public class RandomGenerator implements Terrain.Generator, Serializable {
 	private static final long serialVersionUID = 1L;
     /**
      * Returns the terrain that should be used by the map. It is an integer array of pixel colours,
@@ -23,11 +25,14 @@ public class RandomGenerator implements TerrainGenerator, Serializable {
      * @return the terrain
      */
     @Override
-    public int[][] generateTerrain(int width, int height) {
+    public int[][] generate(int width, int height) {
         int[][] terrain = new int[width][height];
         Random rng = new Random();
+        Log.e("tag", "calling topline");
         topline(terrain, width, height);
+        Log.e("tag", "calling smooth");
         smooth(terrain, rng.nextInt(width / 10));
+        Log.e("tag", "calling fillLower");
         fillLower(terrain, Terrain.GRASS, Terrain.ROCK, Terrain.AIR);
         return terrain;
     }

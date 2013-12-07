@@ -5,8 +5,6 @@ import java.io.Serializable;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 
-import com.fluffybunny.battlebunnies.util.Point;
-
 /**
  * A weapon. My goodness. Contains default implementations for a standard projectile weapon.
  *
@@ -25,7 +23,7 @@ public abstract class Weapon extends Drawable implements Serializable, Cloneable
     protected double fireAngle;         //initial fire angle, for use in position finding later
     protected String name;				//name as it appears in the list of weapons
     
-    public final static double GRAVITY = 3.0 * 9.8;
+    public final static double GRAVITY = 5.0 * 9.8;
     
     /**
      * Getters/Setters.

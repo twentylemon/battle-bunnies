@@ -5,8 +5,6 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 
-import com.fluffybunny.battlebunnies.util.Point;
-
 public class RockWeapon extends Weapon {
 	private static final long serialVersionUID = 1L;
 
@@ -14,6 +12,7 @@ public class RockWeapon extends Weapon {
 	private final Paint PAINT = new Paint();
 
 	public RockWeapon(){
+		explosionRadius = RADIUS;
 		name = "Throw a Rock";
 		PAINT.setColor(Color.parseColor("#C0C0C0"));
 		scoreValue = 50;

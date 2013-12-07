@@ -6,8 +6,6 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 
-import com.fluffybunny.battlebunnies.util.Point;
-
 public class SpearWeapon extends Weapon {
 	private static final long serialVersionUID = 1L;
 

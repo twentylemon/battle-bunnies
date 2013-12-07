@@ -1,4 +1,4 @@
-package com.fluffybunny.battlebunnies.util;
+package com.fluffybunny.battlebunnies.game;
 
 import java.io.Serializable;
 

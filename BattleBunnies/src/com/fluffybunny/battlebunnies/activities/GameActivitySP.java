@@ -25,7 +25,7 @@ import com.fluffybunny.battlebunnies.game.FireAction;
 import com.fluffybunny.battlebunnies.game.GameCanvas;
 import com.fluffybunny.battlebunnies.game.GameInfo;
 import com.fluffybunny.battlebunnies.game.RandomGenerator;
-import com.fluffybunny.battlebunnies.game.TerrainGenerator;
+import com.fluffybunny.battlebunnies.game.Terrain;
 import com.fluffybunny.battlebunnies.game.Weapon;
 
 public class GameActivitySP extends Activity {
@@ -52,6 +52,7 @@ public class GameActivitySP extends Activity {
 	private String[] playerNames;
 	
 	private GameInfo game;
+	private GameCanvas gameCanvas;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,16 @@ public class GameActivitySP extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		//getMenuInflater().inflate(R.menu.game_activity_s, menu);
 		return true;
+	}
+	
+	
+	/**
+	 * Stop the canvas thread on back pressed.
+	 */
+	@Override
+	public void onBackPressed(){
+		gameCanvas.stop();
+		super.onBackPressed();
 	}
 	
 	
@@ -150,20 +161,23 @@ public class GameActivitySP extends Activity {
 		int width = getWindowManager().getDefaultDisplay().getWidth();
 		int height = (int)(0.85 * getWindowManager().getDefaultDisplay().getHeight());
 		
-		TerrainGenerator generator;
+		Terrain.Generator generator;
 		switch (terrainType){
 		case TERRAIN_TYPE_RANDOM: default:
 			generator = new RandomGenerator();
 			break;
 		}
-		
+
+		Log.e("tag", "making terrain");
 		GameInfo g = new GameInfo(playerImages, playerNames, width, height, generator);
 		g.setID(0);
 		for (int i = 0; i < playerNames.length; i++){
 			Bitmap bitmap = BitmapFactory.decodeResource(getResources(), g.getBunny(i).getImageResource());
 			g.getBunny(i).setBitmapImage(bitmap);
 		}
-		g.getBunny(0).setGameCanvas(new GameCanvas(g, surfaceHolder));
+		gameCanvas = new GameCanvas(g, surfaceHolder);
+		g.getBunny(0).setGameCanvas(gameCanvas);
+		Log.e("tag", "game info done");
 		return g;
 	}
 }
