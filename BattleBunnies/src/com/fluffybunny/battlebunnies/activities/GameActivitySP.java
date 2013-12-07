@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.fluffybunny.battlebunnies.R;
 import com.fluffybunny.battlebunnies.game.FireAction;
@@ -113,6 +114,24 @@ public class GameActivitySP extends Activity {
 	}
 	
 	
+	/**
+	 * Blocks the UI thread waiting for the canvas to finish firing.
+	 */
+	private void waitForCanvas(){
+		while (gameCanvas.isFiring()){
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e){}
+		}
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e){}
+	}
+	
+	
+	/**
+	 * Handles the fire button being pressed.
+	 */
 	private void firePressed(){
 		if (!gameCanvas.isFiring()){
 			String selected = (String) weaponSpinner.getSelectedItem();
@@ -126,20 +145,19 @@ public class GameActivitySP extends Activity {
 			}
 			FireAction action = new FireAction(game.getMyID(), shotPower, shotAngle, id);
 			action.execute(game);
-			
-			while (gameCanvas.isFiring()){
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e){}
-			}
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e){}
+			waitForCanvas();
+
 			Random rand = new Random();
 			Weapon weapon = game.getWeaponList().get(rand.nextInt(game.getNumWeapons()));
 			game.getBunny(1).fireWeapon(80 + rand.nextInt(80), 90 + rand.nextInt(60), weapon);
 			new FireAction(1, 80 + rand.nextInt(80), 90 + rand.nextInt(60), rand.nextInt(game.getNumWeapons())).execute(game);
 			gameCanvas.setFiring(true);
+			
+			if (game.isGameOver()){
+				waitForCanvas();
+				Toast.makeText(getApplicationContext(), "You may or may not have won.", Toast.LENGTH_LONG).show();
+				onBackPressed();
+			}
 		}
 	}
 	

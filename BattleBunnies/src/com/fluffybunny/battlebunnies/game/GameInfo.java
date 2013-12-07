@@ -109,13 +109,14 @@ public class GameInfo implements Serializable {
     	for (int i = 0; i < getNumberOfPlayers(); i++){
     		Point[] extents = getBunny(i).getExtents();
     		for (Point extent : extents){
-        		if (extent.distance(landing) < radius){
+        		if (getBunny(i).inExtents(landing) || extent.distance(landing) < radius){
         			if (playerID == i){
         				getBunny(playerID).addScore(-score);
         			}
         			else {
         				getBunny(playerID).addScore(score);
         			}
+        			break;
         		}
     		}
     	}

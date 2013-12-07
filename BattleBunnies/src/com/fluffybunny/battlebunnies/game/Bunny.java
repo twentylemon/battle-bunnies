@@ -152,6 +152,7 @@ public class Bunny extends Drawable implements Serializable {
      * Causes the bunny to fall down due to gravity.
      * 
      * @param terrain the terrain to fall onto
+     * @throws NullPointerException if bitmap has not been initialized
      */
     public void fall(Terrain terrain){
     	Point pos = terrain.getHighestPointAt(position.x);
@@ -165,9 +166,20 @@ public class Bunny extends Drawable implements Serializable {
      * regardless of the terrain.
      *
      * @param left true if the bunny is moving to the left, false if they are to move right
-     * @param map the terrain to move on
+     * @param terrain the terrain to move on
+     * @throws NullPointerException if bitmap has not been initialized
      */
-    public void moveSideways(boolean left, Terrain map){
+    public void moveSideways(boolean left, Terrain terrain){
+    	int x = 0;
+    	if (left){
+    		x = Math.max(0, position.x - MOVE_SPEED);
+    	}
+    	else {
+    		x = Math.min(terrain.getWidth() - 1, position.x + MOVE_SPEED);
+    	}
+    	Point pos = terrain.getHighestPointAt(x);
+    	pos.y -= bitmap.getHeight() / 2;
+    	setPosition(pos);
     }
 
 
