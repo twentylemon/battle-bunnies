@@ -104,9 +104,8 @@ public class GameActivityMP extends GameActivitySP {
 			meGo = true;
 		}
 		else {
-			gameCanvas = new GameCanvas(game, surfaceHolder, getResources());
+			super.startGame();
 			gameCanvas.setBitmapSize(size.x, size.y);
-			gameCanvas.start();
 			meGo = false;
 		}
 	}
