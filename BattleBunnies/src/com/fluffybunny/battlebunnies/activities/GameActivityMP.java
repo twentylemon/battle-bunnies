@@ -200,6 +200,7 @@ public class GameActivityMP extends GameActivitySP {
 	@Override
 	protected void firePressed(){
 		if (meGo && !gameCanvas.isFiring()){
+			checkEndGame();
 			myTurn();
 			checkEndGame();
 		}
