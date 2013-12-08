@@ -1,13 +1,10 @@
 package com.fluffybunny.battlebunnies.game;
 
-import com.fluffybunny.battlebunnies.activities.GameActivityMP;
-
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 public class GameCanvas implements Runnable {
