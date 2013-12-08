@@ -19,4 +19,7 @@
     <string name="title_topic_list">Topics</string>
     <string name="title_topic_detail">Topic Detail</string>
     <string name="title_activity_profile">Profile</string>
+    <string name="name">Name: </string>
+    <string name="wins">Wins: </string>
+    <string name="loss">Loss: </string>
 </resources>

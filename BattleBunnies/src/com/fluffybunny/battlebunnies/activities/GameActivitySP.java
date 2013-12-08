@@ -100,7 +100,7 @@ public class GameActivitySP extends Activity {
 	protected void startGame(){
 		gameCanvas = new GameCanvas(game, surfaceHolder, getResources());
 		gameCanvas.start();
-		meGo = true;
+		meGo = true;		
 	}
 	
 	
@@ -348,5 +348,8 @@ public class GameActivitySP extends Activity {
 				moveBunny(game.getMyID(), false);
 			}
 		});
+	
+	
+	
 	}
 }

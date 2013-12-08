@@ -9,12 +9,14 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.fluffybunny.battlebunnies.R;
 import com.fluffybunny.battlebunnies.bluetooth.BluetoothHandler;
 import com.fluffybunny.battlebunnies.game.Action;
 import com.fluffybunny.battlebunnies.game.FireAction;
-import com.fluffybunny.battlebunnies.game.GameCanvas;
 import com.fluffybunny.battlebunnies.game.GameInfo;
 import com.fluffybunny.battlebunnies.game.MoveAction;
 import com.fluffybunny.battlebunnies.game.Point;
@@ -152,8 +154,10 @@ public class GameActivityMP extends GameActivitySP {
 	 * @param left true if they are moving left, false if right
 	 */
 	protected void moveBunny(int playerID, boolean left){
-		super.moveBunny(playerID, left);
-		btHandler.write(new MoveAction(playerID, left), ACTION_MOVE);
+		if (meGo && !gameCanvas.isFiring()){
+			super.moveBunny(playerID, left);
+			btHandler.write(new MoveAction(playerID, left), ACTION_MOVE);
+		}
 	}
 	
 	
@@ -262,6 +266,8 @@ public class GameActivityMP extends GameActivitySP {
 			remoteAddress = intent.getStringExtra(REMOVE_DEVICE_ADDRESS);
 			BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(remoteAddress);
 			btHandler.startClient(device);
+			RelativeLayout cont= (RelativeLayout) findViewById(R.id.controler);	
+			cont.setBackgroundResource(R.drawable.background_red);
 		}
 	}
 }

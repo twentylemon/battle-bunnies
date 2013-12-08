@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="Name: "
+        android:text="@string/name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -19,7 +19,7 @@
         android:layout_marginTop="15dp"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/name"
-        android:text="Wins: "
+        android:text="@string/wins"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -29,7 +29,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginTop="15dp"
         android:layout_below="@+id/winString"
-        android:text="Loss:"
+        android:text="@string/loss"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText

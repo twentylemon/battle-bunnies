@@ -15,7 +15,7 @@ public class GameInfo implements Serializable {
     private int myID;					//this player's player id
     private FireAction fireAction;		//the most recent shot taken
 	
-	public static final int MAX_TURNS = 1;
+	public static final int MAX_TURNS = 20;
 
     /**
      * Initializes a new game.
