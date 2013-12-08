@@ -6,6 +6,7 @@ import java.util.Random;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -39,6 +40,7 @@ public class GameActivitySP extends Activity {
 	public static final String PLAYER_IMAGES = "playerImages";
 	public static final String TERRAIN_TYPE = "terrainType";
 	public static final String AI_DIFFICULTY = "aiDifficulty";
+	public static final String IS_CAMPAIGN = "isCampaign";
 	
 	public static final int TERRAIN_TYPE_RANDOM = 0;
 	
@@ -64,13 +66,12 @@ public class GameActivitySP extends Activity {
 	protected GameCanvas gameCanvas;
 	protected android.graphics.Point size;
 	protected Terrain.Generator generator;
+	protected Boolean isCampaign;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game_activity_sp);
-		RelativeLayout conts= (RelativeLayout) findViewById(R.id.controler);
-		conts.setBackgroundResource(R.drawable.background_red);
 
 		setup();
 		game = makeGameInfo();
@@ -178,17 +179,37 @@ public class GameActivitySP extends Activity {
 		if (game.isGameOver()){
 			waitForCanvas();
 			gameCanvas.stop();
+			SharedPreferences prefs= getSharedPreferences(ProfileActivity.PREFS_NAME, 0);
+			int level = prefs.getInt(ProfileActivity.PLAYER_LEV, 0);
+			int wins = prefs.getInt(ProfileActivity.PLAYER_WINS, 0);
+			int loss = prefs.getInt(ProfileActivity.PLAYER_LOSS, 0);
 			int myScore = game.getBunny(game.getMyID()).getScore();
 			int aiScore = game.getBunny(game.otherID(game.getMyID())).getScore();
 			if (myScore > aiScore){
 				Toast.makeText(getApplicationContext(), "You won! " + myScore + " to " + aiScore, Toast.LENGTH_LONG).show();
+				wins++;
+				if(isCampaign){
+					if(level == 7){
+							Toast.makeText(getApplicationContext(), "You Beat the Game! " , Toast.LENGTH_LONG).show();
+					}
+					else{
+						level++;	
+					}
+				}
 			}
 			else if (myScore < aiScore){
+				loss++;
 				Toast.makeText(getApplicationContext(), "Failure. " + myScore + " to " + aiScore, Toast.LENGTH_LONG).show();
 			}
 			else {	//tie game
 				Toast.makeText(getApplicationContext(), "You may or may not have won.", Toast.LENGTH_LONG).show();
 			}
+			
+			SharedPreferences.Editor editor = prefs.edit();
+		    editor.putInt(ProfileActivity.PLAYER_LEV, level);
+		    editor.putInt(ProfileActivity.PLAYER_WINS, wins);
+		    editor.putInt(ProfileActivity.PLAYER_LOSS, loss);
+		    editor.commit();
 			onBackPressed();
 		}
 	}
@@ -257,6 +278,7 @@ public class GameActivitySP extends Activity {
 		playerImages = intent.getIntArrayExtra(PLAYER_IMAGES);
 		playerNames = intent.getStringArrayExtra(PLAYER_NAMES);
 		terrainType = intent.getIntExtra(TERRAIN_TYPE, TERRAIN_TYPE_RANDOM);
+		isCampaign = intent.getBooleanExtra(IS_CAMPAIGN,false);
 		size = new android.graphics.Point();
 		getWindowManager().getDefaultDisplay().getSize(size);
 		size.y = (int)(0.85 * size.y);

@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="15dp"
         android:layout_toRightOf="@+id/name"
         android:ems="10" />
 
@@ -65,7 +65,8 @@
         android:id="@+id/chars"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/levelString"
+        android:layout_marginTop="15dp"
         android:layout_alignParentLeft="true" />
 
     <TextView
@@ -74,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/LossString"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:text="Level: "
         android:textAppearance="?android:attr/textAppearanceLarge" />
 

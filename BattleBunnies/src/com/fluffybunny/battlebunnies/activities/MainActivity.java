@@ -4,6 +4,7 @@ import java.util.Random;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -57,8 +58,8 @@ public class MainActivity extends Activity {
      * @param view the button clicked
      */
     public void onProfileClicked(View view){
-    	//Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-        //startActivity(intent);
+    	Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+        startActivity(intent);
     }
 
 
@@ -69,14 +70,21 @@ public class MainActivity extends Activity {
      */
     public void onCampaignClicked(View view){
         //start the campaign loader activity
-    	/*
-    	SharedPreferences prefs = getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-    	String name = prefs.getString("name", getString(R.string.flopsy));
-    	int key = prefs.getInt("bunny", 0);
-    	int progress = prefs.getInt("progress", 2);
-    	int[] images = { getImage(key), getImage(progress) };
+    	
+    	SharedPreferences prefs =getSharedPreferences(ProfileActivity.PREFS_NAME, 0);
+		int level = prefs.getInt(ProfileActivity.PLAYER_LEV, 0);
+		int key = prefs.getInt(ProfileActivity.PLAYER_IMAGE, 2);
+		System.out.println("Level "+level);
+		String name = prefs.getString(ProfileActivity.PLAYER_NAME, "Rusty");
+    	int[] images = { getImage(key), getImage(level) };
     	String[] names = { name, "AI" };
-    	*/
+    	
+    	Intent intent = new Intent(this, GameActivitySP.class);
+    	intent.putExtra(GameActivitySP.PLAYER_IMAGES, images);
+    	intent.putExtra(GameActivitySP.PLAYER_NAMES, names);
+    	intent.putExtra(GameActivitySP.IS_CAMPAIGN, true);
+    	startActivity(intent);
+    	
     }
 
     
