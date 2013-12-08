@@ -317,7 +317,10 @@ public class BluetoothHandler {
             //keep listening to the InputStream while connected
             while (currentState == STATE_CONNECTED){
             	int messageType = -1;
-            	Object obj = read();
+            	Object obj = null;
+            	try {
+            		obj = read();
+            	} catch (Exception e){}
             	if (obj instanceof Long){
             		messageType = GameActivityMP.MESSAGE_SEED;
             	}
@@ -330,8 +333,14 @@ public class BluetoothHandler {
             	else if (obj instanceof MoveAction){
             		messageType = GameActivityMP.ACTION_MOVE;
             	}
-            	Message msg = handler.obtainMessage(messageType, obj);
-            	handler.sendMessage(msg);
+            	if (messageType != -1 && obj != null){
+	            	Message msg = handler.obtainMessage(messageType, obj);
+	            	handler.handleMessage(msg);
+            	}
+            	else {
+            		currentState = STATE_NONE;
+            		BluetoothHandler.this.stop();
+            	}
             }
         }
         

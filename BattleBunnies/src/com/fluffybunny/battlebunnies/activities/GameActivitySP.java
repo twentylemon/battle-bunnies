@@ -187,7 +187,7 @@ public class GameActivitySP extends Activity {
 		if (game.isGameOver()){
 			waitForCanvas();
 			gameCanvas.stop();
-			SharedPreferences prefs= getSharedPreferences(ProfileActivity.PREFS_NAME, MODE_PRIVATE);
+			SharedPreferences prefs = getSharedPreferences(ProfileActivity.PREFS_NAME, MODE_PRIVATE);
 			int level = prefs.getInt(ProfileActivity.PLAYER_LEV, 0);
 			int wins = prefs.getInt(ProfileActivity.PLAYER_WINS, 0);
 			int loss = prefs.getInt(ProfileActivity.PLAYER_LOSS, 0);

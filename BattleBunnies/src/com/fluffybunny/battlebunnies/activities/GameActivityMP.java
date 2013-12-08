@@ -5,9 +5,12 @@ import java.util.UUID;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.fluffybunny.battlebunnies.bluetooth.BluetoothHandler;
 import com.fluffybunny.battlebunnies.game.Action;
@@ -50,22 +53,18 @@ public class GameActivityMP extends GameActivitySP {
 		public void handleMessage(Message msg){
 			switch (msg.what){
 			case MESSAGE_SEED:
-				Log.e("handler", "got a long");
 				generator.setSeed((Long) msg.obj);
 				break;
 			case MESSAGE_SIZE:
-				Log.e("handler", "got a point");
 				Point s = (Point) msg.obj;
 				game = new GameInfo(playerImages, playerNames, s.x, s.y, generator);
 				game.setID(1);
 				break;
 			case ACTION_MOVE:
-				Log.e("handler", "got a MoveAction");
 				MoveAction move = (MoveAction) msg.obj;
 				move.execute(game);
 				break;
 			case ACTION_FIRE:
-				Log.e("handler", "got a FireAction");
 				FireAction fire = (FireAction) msg.obj;
 				fire.execute(game);
 				gameCanvas.setFiring(true);
@@ -75,6 +74,8 @@ public class GameActivityMP extends GameActivitySP {
 			}
 		}
 	};
+	
+
 	@Override
 	public void onDestroy(){
 		if (btHandler != null){
@@ -182,15 +183,8 @@ public class GameActivityMP extends GameActivitySP {
 		}
 		//client side, we are going to receive the game info and add in stuff for the canvas etc
 		else {
-			/*
-			generator.setSeed((Long) btHandler.read());
-			Point s = (Point) btHandler.read();
-			GameInfo g = new GameInfo(playerImages, playerNames, s.x, s.y, generator);
-			g.setID(1);
-			*/
 			while (game == null){
 				try {
-					Log.e("game", "game is null");
 					Thread.sleep(100);
 				} catch (InterruptedException e){
 					e.printStackTrace();
@@ -208,6 +202,42 @@ public class GameActivityMP extends GameActivitySP {
 	protected void firePressed(){
 		if (meGo && !gameCanvas.isFiring()){
 			myTurn();
+			checkEndGame();
+		}
+	}
+	
+	
+	/**
+	 * Checks for the game being over. If it is, the activity ends.
+	 * Increments the campaign if they won and it is campaign mode.
+	 */
+	@Override
+	protected void checkEndGame(){
+		if (game.isGameOver()){
+			waitForCanvas();
+			gameCanvas.stop();
+			SharedPreferences prefs = getSharedPreferences(ProfileActivity.PREFS_NAME, MODE_PRIVATE);
+			int wins = prefs.getInt(ProfileActivity.PLAYER_WINS, 0);
+			int loss = prefs.getInt(ProfileActivity.PLAYER_LOSS, 0);
+			int myScore = game.getBunny(game.getMyID()).getScore();
+			int aiScore = game.getBunny(game.otherID(game.getMyID())).getScore();
+			if (myScore > aiScore){
+				Toast.makeText(getApplicationContext(), "You won! " + myScore + " to " + aiScore, Toast.LENGTH_LONG).show();
+				wins++;
+			}
+			else if (myScore < aiScore){
+				loss++;
+				Toast.makeText(getApplicationContext(), "Failure. " + myScore + " to " + aiScore, Toast.LENGTH_LONG).show();
+			}
+			else {	//tie game
+				Toast.makeText(getApplicationContext(), "You may or may not have won.", Toast.LENGTH_LONG).show();
+			}
+			
+			SharedPreferences.Editor editor = prefs.edit();
+		    editor.putInt(ProfileActivity.PLAYER_WINS, wins);
+		    editor.putInt(ProfileActivity.PLAYER_LOSS, loss);
+		    editor.commit();
+			onBackPressed();
 		}
 	}
 	

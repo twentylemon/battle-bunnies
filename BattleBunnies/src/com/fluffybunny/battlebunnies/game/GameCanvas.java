@@ -22,6 +22,7 @@ public class GameCanvas implements Runnable {
 	private Bitmap[] bunnyImages;			//for displaying the bunnies
 	private Bitmap terrainImage;			//the terrain image
 	private int width, height;				//server's screen size
+	private double xRatio, yRatio;			//screne ratios
 	private int bitWidth, bitHeight;		//new dimensions for terrain image
 
 	/**
@@ -71,9 +72,13 @@ public class GameCanvas implements Runnable {
      * @param height the new height of the bitmap
      */
     public void setBitmapSize(int width, int height){
-    	//bitWidth = width;
-    	//bitHeight = height;
+    	/*
+    	bitWidth = width;
+    	bitHeight = height;
+    	xRatio = (double)bitWidth / (double)width;
+    	yRatio = (double)bitHeight / (double)height;
     	generateTerrainBitmap();
+    	*/
     }
 	
 	
@@ -114,6 +119,18 @@ public class GameCanvas implements Runnable {
 			thread.join();
 		} catch (InterruptedException e){}
 	}
+	
+	
+	/**
+	 * Changes the position to match this screen.
+	 * @param p the point to alter
+	 */
+	private void translate(Point p){
+		if (bitWidth != 0 && bitHeight != 0){
+			p.x *= xRatio;
+			p.y *= yRatio;
+		}
+	}
 
 
 	@Override
@@ -123,7 +140,6 @@ public class GameCanvas implements Runnable {
 		while (running){
 			canvas = surfaceHolder.lockCanvas();
 			if (canvas == null){
-				Log.e("canvas", "canvas is null");
 				try {
 					surfaceHolder.unlockCanvasAndPost(canvas);
 				} catch (IllegalArgumentException e){}
@@ -139,6 +155,7 @@ public class GameCanvas implements Runnable {
 			for (int i = 0; i < game.getNumberOfPlayers(); i++){
 				game.getBunny(i).fall(game.getTerrain());		
 				Point[] extents = game.getBunny(i).getExtents();
+				translate(extents[1]);
 				canvas.drawBitmap(bunnyImages[i], extents[1].x, extents[1].y, null);
 				scoreBox.draw(canvas, game.getBunny(i).getScore(), i);
 			}
