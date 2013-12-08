@@ -10,8 +10,8 @@ import java.io.Serializable;
  * @since 2013-11-23
  */
 public class Point implements Serializable {
-
 	private static final long serialVersionUID = 1L;
+
 	public int x;   //public is fine
     public int y;
 

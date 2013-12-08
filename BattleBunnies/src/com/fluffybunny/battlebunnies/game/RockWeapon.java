@@ -2,19 +2,16 @@ package com.fluffybunny.battlebunnies.game;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.Paint;
 
 public class RockWeapon extends Weapon {
 	private static final long serialVersionUID = 1L;
 
 	private final float RADIUS = 10;
-	private final Paint PAINT = new Paint();
 
 	public RockWeapon(){
 		explosionRadius = RADIUS;
 		name = "Throw a Rock";
-		PAINT.setColor(Color.parseColor("#C0C0C0"));
 		scoreValue = 50;
 	}
 
@@ -26,18 +23,6 @@ public class RockWeapon extends Weapon {
 
 	
 	/**
-	 * Draws this weapon on the canvas provided. This method should not be used, as
-	 * { @code draw(Canvas, Point) } animates the weapon.
-	 * 
-	 * @param canvas where to draw
-	 */
-	@Override
-	public void draw(Canvas canvas){
-		draw(canvas, fireLocation);
-	}
-
-	
-	/**
 	 * Draws this weapon on the canvas provided.
 	 * 
 	 * @param canvas where to draw
@@ -45,19 +30,8 @@ public class RockWeapon extends Weapon {
 	 */
 	@Override
 	public void draw(Canvas canvas, Point where){
-		canvas.drawCircle(where.x, where.y, RADIUS, PAINT);
-	}
-
-	@Override
-	public int getOpacity(){
-		return 0;
-	}
-
-	@Override
-	public void setAlpha(int alpha){
-	}
-
-	@Override
-	public void setColorFilter(ColorFilter cf){
+		Paint paint = new Paint();
+		paint.setColor(Color.parseColor("#C0C0C0"));
+		canvas.drawCircle(where.x, where.y, RADIUS, paint);
 	}
 }

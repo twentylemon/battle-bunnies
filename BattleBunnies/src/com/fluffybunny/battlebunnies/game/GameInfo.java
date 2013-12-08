@@ -15,7 +15,7 @@ public class GameInfo implements Serializable {
     private int myID;					//this player's player id
     private FireAction fireAction;		//the most recent shot taken
 	
-	public static final int MAX_TURNS = 10;
+	public static final int MAX_TURNS = 5;
 
     /**
      * Initializes a new game.
@@ -35,7 +35,7 @@ public class GameInfo implements Serializable {
 
         bunnies = new Bunny[2];
         for (int i = 0; i < bunnies.length; i++){
-            bunnies[i] = new Bunny(names[i], startLocations[i], images[i]);
+            bunnies[i] = new Bunny(names[i], startLocations[i], images[i], i);
         }
 
         //create the weapon list

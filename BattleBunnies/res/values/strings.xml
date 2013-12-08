@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Battle Bunnies</string>
     <string name="profile">Profile</string>
     <string name="multiplayer">Multiplayer</string>
@@ -14,27 +13,10 @@
     <string name="title_activity_game">GameActivity</string>
     <string name="flopsy">Flopsy</string>
     <string name="fire">FIRE</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_multiplayer">MultiplayerActivity</string>
-    <string name="title_activity_device_list">DeviceListActivity</string>
-    <string name="title_activity_multi_launch">MultiLaunch</string>
-
-    <style name="ButtonText">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_margin">3dp</item>
-        <item name="android:textSize">30dp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:shadowColor">#000000</item>
-        <item name="android:shadowDx">1</item>
-        <item name="android:shadowDy">1</item>
-        <item name="android:shadowRadius">2</item>
-    </style>
-
+    <string name="title_activity_multiplayer">Bluetooth Multiplayer</string>
+    <string name="title_activity_device_list">Scan for Devices</string>
+    <string name="title_activity_multi_launch">Bluetooth Multiplayer</string>
     <string name="title_topic_list">Topics</string>
     <string name="title_topic_detail">Topic Detail</string>
     <string name="title_activity_profile">Profile</string>
-
 </resources>

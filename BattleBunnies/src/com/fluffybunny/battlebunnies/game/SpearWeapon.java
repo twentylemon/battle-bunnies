@@ -1,24 +1,18 @@
 package com.fluffybunny.battlebunnies.game;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.Paint;
 
 public class SpearWeapon extends Weapon {
 	private static final long serialVersionUID = 1L;
 
-	private final float RADIUS = 10;
-	private final Paint PAINT = new Paint();
-	Bitmap bitmap;
+	private final float RADIUS = 3;
 
 	public SpearWeapon(){
 		name ="Chuck a Spear";
-		PAINT.setColor(Color.parseColor("#C0C0C0"));
 		scoreValue = 100;
-		explosionRadius = 1;
-		//bitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.spear);
+		explosionRadius = 3;
 	}
 
 
@@ -26,43 +20,12 @@ public class SpearWeapon extends Weapon {
 	public void explode(Canvas canvas, Point where){
 		draw(canvas, where);
 	}
-
-	
-	/**
-	 * Draws this weapon on the canvas provided. This method should not be used, as
-	 * { @code draw(Canvas, Point) } animates the weapon.
-	 * 
-	 * @param canvas where to draw
-	 */
-	@Override
-	public void draw(Canvas canvas){
-		draw(canvas, fireLocation);
-	}
 	
 
 	@Override
-	public void draw(Canvas canvas, Point where) {
-		canvas.drawCircle(where.x, where.y, RADIUS, PAINT);
-
+	public void draw(Canvas canvas, Point where){
+		Paint paint = new Paint();
+		paint.setColor(Color.parseColor("#8B4513"));
+		canvas.drawCircle(where.x, where.y, RADIUS, paint);
 	}
-
-
-	@Override
-	public int getOpacity() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void setAlpha(int alpha) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setColorFilter(ColorFilter cf) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

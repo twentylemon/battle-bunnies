@@ -1,6 +1,5 @@
 package com.fluffybunny.battlebunnies.game;
 
-import java.io.Serializable;
 
 /**
  * Action wrapping a bunny moving.
@@ -9,7 +8,7 @@ import java.io.Serializable;
  * @version 1.0
  * @since 2013-12-07
  */
-public class MoveAction extends Action implements Serializable {
+public class MoveAction extends Action {
 	private static final long serialVersionUID = 1L;
 	
 	private boolean left;
@@ -24,6 +23,12 @@ public class MoveAction extends Action implements Serializable {
 		setPlayerID(playerID);
 		this.left = left;
 	}
+	
+	
+	/**
+	 * Getters/Setters.
+	 */
+	public boolean isLeft(){ return left; }
 
 	
 	/**

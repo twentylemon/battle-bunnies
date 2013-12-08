@@ -1,18 +1,28 @@
 package com.fluffybunny.battlebunnies.game;
 
+import com.fluffybunny.battlebunnies.activities.GameActivityMP;
+
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
 public class GameCanvas implements Runnable {
-	
-	private GameInfo game;
-	private SurfaceHolder surfaceHolder;
-	private Thread thread;
-	private boolean running;
-	private double fireTime;
-	private boolean firing;
-	private ScoreBox scoreBox;
+
+	private GameInfo game;					//all the game information
+	private SurfaceHolder surfaceHolder;	//where the canvas is
+	private Thread thread;					//our canvas thread
+	private boolean running;				//continue to update while true
+	private double fireTime;				//when the last shot was taken
+	private boolean firing;					//if a weapon is in the air
+	private ScoreBox scoreBox;				//for displaying the scores
+	private Bitmap[] bunnyImages;			//for displaying the bunnies
+	private Bitmap terrainImage;			//the terrain image
+	private int width, height;				//server's screen size
+	private int bitWidth, bitHeight;		//new dimensions for terrain image
 
 	/**
 	 * Default constructor.
@@ -20,13 +30,23 @@ public class GameCanvas implements Runnable {
 	 * @param game the game info to paint on the screen
 	 * @param surfaceHolder where to paint
 	 */
-	public GameCanvas(GameInfo game, SurfaceHolder surfaceHolder){
+	public GameCanvas(GameInfo game, SurfaceHolder surfaceHolder, Resources resources){
 		this.game = game;
 		this.surfaceHolder = surfaceHolder;
 		fireTime = 0;
 		firing = false;
 		running = false;
 		scoreBox = new ScoreBox(game.getTerrain().getWidth(), game.getTerrain().getHeight());
+		
+		bunnyImages = new Bitmap[game.getNumberOfPlayers()];
+		for (int i = 0; i < game.getNumberOfPlayers(); i++){
+			bunnyImages[i] = BitmapFactory.decodeResource(resources, game.getBunny(i).getImageResource());
+		}
+		width = game.getTerrain().getWidth();
+		height = game.getTerrain().getHeight();
+		bitWidth = 0;
+		bitHeight = 0;
+		generateTerrainBitmap();
 	}
 
 	
@@ -40,6 +60,37 @@ public class GameCanvas implements Runnable {
 		firing = fire;
 		if (firing){
 			setFireTime(System.currentTimeMillis());
+		}
+	}
+	
+    
+    /**
+     * Changes the size of the bitmap this terrain will produce.
+     * 
+     * @param width the new width of the bitmap
+     * @param height the new height of the bitmap
+     */
+    public void setBitmapSize(int width, int height){
+    	//bitWidth = width;
+    	//bitHeight = height;
+    	generateTerrainBitmap();
+    }
+	
+	
+	/**
+	 * Recreates the terrain bitmap.
+	 */
+	public void generateTerrainBitmap(){
+		Terrain map = game.getTerrain();
+    	int[] data = new int[map.getWidth() * map.getHeight()];
+    	for (int x = 0; x < map.getWidth(); x++){
+    		for (int y = 0; y < map.getHeight(); y++){
+    			data[x + y * map.getWidth()] = map.getPoint(x, y);
+			}
+		}
+    	terrainImage = Bitmap.createBitmap(data, map.getWidth(), map.getHeight(), Bitmap.Config.ARGB_8888);
+		if (bitWidth != 0 && bitHeight != 0){
+			terrainImage = Bitmap.createScaledBitmap(terrainImage, bitWidth, bitHeight, true);
 		}
 	}
 	
@@ -72,6 +123,7 @@ public class GameCanvas implements Runnable {
 		while (running){
 			canvas = surfaceHolder.lockCanvas();
 			if (canvas == null){
+				Log.e("canvas", "canvas is null");
 				try {
 					surfaceHolder.unlockCanvasAndPost(canvas);
 				} catch (IllegalArgumentException e){}
@@ -80,12 +132,14 @@ public class GameCanvas implements Runnable {
 				} catch (InterruptedException e){}
 				continue;
 			}
-			game.getTerrain().draw(canvas);
+			
+			canvas.drawBitmap(terrainImage, 0, 0, new Paint());
 			
 			//draw the bunnies
 			for (int i = 0; i < game.getNumberOfPlayers(); i++){
-				game.getBunny(i).fall(game.getTerrain());				
-				game.getBunny(i).draw(canvas);
+				game.getBunny(i).fall(game.getTerrain());		
+				Point[] extents = game.getBunny(i).getExtents();
+				canvas.drawBitmap(bunnyImages[i], extents[1].x, extents[1].y, null);
 				scoreBox.draw(canvas, game.getBunny(i).getScore(), i);
 			}
 			
@@ -102,6 +156,7 @@ public class GameCanvas implements Runnable {
 						game.getBunny(0).inExtents(pos) || game.getBunny(1).inExtents(pos)){
 					game.getFiredWeapon().explode(canvas, pos);
 					game.getTerrain().destroyTerrain(pos, game.getFiredWeapon());
+					generateTerrainBitmap();
 					game.addScore(game.getFireAction(), pos);
 					firing = false;
 				}

@@ -2,11 +2,7 @@ package com.fluffybunny.battlebunnies.game;
 
 import java.io.Serializable;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
 
 /**
  * The game terrain map.
@@ -15,12 +11,10 @@ import android.graphics.drawable.Drawable;
  * @version 1.0
  * @since 2013-11-23 
  */
-public class Terrain extends Drawable implements Serializable {
+public class Terrain implements Serializable {
 	private static final long serialVersionUID = 1L;
 
     private int[][] map;    //the terrain map
-    private Bitmap bitmap;	//the game map image
-    private int bitWidth, bitHeight;
 
     public final static int AIR = Color.parseColor("#E0FEFF");
     public final static int GRASS = Color.parseColor("#6E8B3D");
@@ -35,8 +29,6 @@ public class Terrain extends Drawable implements Serializable {
      */
     public Terrain(int width, int height, Terrain.Generator generator){
         map = generator.generate(width, height);
-        bitWidth = bitHeight = 0;
-        generateBitmap();
     }
 
 
@@ -44,7 +36,6 @@ public class Terrain extends Drawable implements Serializable {
      * Getters/Setters.
      */
     public void destroyPoint(int x, int y){ map[x][y] = AIR; }
-    public Bitmap getBitmap(){ return bitmap; }
     public boolean isOnMap(int x, int y){ return x >= 0 && x < getWidth() && y >= 0 && y < getHeight(); }
     public int getWidth(){ return map.length; }
     public int getHeight(){ return map[0].length; }
@@ -56,36 +47,6 @@ public class Terrain extends Drawable implements Serializable {
     		return AIR;
     	}
     	return map[x][y];
-    }
-    
-    
-    /**
-     * Changes the size of the bitmap this terrain will produce.
-     * 
-     * @param width the new width of the bitmap
-     * @param height the new height of the bitmap
-     */
-    public void setBitmapSize(int width, int height){
-    	bitWidth = width;
-    	bitHeight = height;
-    	generateBitmap();
-    }
-    
-    
-    /**
-     * Regenerates the bitmap for this terrain.
-     */
-    private void generateBitmap(){
-    	int[] data = new int[getWidth() * getHeight()];
-    	for (int x = 0; x < getWidth(); x++){
-    		for (int y = 0; y < getHeight(); y++){
-    			data[x + y * getWidth()] = getPoint(x, y);
-			}
-		}
-		bitmap = Bitmap.createBitmap(data, getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-		if (bitWidth != 0 && bitHeight != 0){
-	    	bitmap = Bitmap.createScaledBitmap(bitmap, bitWidth, bitHeight, true);
-		}
     }
 
 
@@ -127,38 +88,10 @@ public class Terrain extends Drawable implements Serializable {
             	}
             }
         }
-        generateBitmap();
     }
 
-
-    /**
-     * Draws this terrain onto the canvas.
-     * 
-     * @param canvas the canvas to draw on
-     */
-	@Override
-	public void draw(Canvas canvas){
-		canvas.drawBitmap(bitmap, 0, 0, null);
-	}
-
-
-	@Override
-	public int getOpacity(){
-		return 0;
-	}
-
-
-	@Override
-	public void setAlpha(int alpha){
-	}
-
-
-	@Override
-	public void setColorFilter(ColorFilter cf){
-	}
 	
-	
-	public interface Generator {
+	public interface Generator extends Serializable {
 	    /**
 	     * Returns the terrain that should be used by the map. It is an integer array of pixel colours,
 	     * such that is (x,y) is Terrain.AIR then it is not occupied by any terrain, otherwise the colour
@@ -170,5 +103,8 @@ public class Terrain extends Drawable implements Serializable {
 	     * @return the terrain
 	     */
 	    public int[][] generate(int width, int height);
+	    
+	    public long getSeed();
+	    public void setSeed(long seed);
 	}
 }

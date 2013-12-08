@@ -1,9 +1,5 @@
 package com.fluffybunny.battlebunnies.activities;
 
-import com.fluffybunny.battlebunnies.R;
-import com.fluffybunny.battlebunnies.R.layout;
-import com.fluffybunny.battlebunnies.R.menu;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +21,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.fluffybunny.battlebunnies.R;
 
 /**
  * This Activity appears as a dialog. It lists any paired devices and

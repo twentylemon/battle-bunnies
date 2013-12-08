@@ -1,18 +1,13 @@
 package com.fluffybunny.battlebunnies.bluetooth;
 
 
-import com.fluffybunny.battlebunnies.R;
-import com.fluffybunny.battlebunnies.R.layout;
-import com.fluffybunny.battlebunnies.R.menu;
-import com.fluffybunny.battlebunnies.activities.DeviceListActivity;
-
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -23,6 +18,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.fluffybunny.battlebunnies.R;
+import com.fluffybunny.battlebunnies.activities.DeviceListActivity;
 
 public class MultiplayerActivity extends Activity {
 	private static final String TAG = "BluetoothChat";

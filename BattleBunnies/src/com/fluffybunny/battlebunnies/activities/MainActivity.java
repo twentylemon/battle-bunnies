@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
@@ -70,12 +71,10 @@ public class MainActivity extends Activity {
      */
     public void onCampaignClicked(View view){
         //start the campaign loader activity
-    	
-    	SharedPreferences prefs =getSharedPreferences(ProfileActivity.PREFS_NAME, 0);
-		int level = prefs.getInt(ProfileActivity.PLAYER_LEV, 0);
-		int key = prefs.getInt(ProfileActivity.PLAYER_IMAGE, 2);
-		System.out.println("Level "+level);
-		String name = prefs.getString(ProfileActivity.PLAYER_NAME, "Rusty");
+    	SharedPreferences prefs = getSharedPreferences(ProfileActivity.PREFS_NAME, MODE_PRIVATE);
+		int level = prefs.getInt(ProfileActivity.PLAYER_LEV, 1);
+		int key = prefs.getInt(ProfileActivity.PLAYER_IMAGE, 0);
+		String name = prefs.getString(ProfileActivity.PLAYER_NAME, "Flopsy");
     	int[] images = { getImage(key), getImage(level) };
     	String[] names = { name, "AI" };
     	
@@ -84,7 +83,6 @@ public class MainActivity extends Activity {
     	intent.putExtra(GameActivitySP.PLAYER_NAMES, names);
     	intent.putExtra(GameActivitySP.IS_CAMPAIGN, true);
     	startActivity(intent);
-    	
     }
 
     
@@ -95,9 +93,12 @@ public class MainActivity extends Activity {
      */
     public void onQuickPlayClicked(View view){
         //start the weapon select activity
+    	SharedPreferences prefs = getSharedPreferences(ProfileActivity.PREFS_NAME, MODE_PRIVATE);
+		int key = prefs.getInt(ProfileActivity.PLAYER_IMAGE, 2);
+		String name = prefs.getString(ProfileActivity.PLAYER_NAME, "Flopsy");
     	Intent intent = new Intent(this, GameActivitySP.class);
-    	int[] images = { R.drawable.player_bunny, getImage(new Random().nextInt(NUM_BUNNIES-1) + 1) };
-    	String[] names = { "Fluffy", "Bunny" };
+    	int[] images = { getImage(key), getImage(new Random().nextInt(NUM_BUNNIES-1) + 1) };
+    	String[] names = { name, "Bunny" };
     	intent.putExtra(GameActivitySP.PLAYER_IMAGES, images);
     	intent.putExtra(GameActivitySP.PLAYER_NAMES, names);
     	startActivity(intent);
@@ -111,6 +112,7 @@ public class MainActivity extends Activity {
      */
     public void onMultiplayerClicked(View view){
     	Intent intent = new Intent(MainActivity.this, MultiplayerLaunchActivity.class);
+    	Log.e("main", "cliked multiplayer");
         startActivity(intent);
     }
 }

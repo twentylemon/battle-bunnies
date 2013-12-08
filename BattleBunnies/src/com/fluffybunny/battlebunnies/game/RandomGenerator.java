@@ -1,6 +1,5 @@
 package com.fluffybunny.battlebunnies.game;
 
-import java.io.Serializable;
 import java.util.Random;
 
 /**
@@ -10,8 +9,30 @@ import java.util.Random;
  * @version 1.0
  * @since 2013-11-23
  */
-public class RandomGenerator implements Terrain.Generator, Serializable {
+public class RandomGenerator implements Terrain.Generator {
 	private static final long serialVersionUID = 1L;
+	
+	private Random rng;
+	private long seed;
+
+	
+	public RandomGenerator(){
+    	rng = new Random();
+    	seed = rng.nextLong();
+    	rng.setSeed(seed);
+	}
+	
+	
+	/**
+	 * Getters/Setters.
+	 */
+	public long getSeed(){ return seed; }
+	public void setSeed(long seed){
+		this.seed = seed;
+		rng.setSeed(seed);
+	}
+	
+	
     /**
      * Returns the terrain that should be used by the map. It is an integer array of pixel colours,
      * such that is (x,y) is 0 (black) then it is not occupied by any terrain, otherwise the colour
@@ -23,9 +44,8 @@ public class RandomGenerator implements Terrain.Generator, Serializable {
      * @return the terrain
      */
     @Override
-    public int[][] generate(int width, int height) {
+    public int[][] generate(int width, int height){
         int[][] terrain = new int[width][height];
-        Random rng = new Random();
         topline(terrain, width, height);
         smooth(terrain, rng.nextInt(width / 100));
         fillLower(terrain, Terrain.GRASS, Terrain.ROCK, Terrain.AIR);
@@ -44,7 +64,6 @@ public class RandomGenerator implements Terrain.Generator, Serializable {
      */
     public void topline(int[][] c, int width, int height){
         int prev;
-        Random rng = new Random();
 
         boolean b = rng.nextBoolean();
         int scale = width/4;

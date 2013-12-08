@@ -1,18 +1,28 @@
 package com.fluffybunny.battlebunnies.bluetooth;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
 import java.io.OutputStream;
 import java.io.StreamCorruptedException;
+
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+
 import com.fluffybunny.battlebunnies.activities.GameActivityMP;
+import com.fluffybunny.battlebunnies.game.FireAction;
+import com.fluffybunny.battlebunnies.game.MoveAction;
+import com.fluffybunny.battlebunnies.game.Point;
 
 @SuppressLint("NewApi")
 public class BluetoothHandler {
@@ -31,7 +41,10 @@ public class BluetoothHandler {
 	public static final int STATE_CONNECTING = 2;
 	public static final int STATE_CONNECTED = 3;
 	
-	public BluetoothHandler(){
+	private Handler handler;
+	
+	public BluetoothHandler(Handler handler){
+		this.handler = handler;
 		currentState = STATE_NONE;
 		adapter = BluetoothAdapter.getDefaultAdapter();
 	}
@@ -112,18 +125,19 @@ public class BluetoothHandler {
 	/**
 	 * Tells the connected thread to write the object to the output stream.
 	 * @param obj the object to send
+	 * @param messageType the type of object we're sending
 	 */
-	public void write(Object obj){
+	public void write(Object obj, int messageType){
 		ConnectedThread t;
 		synchronized (this){
-			if (getState() == STATE_CONNECTED){
+			if (currentState == STATE_CONNECTED){
 				t = connectedThread;
 			}
 			else {
 				return;
 			}
 		}
-		t.write(obj);
+		t.write(obj, messageType);
 	}
 	
 	
@@ -171,7 +185,6 @@ public class BluetoothHandler {
         private final BluetoothServerSocket serverSocket;
 
         public ServerThread(){
-        	Log.e("bt", "started ServerThread");
             BluetoothServerSocket tmp = null;
 
             try {
@@ -193,7 +206,6 @@ public class BluetoothHandler {
 
                 //if a connection was accepted
                 if (socket != null){
-                	Log.e("server", "server has socket, connected = " + socket.isConnected());
                     synchronized (BluetoothHandler.this){
                         switch (currentState){
                         case STATE_LISTEN:
@@ -204,9 +216,7 @@ public class BluetoothHandler {
                         case STATE_NONE:
                         case STATE_CONNECTED:
                             //either not ready or already connected, terminate new socket.
-                            try {
-                                socket.close();
-                            } catch (IOException e){}
+                        	cancel();
                             break;
                         }
                     }
@@ -233,7 +243,6 @@ public class BluetoothHandler {
         private final BluetoothDevice device;
 
         public ClientThread(BluetoothDevice device){
-        	Log.e("bt", "started ClientThread");
             this.device = device;
             BluetoothSocket tmp = null;
 
@@ -284,72 +293,164 @@ public class BluetoothHandler {
      */
     private class ConnectedThread extends Thread {
         private final BluetoothSocket socket;
-        private ObjectInputStream inStream;
-        private ObjectOutputStream outStream;
+        private InputStream in;
+        private OutputStream out;
+        private final int BUFFER_SIZE = 1024;
 
 		public ConnectedThread(BluetoothSocket socket){
-        	Log.e("bt", "started ConnectedThread " + socket.isConnected());
             this.socket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
 
-            // Get the BluetoothSocket input and output streams
+            //get the BluetoothSocket input and output streams
             try {
                 tmpIn = socket.getInputStream();
                 tmpOut = socket.getOutputStream();
-            } catch (IOException e){
-	            Log.e("bt", "IOException on socket.getStream()");
-            }
-
-            try {
-				inStream = new ObjectInputStream(tmpIn);
-	            outStream = new ObjectOutputStream(tmpOut);
-			} catch (StreamCorruptedException e){
-	            Log.e("bt", "StreamCorruptedException");
-				e.printStackTrace();
-			} catch (IOException e){
-	            Log.e("bt", "IOException");
-				e.printStackTrace();
-			}
-            Log.e("bt", "inStream = " + inStream.toString());
-            Log.e("bt", "outStream = " + outStream.toString());
+            } catch (IOException e){}
+            in = tmpIn;
+            out = tmpOut;
+            Log.e("bt", "in = " + in.toString() +
+            		"  out = " + out.toString());
         }
 
         public void run(){
             //keep listening to the InputStream while connected
-        	Log.e("tag", "connected thread is running");
             while (currentState == STATE_CONNECTED){
-            	try {
-					Thread.sleep(250);
-				} catch (InterruptedException e){
-					e.printStackTrace();
-				}
+            	int messageType = -1;
+            	Object obj = read();
+            	if (obj instanceof Long){
+            		messageType = GameActivityMP.MESSAGE_SEED;
+            	}
+            	else if (obj instanceof Point){
+            		messageType = GameActivityMP.MESSAGE_SIZE;
+            	}
+            	else if (obj instanceof FireAction){
+            		messageType = GameActivityMP.ACTION_FIRE;
+            	}
+            	else if (obj instanceof MoveAction){
+            		messageType = GameActivityMP.ACTION_MOVE;
+            	}
+            	Message msg = handler.obtainMessage(messageType, obj);
+            	handler.sendMessage(msg);
             }
         }
         
-        public Object read(){
-        	Object obj = null;
-            try {
-                obj = inStream.readObject();
-            } catch (IOException e){
-                connectionLost();
-            } catch (ClassNotFoundException e){
+        
+        /**
+         * Unserializes the byte array into an object.
+         * 
+         * @param data the byte array to unserialize
+         * @return the object represented by the data
+         */
+        private Object unserialize(byte[] data){
+        	ByteArrayInputStream bais = new ByteArrayInputStream(data);
+        	ObjectInputStream ois = null;
+        	try {
+				Log.e("unserialize", "making ois");
+				ois = new ObjectInputStream(bais);
+			} catch (StreamCorruptedException e){
+				Log.e("unserialize", "stream corrupted while making ois");
+				e.printStackTrace();
+			} catch (IOException e){
+				Log.e("unserialize", "exception while making ois");
 				e.printStackTrace();
 			}
-            return obj;
+        	try {
+				Log.e("unserialize", "reading object");
+				Object o = ois.readObject();
+				Log.e("unserialize", "read a " + o);
+				return o;
+			} catch (OptionalDataException e){
+				Log.e("unserialize", "OptionalDataException while reading object");
+				e.printStackTrace();
+			} catch (ClassNotFoundException e){
+				Log.e("unserialize", "ClassNotFoundException while reading object");
+				e.printStackTrace();
+			} catch (IOException e){
+				Log.e("unserialize", "IOException while reading object");
+				e.printStackTrace();
+			}
+        	Log.e("unserialize", "returning null from unserialize()");
+        	return null;
         }
         
-        public void write(Object obj){
-        	try {
-				outStream.writeObject(obj);
-				outStream.flush();
+        
+        /**
+         * Serializes the object sent.
+         * 
+         * @param obj the object to serialize
+         * @return the serialization of the object
+         */
+        private byte[] serialize(Object obj){
+        	ByteArrayOutputStream baos = new ByteArrayOutputStream(BUFFER_SIZE);
+			ObjectOutputStream oos = null;
+			try {
+				oos = new ObjectOutputStream(baos);
 			} catch (IOException e){
+				Log.e("serialize", "exception while making oos");
 				e.printStackTrace();
 			}
+			try {
+				Log.e("serialize", "serializing " + obj);
+				oos.writeObject(obj);
+			} catch (IOException e){
+				Log.e("serialize", "exception while writing " + obj);
+				e.printStackTrace();
+			}
+			try {
+				oos.close();
+			} catch (IOException e){
+				Log.e("serialize", "exception while closing oos");
+				e.printStackTrace();
+			}
+        	return baos.toByteArray();
+        }
+        
+        
+        /**
+         * Reads an object from the input stream.
+         * 
+         * @return an object from the input stream
+         */
+        public Object read(){
+        	byte[] buffer = new byte[BUFFER_SIZE];
+        	try {
+        		Log.e("read", "read " + in.read(buffer) + " bytes");
+			} catch (IOException e){
+				Log.e("read", "exception during read()");
+				e.printStackTrace();
+			}
+        	return unserialize(buffer);
+        }
+        
+       
+        /**
+         * Writes an object on the output stream.
+         * 
+         * @param obj the object to send
+         */
+        public void write(Object obj, int messageType){
+        	byte[] buffer = serialize(obj);
+        	try {
+        		Log.e("write", "writing " + obj);
+				out.write(buffer);
+				out.flush();
+				Log.e("write", "write successful");
+			} catch (IOException e){
+				Log.e("read", "exception during write()");
+				e.printStackTrace();
+			}
+        	//handler.obtainMessage(messageType, obj).sendToTarget();
         }
 
         public void cancel(){
             try {
+            	connectionLost();
+            	synchronized (this){
+            		notify();
+            	}
+            	in.close();
+            	out.close();
                 socket.close();
             } catch (IOException e){}
         }

@@ -25,8 +25,7 @@
         android:layout_above="@+id/button1"
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="128dp"
-        android:layout_marginLeft="110dp"
-        android:text="@string/hello_world" />
+        android:layout_marginLeft="110dp" />
 
     <EditText
         android:id="@+id/editText1"

@@ -2,22 +2,17 @@ package com.fluffybunny.battlebunnies.game;
 
 import java.io.Serializable;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
-
-public class Bunny extends Drawable implements Serializable {
+public class Bunny implements Serializable {
 	private static final long serialVersionUID = 1L;
 
     private Point position;     //where we are located on the map
     private int movesRemaining; //how many times we can move
     private int score;          //how many points we have
     private String name;    	//our display name
+    private int radius;			//the size of the bunny
     private Point[] extents;    //how big on the map the bunny is (for collision detection)
+    private int myID;			//our player ID
     private int resImage;		//resource id of our image
-    private Bitmap bitmap;		//what to display for our image
-    private GameCanvas gameCanvas;
 
     public final static int DEFAULT_NUM_MOVES = 15;
     public final static int MOVE_SPEED = 50;
@@ -32,14 +27,17 @@ public class Bunny extends Drawable implements Serializable {
      * @param loc where the bunny starts, (minX,minY) point
      * @param radius the size of the bunny (for extents)
      * @param image the image resource that this bunny should use to draw
+     * @param id the player ID
      */
-    public Bunny(String name, int score, int moves, Point loc, int radius, int image){
+    public Bunny(String name, int score, int moves, Point loc, int radius, int image, int id){
         this.name = name;
         this.score = score;
         this.movesRemaining = moves;
         this.resImage = image;
+        this.radius = radius;
         extents = new Point[2];
         this.position = loc;
+        myID = id;
         extents[0] = position.add(new Point(-radius, -radius));
         extents[1] = position.add(new Point(radius, radius));
         extents[0] = loc;
@@ -54,9 +52,10 @@ public class Bunny extends Drawable implements Serializable {
      * @param name the name to display on the screen
      * @param loc where the bunny starts
      * @param image the image resource that this bunny should use to draw
+     * @param id the player ID
      */
-    public Bunny(String name, Point loc, int image){
-        this(name, 0, DEFAULT_NUM_MOVES, loc, RADIUS, image);
+    public Bunny(String name, Point loc, int image, int id){
+        this(name, 0, DEFAULT_NUM_MOVES, loc, RADIUS, image, id);
     }
 
 
@@ -67,7 +66,6 @@ public class Bunny extends Drawable implements Serializable {
     public void setScore(int score){ this.score = score; }
     public void setName(String name){ this.name = name; }
     public void setExtents(Point[] extents){ this.extents = extents; }
-    public void setBitmapImage(Bitmap bitmap){ this.bitmap = bitmap; }
     public void addScore(int score){ this.score += score; }
     public int getMovesRemaining(){ return movesRemaining; }
     public int getScore(){ return score; }
@@ -75,21 +73,6 @@ public class Bunny extends Drawable implements Serializable {
     public String getName(){ return name; }
     public Point[] getExtents(){ return extents; }
     public int getImageResource(){ return resImage; }
-    
-
-    /**
-     * Sets and starts the GameCanvas
-     * @param canvas the game canvas
-     */
-    public void setGameCanvas(GameCanvas canvas){
-    	if (gameCanvas != null){
-    		gameCanvas.stop();
-    	}
-    	gameCanvas = canvas;
-    	if (gameCanvas != null){
-    		gameCanvas.start();
-    	}
-    }
     
     
     /**
@@ -100,7 +83,7 @@ public class Bunny extends Drawable implements Serializable {
      */
     public void setPosition(Point position){
     	this.position = position;
-    	Point size = new Point(bitmap.getWidth() / 2, bitmap.getHeight() / 2);
+    	Point size = new Point(radius, radius);
     	Point e0 = position.add(size);
     	size.x = -size.x; size.y = -size.y;
     	Point e1 = position.add(size);
@@ -143,13 +126,10 @@ public class Bunny extends Drawable implements Serializable {
         // TODO change speed according to the weapon's mass
         double speed = power;
         Point point = new Point(extents[0].x, extents[1].y);
-        if (gameCanvas == null || gameCanvas.getGameInfo().getMyID() != 0){
+        if (myID != 0){
         	point = new Point(extents[1].x, extents[1].y);
         }
         weapon.initFire(point, speed, angle);
-        if (gameCanvas != null){
-        	gameCanvas.setFiring(true);
-        }
     }
 
     
@@ -161,7 +141,7 @@ public class Bunny extends Drawable implements Serializable {
      */
     public void fall(Terrain terrain){
     	Point pos = terrain.getHighestPointAt(position.x);
-    	pos.y -= bitmap.getHeight() / 2;
+    	pos.y -= radius;
     	setPosition(pos);
     }
 
@@ -185,30 +165,8 @@ public class Bunny extends Drawable implements Serializable {
 	    		x = Math.min(terrain.getWidth() - 1, position.x + MOVE_SPEED);
 	    	}
 	    	Point pos = terrain.getHighestPointAt(x);
-	    	pos.y -= bitmap.getHeight() / 2;
+	    	pos.y -= radius;
 	    	setPosition(pos);
     	}
     }
-
-
-	@Override
-	public void draw(Canvas canvas){
-		canvas.drawBitmap(bitmap, extents[1].x, extents[1].y, null);
-	}
-
-
-	@Override
-	public int getOpacity(){
-		return 0;
-	}
-
-
-	@Override
-	public void setAlpha(int alpha){
-	}
-
-
-	@Override
-	public void setColorFilter(ColorFilter cf){
-	}
 }

@@ -1,5 +1,6 @@
 package com.fluffybunny.battlebunnies.game;
 
+
 public class FireAction extends Action {
 	private static final long serialVersionUID = 1L;
 

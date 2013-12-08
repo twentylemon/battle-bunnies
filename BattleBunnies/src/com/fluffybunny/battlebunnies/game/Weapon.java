@@ -3,7 +3,6 @@ package com.fluffybunny.battlebunnies.game;
 import java.io.Serializable;
 
 import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 
 /**
  * A weapon. My goodness. Contains default implementations for a standard projectile weapon.
@@ -12,7 +11,7 @@ import android.graphics.drawable.Drawable;
  * @version 1.0
  * @since 2013-11-23
  */
-public abstract class Weapon extends Drawable implements Serializable, Cloneable {
+public abstract class Weapon implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 
     protected double mass;              //how heavy the weapon is, decreased initial velocity

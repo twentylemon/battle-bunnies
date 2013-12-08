@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,11 +50,11 @@ public class MultiplayerLaunchActivity extends Activity {
 					Toast.makeText(MultiplayerLaunchActivity.this, "Make Discoverable to Host", Toast.LENGTH_LONG).show();
 		        	return;
 		        }
-				Toast.makeText(getApplicationContext(), "waiting for another player", Toast.LENGTH_LONG).show();
 				Intent intent = new Intent(MultiplayerLaunchActivity.this, GameActivityMP.class);  
 				intent.putExtra(GameActivityMP.IS_SERVER, true);
 				intent.putExtra(GameActivitySP.PLAYER_NAMES, names);
 				intent.putExtra(GameActivitySP.PLAYER_IMAGES, images);
+				Log.e("client", "I am the server");
             	startActivity(intent);
 			} 
 		});
@@ -99,6 +100,7 @@ public class MultiplayerLaunchActivity extends Activity {
             	intent.putExtra(GameActivityMP.IS_SERVER, false);
 				intent.putExtra(GameActivitySP.PLAYER_NAMES, names);
 				intent.putExtra(GameActivitySP.PLAYER_IMAGES, images);
+				Log.e("client", "I am the client");
             	startActivity(intent);
             }
             break;

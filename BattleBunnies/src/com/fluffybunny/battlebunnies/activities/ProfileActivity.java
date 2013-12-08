@@ -6,7 +6,6 @@ import java.util.List;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -54,10 +53,10 @@ public class ProfileActivity extends Activity {
 	}
 	
 	private void setupPrefs(){
-		String name = prefs.getString(PLAYER_NAME, "Rusty");
+		String name = prefs.getString(PLAYER_NAME, "Flopsy");
 		int wins = prefs.getInt(PLAYER_WINS, 0);
 		int loss = prefs.getInt(PLAYER_LOSS, 0);
-		int level = prefs.getInt(PLAYER_LEV, 0);
+		int level = prefs.getInt(PLAYER_LEV, 1);
 		imageLoc = prefs.getInt(PLAYER_IMAGE, 0);
 		
 		System.out.println("ImageLoc: "+imageLoc);
@@ -129,13 +128,8 @@ public class ProfileActivity extends Activity {
 
 		    @Override
 		    public void onNothingSelected(AdapterView<?> parentView) {
-		        // your code here
 		    }
-
 		});
-		
-		
-		
 	}
 
 	@Override

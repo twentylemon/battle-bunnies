@@ -7,8 +7,6 @@ import java.util.Random;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,7 +16,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
@@ -61,12 +58,14 @@ public class GameActivitySP extends Activity {
 	protected int terrainType;
 	protected int[] playerImages;
 	protected String[] playerNames;
+	protected boolean meGo;
 	
 	protected GameInfo game;
 	protected GameCanvas gameCanvas;
 	protected android.graphics.Point size;
 	protected Terrain.Generator generator;
-	protected Boolean isCampaign;
+	protected boolean isCampaign;
+	public static final int NUM_LEVELS = 7;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +79,7 @@ public class GameActivitySP extends Activity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu){
 		// Inflate the menu; this adds items to the action bar if it is present.
 		//getMenuInflater().inflate(R.menu.game_activity_s, menu);
 		return true;
@@ -96,9 +95,12 @@ public class GameActivitySP extends Activity {
 	
 	
 	/**
-	 * Starts the game. More useful in multiplayer.
+	 * Starts the game canvas.
 	 */
 	protected void startGame(){
+		gameCanvas = new GameCanvas(game, surfaceHolder, getResources());
+		gameCanvas.start();
+		meGo = true;
 	}
 	
 	
@@ -143,11 +145,13 @@ public class GameActivitySP extends Activity {
 	 * @param left true if they are moving left, false if right
 	 */
 	protected void moveBunny(int playerID, boolean left){
-		if (game.getBunny(playerID).getMovesRemaining() <= 0){
-			Toast.makeText(getApplicationContext(), "No more moves remaining.", Toast.LENGTH_LONG).show();
-		}
-		else {
-			new MoveAction(playerID, left).execute(game);
+		if (!gameCanvas.isFiring() && meGo){
+			if (game.getBunny(playerID).getMovesRemaining() <= 0){
+				Toast.makeText(getApplicationContext(), "No more moves remaining.", Toast.LENGTH_LONG).show();
+			}
+			else {
+				new MoveAction(playerID, left).execute(game);
+			}
 		}
 	}
 	
@@ -158,6 +162,8 @@ public class GameActivitySP extends Activity {
 	protected void myTurn(){
 		FireAction action = new FireAction(game.getMyID(), shotPower, shotAngle, getSelectedWeapon());
 		action.execute(game);
+		gameCanvas.setFiring(true);
+		meGo = false;
 		waitForCanvas();
 	}
 	
@@ -169,17 +175,19 @@ public class GameActivitySP extends Activity {
 		Random rand = new Random();
 		new FireAction(1, 80 + rand.nextInt(80), 90 + rand.nextInt(60), rand.nextInt(game.getNumWeapons())).execute(game);
 		gameCanvas.setFiring(true);
+		meGo = true;
 	}
 	
 	
 	/**
 	 * Checks for the game being over. If it is, the activity ends.
+	 * Increments the campaign if they won and it is campaign mode.
 	 */
 	protected void checkEndGame(){
 		if (game.isGameOver()){
 			waitForCanvas();
 			gameCanvas.stop();
-			SharedPreferences prefs= getSharedPreferences(ProfileActivity.PREFS_NAME, 0);
+			SharedPreferences prefs= getSharedPreferences(ProfileActivity.PREFS_NAME, MODE_PRIVATE);
 			int level = prefs.getInt(ProfileActivity.PLAYER_LEV, 0);
 			int wins = prefs.getInt(ProfileActivity.PLAYER_WINS, 0);
 			int loss = prefs.getInt(ProfileActivity.PLAYER_LOSS, 0);
@@ -188,11 +196,12 @@ public class GameActivitySP extends Activity {
 			if (myScore > aiScore){
 				Toast.makeText(getApplicationContext(), "You won! " + myScore + " to " + aiScore, Toast.LENGTH_LONG).show();
 				wins++;
-				if(isCampaign){
-					if(level == 7){
-							Toast.makeText(getApplicationContext(), "You Beat the Game! " , Toast.LENGTH_LONG).show();
+				if (isCampaign){
+					if (level == NUM_LEVELS){
+							Toast.makeText(getApplicationContext(), "You Beat the Game!", Toast.LENGTH_LONG).show();
+							level = 0;
 					}
-					else{
+					else {
 						level++;	
 					}
 				}
@@ -220,7 +229,7 @@ public class GameActivitySP extends Activity {
 	 * The entire turn gets played out when fire is pressed.
 	 */
 	protected void firePressed(){
-		if (!gameCanvas.isFiring()){
+		if (!gameCanvas.isFiring() && meGo){
 			myTurn();
 			checkEndGame();
 			otherTurn();
@@ -256,12 +265,6 @@ public class GameActivitySP extends Activity {
 	protected GameInfo makeGameInfo(){
 		GameInfo g = new GameInfo(playerImages, playerNames, size.x, size.y, generator);
 		g.setID(0);
-		for (int i = 0; i < playerNames.length; i++){
-			Bitmap bitmap = BitmapFactory.decodeResource(getResources(), g.getBunny(i).getImageResource());
-			g.getBunny(i).setBitmapImage(bitmap);
-		}
-		gameCanvas = new GameCanvas(g, surfaceHolder);
-		g.getBunny(0).setGameCanvas(gameCanvas);
 		return g;
 	}
 
@@ -278,7 +281,7 @@ public class GameActivitySP extends Activity {
 		playerImages = intent.getIntArrayExtra(PLAYER_IMAGES);
 		playerNames = intent.getStringArrayExtra(PLAYER_NAMES);
 		terrainType = intent.getIntExtra(TERRAIN_TYPE, TERRAIN_TYPE_RANDOM);
-		isCampaign = intent.getBooleanExtra(IS_CAMPAIGN,false);
+		isCampaign = intent.getBooleanExtra(IS_CAMPAIGN, false);
 		size = new android.graphics.Point();
 		getWindowManager().getDefaultDisplay().getSize(size);
 		size.y = (int)(0.85 * size.y);

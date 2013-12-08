@@ -5,6 +5,8 @@ import java.util.UUID;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.fluffybunny.battlebunnies.bluetooth.BluetoothHandler;
@@ -13,6 +15,7 @@ import com.fluffybunny.battlebunnies.game.FireAction;
 import com.fluffybunny.battlebunnies.game.GameCanvas;
 import com.fluffybunny.battlebunnies.game.GameInfo;
 import com.fluffybunny.battlebunnies.game.MoveAction;
+import com.fluffybunny.battlebunnies.game.Point;
 
 /**
  * The multiplayer game screen
@@ -29,15 +32,55 @@ public class GameActivityMP extends GameActivitySP {
 	public static final String NAME = "GameActivityMP";
 	public static final UUID MY_UUID = UUID.fromString("fa87c0d0-afac-11de-8a39-9750200c9a66");
 	private BluetoothHandler btHandler;
-
+	
+	public static final int MESSAGE_SEED = 1;
+	public static final int MESSAGE_SIZE = 2;
+	public static final int ACTION_MOVE = 3;
+	public static final int ACTION_FIRE = 4;
+	
 	private boolean isServer;
 	private String remoteAddress;
+
 	
+	/**
+	 * Handles messages/actions being passed.
+	 */
+	private final Handler handler = new Handler(){
+		@Override
+		public void handleMessage(Message msg){
+			switch (msg.what){
+			case MESSAGE_SEED:
+				Log.e("handler", "got a long");
+				generator.setSeed((Long) msg.obj);
+				break;
+			case MESSAGE_SIZE:
+				Log.e("handler", "got a point");
+				Point s = (Point) msg.obj;
+				game = new GameInfo(playerImages, playerNames, s.x, s.y, generator);
+				game.setID(1);
+				break;
+			case ACTION_MOVE:
+				Log.e("handler", "got a MoveAction");
+				MoveAction move = (MoveAction) msg.obj;
+				move.execute(game);
+				break;
+			case ACTION_FIRE:
+				Log.e("handler", "got a FireAction");
+				FireAction fire = (FireAction) msg.obj;
+				fire.execute(game);
+				gameCanvas.setFiring(true);
+				meGo = true;
+				waitForCanvas();
+				break;
+			}
+		}
+	};
 	@Override
 	public void onDestroy(){
 		if (btHandler != null){
 			btHandler.stop();
 		}
+		super.onDestroy();
 	}
 	
 
@@ -57,9 +100,14 @@ public class GameActivityMP extends GameActivitySP {
 	 */
 	protected void startGame(){
 		if (isServer){
+			super.startGame();
+			meGo = true;
 		}
 		else {
-			otherTurn();
+			gameCanvas = new GameCanvas(game, surfaceHolder, getResources());
+			gameCanvas.setBitmapSize(size.x, size.y);
+			gameCanvas.start();
+			meGo = false;
 		}
 	}
 		
@@ -70,8 +118,10 @@ public class GameActivityMP extends GameActivitySP {
 	@Override
 	protected void myTurn(){
 		FireAction action = new FireAction(game.getMyID(), shotPower, shotAngle, getSelectedWeapon());
-		btHandler.write(action);
+		btHandler.write(action, ACTION_FIRE);
 		action.execute(game);
+		gameCanvas.setFiring(true);
+		meGo = false;
 		waitForCanvas();
 	}
 	
@@ -86,8 +136,12 @@ public class GameActivityMP extends GameActivitySP {
 		while (!(action instanceof FireAction)){
 			action = (Action) btHandler.read();
 			action.execute(game);
+			if (action instanceof FireAction){
+				gameCanvas.setFiring(true);
+			}
+			waitForCanvas();
 		}
-		waitForCanvas();
+		meGo = true;
 	}
 
 
@@ -100,7 +154,7 @@ public class GameActivityMP extends GameActivitySP {
 	 */
 	protected void moveBunny(int playerID, boolean left){
 		super.moveBunny(playerID, left);
-		btHandler.write(new MoveAction(playerID, left));
+		btHandler.write(new MoveAction(playerID, left), ACTION_MOVE);
 	}
 	
 	
@@ -112,45 +166,37 @@ public class GameActivityMP extends GameActivitySP {
 	 */
 	@Override
 	protected GameInfo makeGameInfo(){
+		while (btHandler.getState() != BluetoothHandler.STATE_CONNECTED){
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				Log.e("GameActivityMP", "waiting for bluetooth to connect");
+			}
+		}
 		//server side, we are going to create the game info and send it to the other player
 		if (isServer){
 			GameInfo g = super.makeGameInfo();
-			while (btHandler.getState() != BluetoothHandler.STATE_CONNECTED){
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					Log.e("GameActivityMP", "waiting for bluetooth to connect");
-				}
-			}
-			Log.e("game", "sending GameInfo");
-			btHandler.write(g);
+			btHandler.write(generator.getSeed(), MESSAGE_SEED);
+			btHandler.write(new Point(size.x, size.y), MESSAGE_SIZE);
 			return g;
 		}
 		//client side, we are going to receive the game info and add in stuff for the canvas etc
 		else {
-			while (btHandler.getState() != BluetoothHandler.STATE_CONNECTED){
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					Log.e("GameActivityMP", "waiting for bluetooth to connect");
-				}
-			}
-			Log.e("game", "receiving GameInfo");
-			GameInfo g = (GameInfo) btHandler.read();
-			while (g == null){
-				try {
-					Log.e("game", "receiving GameInfo, it was null");
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					Log.e("GameActivityMP", "gameinfo received was null");
-				}
-			}
+			/*
+			generator.setSeed((Long) btHandler.read());
+			Point s = (Point) btHandler.read();
+			GameInfo g = new GameInfo(playerImages, playerNames, s.x, s.y, generator);
 			g.setID(1);
-			g.getBunny(0).setGameCanvas(null);
-			game.getTerrain().setBitmapSize(size.x, size.y);
-			gameCanvas = new GameCanvas(g, surfaceHolder);
-			g.getBunny(1).setGameCanvas(gameCanvas);
-			return g;
+			*/
+			while (game == null){
+				try {
+					Log.e("game", "game is null");
+					Thread.sleep(100);
+				} catch (InterruptedException e){
+					e.printStackTrace();
+				}
+			}
+			return game;
 		}
 	}
 	
@@ -160,7 +206,9 @@ public class GameActivityMP extends GameActivitySP {
 	 */
 	@Override
 	protected void firePressed(){
-		super.firePressed();
+		if (meGo && !gameCanvas.isFiring()){
+			myTurn();
+		}
 	}
 	
 	
@@ -174,12 +222,14 @@ public class GameActivityMP extends GameActivitySP {
 		Intent intent = getIntent();
 		
 		isServer = intent.getBooleanExtra(IS_SERVER, false);
-		btHandler = new BluetoothHandler();
+		btHandler = new BluetoothHandler(handler);
 		
 		if (isServer){
+			meGo = true;
 			btHandler.startServer();
 		}
 		else {
+			meGo = false;
 			remoteAddress = intent.getStringExtra(REMOVE_DEVICE_ADDRESS);
 			BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(remoteAddress);
 			btHandler.startClient(device);
